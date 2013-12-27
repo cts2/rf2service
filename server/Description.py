@@ -61,7 +61,7 @@ class Description(RF2BaseNode):
             return None, (400, "Invalid description sctid: %s" % desc)
         if not description_parms.validate(**kwargs):
             return None, (404, description_parms.invalidMessage(**kwargs))
-        dbrec = descdb.getDescriptionById(desc, description_parms(**kwargs))
+        dbrec = descdb.getDescriptionById(desc, description_parms.parse(**kwargs))
         return dbrec, (404, "Description id %s not found" % desc)           
 
 class Descriptions(RF2BaseNode):
@@ -107,10 +107,10 @@ class ConceptForDescription(RF2BaseNode):
             return None, (400, "Invalid description sctid: %s" % desc)
         if not description_parms.validate(**kwargs):
             return None, (404, description_parms.invalidMessage(**kwargs))
-        conc = descdb.getConceptIdForDescription(desc, description_parms(**kwargs))
+        conc = descdb.getConceptIdForDescription(desc, description_parms.parse(**kwargs))
         
         if conc:
-            concrec = concdb.getConcept(conc, concept_parms(**kwargs))
+            concrec = concdb.getConcept(conc, concept_parms.parse(**kwargs))
             return concrec, (404, "Concept for concept %s not found" % conc)
         else:
             return conc, (404, "Description for SCTID %s not found" % desc)
