@@ -1,0 +1,479 @@
+ <html>
+ <style type="text/css">
+     table.parmstable {
+        border-width: 0px;
+        border-spacing: 0px;
+        border-style: none;
+        border-color: black;
+        border-collapse: separate;
+        background-color: white;
+    }
+    table.parmstable th {
+        border-width: 1px;
+        padding: 3px;
+        border-style: solid;
+        border-color: gray;
+        background-color: white;
+    }
+    table.parmstable td {
+        border-width: 1px;
+        padding: 3px;
+        border-style: solid;
+        border-color: gray;
+        background-color: white;
+    }
+     table .parms {display : none; }
+ </style>
+ <script type="text/javascript">
+ function show_hide() {
+     var text = document.getElementById("parmsButton").firstChild;
+     var parms = document.getElementsByClassName("parms");
+     for(var i=0;i<parms.length;i++) {
+         parms[i].style.display = text.data == "Show Parms"? "block" : "none";
+     }
+     var btns = document.getElementsByClassName("parmsButton");
+     for(var i=0;i<btns.length;i++) {
+         btns[i].firstChild.data = btns[i].firstChild.data == "Show Parms"? "Hide Parms" : "Show Parms";
+     }
+ }
+ </script>
+ <body>
+ <h1>RF2 Table Access</h1>
+ <h2>Primary Tables</h2>
+        <button class="parmsButton" id="parmsButton" onClick="show_hide()">Show Parms</button>
+        <table border="1">
+            <tr>
+                <th>Table</th>
+                <th>Operation</th>
+                <th colspan="5">Formats</th>
+                <th>Signature</th>
+                <th class="parms">Parameters</th>
+            </tr>
+            <tr>
+                <td>Concept</td>
+                <td><a href="%(root)s/concept">Read by id</a></td>
+                <td><a href="%(root)s/concept/%(refConcept)s"><button>XML</button></a></td>
+                <td><a href="%(root)s/concept/%(refConcept)s?format=tsv"><button>TSV</button></a></td>
+                <td><a href="%(root)s/concept/%(refConcept)s?format=ditatable"><button>DITA</button></a></td>
+                <td><a href="%(root)s/concept/%(refConcept)s?format=cntable"><button>CollabNet</button></a></td>
+                <td><a href="%(root)s/concept/%(refConcept)s?format=json"><button>JSON</button></a></td>
+                <td>/concept/{conceptid}</td>
+                <td class="parms">
+                    <table class="parmstable">
+                    <tr><td>active</td>
+                    <td><i>true</i> - active concepts only (default)<br/>
+                    <i>false</i> - active and inactive concepts</td></tr>
+                    <tr><td>format</td>
+                    <td><i>xml</i><br/>
+                        <i>tsv</i><br/>
+                        <i>ditatable</i><br/>
+                        <i>cntable</i><br/>
+                        <i>json</i><br/>
+                        <i>html</i><br/>
+                    </td></tr>
+                </table></td>
+            </tr>
+            <tr>
+                <td/>
+                <td><a href="%(root)s/description/concept">Read concept for description id</a></td>
+                <td><a href="%(root)s/description/%(refDesc)s/concept?format=xml"><button>XML</button></a></td>
+                <td><a href="%(root)s/description/%(refDesc)s/concept?format=tsv"><button>TSV</button></a></td>
+                <td><a href="%(root)s/description/%(refDesc)s/concept?format=ditatable"><button>DITA</button></a></td>
+                <td><a href="%(root)s/description/%(refDesc)s/concept?format=cntable"><button>CollabNet</button></a></td>
+                <td><a href="%(root)s/description/%(refDesc)s/concept?format=json"><button>JSON</button></a></td>
+                <td>/description/{descid}/concept</td>
+                <td class="parms">
+                    <table class="parmstable">
+                    <tr><td>active</td>
+                    <td><i>true</i> - active entries only (default)<br/>
+                    <i>false</i> - active and inactive entries</td></tr>
+                    <tr><td>format</td>
+                    <td><i>xml</i><br/>
+                        <i>tsv</i><br/>
+                        <i>ditatable</i><br/>
+                        <i>cntable</i><br/>
+                        <i>json</i><br/>
+                        <i>html</i><br/>
+                    </td></tr>
+                </table></td>
+            </tr>
+            <tr>
+                <td>Concepts</td>
+                <td><a href="%(root)s/concepts">List concepts</a></td>
+                <td><a href="%(root)s/concepts/?format=xml"><button>XML</button></a></td>
+                <td><a href="%(root)s/concepts/?format=tsv"><button>TSV</button></a></td>
+                <td><a href="%(root)s/concepts/?format=ditatable"><button>DITA</button></a></td>
+                <td><a href="%(root)s/concepts/?format=cntable"><button>CollabNet</button></a></td>
+                <td><a href="%(root)s/concepts/?format=json"><button>JSON</button></a></td>
+                <td class="signature">/concepts/</td>
+                <td class="parms">
+                    <table class="parmstable">
+                        <tr>
+                            <td>active</td>
+                            <td><i>true</i> - active concepts only (default)<br/>
+                                <i>false</i> - active and inactive concepts</td>
+                        </tr>
+                        <tr>
+                            <td>page</td>
+                            <td>page number in <i>maxtoreturn</i> chunks</td>
+                        </tr>
+                        <tr>
+                            <td>maxtoreturn</td>
+                            <td>maximum number of elements to return (default: 100)</td>
+                        </tr>
+                         <tr>
+                            <td>order</td>
+                            <td><i>asc</i> - return in ascending concept id order (default)<br/>
+                                <i>desc</i> - return in descending order</td>
+                        </tr>
+                        <tr>
+                            <td>after</td>
+                            <td>start at first concept id &gt; <i>after</i></td>
+                        </tr>
+                         <tr>
+                            <td>moduleid</td>
+                            <td>only return concepts defined in this module</td>
+                        </tr>
+                        <tr>
+                            <td>format</td>
+                            <td>
+                                <i>xml</i><br/>
+                                <i>tsv</i><br/>
+                                <i>ditatable</i><br/>
+                                <i>cntable</i><br/>
+                                <i>json</i><br/>
+                                <i>html</i><br/>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                 <td>Description</td>
+                 <td><a href="%(root)s/description">Read by id</a></td>
+                 <td><a href="%(root)s/description/%(refDesc)s?format=xml"><button>XML</button></a></td>
+                 <td><a href="%(root)s/description/%(refDesc)s?format=tsv"><button>TSV</button></a></td>
+                 <td><a href="%(root)s/description/%(refDesc)s?format=ditatable"><button>DITA</button></a></td>
+                 <td><a href="%(root)s/description/%(refDesc)s?format=cntable"><button>CollabNet</button></a></td>
+                 <td><a href="%(root)s/description/%(refDesc)s?format=json"><button>JSON</button></a></td>
+                 <td>/description/{descid}</td>
+                 <td class="parms">
+                     <table class="parmstable">
+                        <tr>
+                            <td>active</td>
+                            <td><i>true</i> - active descriptions only (default)<br/>
+                                <i>false</i> - active and inactive descriptions</td>
+                        </tr>
+                        <tr>
+                            <td>format</td>
+                            <td><i>xml</i><br/>
+                                <i>tsv</i><br/>
+                                <i>ditatable</i><br/>
+                                <i>cntable</i><br/>
+                                <i>json</i><br/>
+                                <i>html</i><br/>
+                            </td>
+                        </tr>
+                    </table>
+                 </td>
+             </tr>
+             <tr>
+                <td>Descriptions</td>
+                <td><a href="%(root)s/concept/descriptions">Descriptions for a concept</a></td>
+                <td><a href="%(root)s/concept/%(refConcept)s/descriptions?format=xml"><button>XML</button></a></td>
+                <td><a href="%(root)s/concept/%(refConcept)s/descriptions?format=tsv"><button>TSV</button></a></td>
+                <td><a href="%(root)s/concept/%(refConcept)s/descriptions?format=ditatable"><button>DITA</button></a></td>
+                <td><a href="%(root)s/concept/%(refConcept)s/descriptions?format=cntable"><button>CollabNet</button></a></td>
+                <td><a href="%(root)s/concept/%(refConcept)s/descriptions?format=json"><button>JSON</button></a></td>
+                <td class="signature">/concept/{concept}/descriptions</td>
+                <td class="parms">
+                    <table class="parmstable">
+                        <tr>
+                            <td>active</td>
+                            <td><i>true</i> - active entries only (default)<br/>
+                                <i>false</i> - active and inactive entries</td>
+                        </tr>
+                        <tr>
+                            <td>page</td>
+                            <td>page number in <i>maxtoreturn</i> chunks</td>
+                        </tr>
+                        <tr>
+                            <td>maxtoreturn</td>
+                            <td>maximum number of elements to return (default: 100)</td>
+                        </tr>
+
+                         <tr>
+                            <td>moduleid</td>
+                            <td>only return descriptions defined in this module</td>
+                        </tr>
+                        <tr>
+                            <td>format</td>
+                            <td>
+                                <i>xml</i><br/>
+                                <i>tsv</i><br/>
+                                <i>ditatable</i><br/>
+                                <i>cntable</i><br/>
+                                <i>json</i><br/>
+                                <i>html</i><br/>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td/>
+                <td><a href="%(root)s/descriptions">Matching descriptions</a></td>
+                <td><a href="%(root)s/descriptions/%(refMatchvalue)s?format=xml"><button>XML</button></a></td>
+                <td><a href="%(root)s/descriptions/%(refMatchvalue)s?format=tsv"><button>TSV</button></a></td>
+                <td><a href="%(root)s/descriptions/%(refMatchvalue)s?format=ditatable"><button>DITA</button></a></td>
+                <td><a href="%(root)s/descriptions/%(refMatchvalue)s?format=cntable"><button>CollabNet</button></a></td>
+                <td><a href="%(root)s/descriptions/%(refMatchvalue)s?format=json"><button>JSON</button></a></td>
+                <td>/descriptions/{matchvalue}</td>
+                 <td class="parms">
+                    <table class="parmstable">
+                        <tr>
+                            <td>active</td>
+                            <td><i>true</i> - active concepts only (default)<br/>
+                                <i>false</i> - active and inactive concepts</td>
+                        </tr>
+                        <tr>
+                            <td>page</td>
+                            <td>page number in <i>maxtoreturn</i> chunks</td>
+                        </tr>
+                        <tr>
+                            <td>maxtoreturn</td>
+                            <td>maximum number of elements to return (default: 100)</td>
+                        </tr>
+                         <tr>
+                            <td>order</td>
+                            <td><i>asc</i> - return in ascending description length order (default)<br/>
+                                <i>desc</i> - return in descending description length order</td>
+                        </tr>
+                         <tr>
+                            <td>moduleid</td>
+                            <td>only return descriptions defined in this module</td>
+                        </tr>
+                        <tr>
+                            <td>matchvalue</td>
+                            <td>subsequent match values - multiple entries are viewed as 'and' combos</td>
+                        </tr>
+                        <tr>
+                            <td>matchalgorithm</td>
+                            <td>
+                                <i>contains</i> - match text contains<br/>
+                                <i>startswith</i> - match text starts with<br/>
+                                <i>endswith</i> - match text ends with<br/>
+                                <i>exact</i> - exact text match<br/>
+                                <i>wordstart</i> - match word starts with<br/>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>format</td>
+                            <td>
+                                <i>xml</i><br/>
+                                <i>tsv</i><br/>
+                                <i>ditatable</i><br/>
+                                <i>cntable</i><br/>
+                                <i>json</i><br/>
+                                <i>html</i><br/>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+             <tr>
+                 <td>Relationship</td>
+                 <td><a href="%(root)s/relationship">Read by Id</a></td>
+                 <td><a href="%(root)s/relationship/%(refRel)s?format=xml"><button>XML</button></a></td>
+                 <td><a href="%(root)s/relationship/%(refRel)s?format=tsv"><button>TSV</button></a></td>
+                 <td><a href="%(root)s/relationship/%(refRel)s?format=ditatable"><button>DITA</button></a></td>
+                 <td><a href="%(root)s/relationship/%(refRel)s?format=cntable"><button>CollabNet</button></a></td>
+                 <td><a href="%(root)s/relationship/%(refRel)s?format=json"><button>JSON</button></a></td>
+                  <td>/relationship/{relid}</td>
+                  <td class="parms">
+                     <table class="parmstable">
+                        <tr>
+                            <td>active</td>
+                            <td><i>true</i> - active relationship entries only (default)<br/>
+                                <i>false</i> - active and inactive entries</td>
+                        </tr>
+                         <tr>
+                             <td>stated</td>
+                              <td><i>true</i> - include stated relationships (default)<br/>
+                                <i>false</i> - exclude stated relationships</td>
+                         </tr>
+                         <tr>
+                             <td>inferred</td>
+                              <td><i>true</i> - include inferred relationships (default)<br/>
+                                <i>false</i> - exclude inferred relationships</td>
+                         </tr>
+                         <tr>
+                             <td>canonical</td>
+                              <td><i>true</i> - show only canonical relationships<br/>
+                                <i>false</i> - show canonical and non-canonical relationships (default)</td>
+                         </tr>
+                        <tr>
+                            <td>format</td>
+                            <td><i>xml</i><br/>
+                                <i>tsv</i><br/>
+                                <i>ditatable</i><br/>
+                                <i>cntable</i><br/>
+                                <i>json</i><br/>
+                                <i>html</i><br/>
+                            </td>
+                        </tr>
+                    </table>
+                 </td>
+             </tr>
+
+             <tr>
+                 <td>Relationships</td>
+                 <td><a href="%(root)s/relationships/source">Relationships for source concept</a></td>
+                 <td><a href="%(root)s/relationships/source/%(refConcept)s?format=xml"><button>XML</button></a></td>
+                 <td><a href="%(root)s/relationships/source/%(refConcept)s?format=tsv"><button>TSV</button></a></td>
+                 <td><a href="%(root)s/relationships/source/%(refConcept)s?format=ditatable"><button>DITA</button></a></td>
+                 <td><a href="%(root)s/relationships/source/%(refConcept)s?format=cntable"><button>CollabNet</button></a></td>
+                 <td><a href="%(root)s/relationships/source/%(refConcept)s?format=json"><button>JSON</button></a></td>
+                 <td>/relationships/source/{concept}</td>
+                  <td class="parms">
+                     <table class="parmstable">
+
+                        <tr>
+                            <td>active</td>
+                            <td><a href="%(root)s/relationships/source/%(refConcept)s?active=1"><i>true</i></a> - active relationship entries only<br/>
+                                <a href="%(root)s/relationships/source/%(refConcept)s?active=0"><i>false</i></a> - active and inactive entries (default)</td>
+                        </tr>
+                         <tr>
+                             <td>stated</td>
+                              <td><a href="%(root)s/relationships/source/%(refConcept)s?stated=1"><i>true</i></a> - include stated relationships (default)<br/>
+                                <a href="%(root)s/relationships/source/%(refConcept)s?stated=0"><i>false</i></a> - exclude stated relationships</td>
+                         </tr>
+                         <tr>
+                             <td>inferred</td>
+                              <td><a href="%(root)s/relationships/source/%(refConcept)s?inferred=1"><i>true</i></a> - include inferred relationships (default)<br/>
+                                <a href="%(root)s/relationships/source/%(refConcept)s?inferred=0"><i>false</i></a> - exclude inferred relationships</td>
+                         </tr>
+                         <tr>
+                             <td>canonical</td>
+                              <td><a href="%(root)s/relationships/source/%(refConcept)s?canonical=1"><i>true</i></a> - show only canonical relationships<br/>
+                                <a href="%(root)s/relationships/source/%(refConcept)s?canonical=0"><i>false</i></a> - show canonical and non-canonical relationships (default)</td>
+                         </tr>
+                         <tr>
+                            <td>page</td>
+                            <td>page number in <i>maxtoreturn</i> chunks</td>
+                        </tr>
+                        <tr>
+                            <td>maxtoreturn</td>
+                            <td>maximum number of elements to return (default: 100)</td>
+                        </tr>
+                         <tr>
+                            <td>order</td>
+                            <td><i>asc</i> - return in ascending group/target order (default)<br/>
+                                <i>desc</i> - return in descending group/target order</td>
+                        </tr>
+                         <tr>
+                            <td>moduleid</td>
+                            <td>only return relationships defined in this module</td>
+                        </tr>
+                         <embed type="text/html" src="snippets/format.html"/>
+                        <tr>
+                            <td>format</td>
+                            <td><i>xml</i><br/>
+                                <i>tsv</i><br/>
+                                <i>ditatable</i><br/>
+                                <i>cntable</i><br/>
+                                <i>json</i><br/>
+                                <i>html</i><br/>
+                            </td>
+                        </tr>
+                    </table>
+                 </td>
+             </tr>
+             <tr>
+                 <td/>
+                 <td><a href="%(root)s/relationships/predicate">Relationships for relationship type</a></td>
+                 <td><a href="%(root)s/relationships/predicate/%(refPredicate)s?format=xml"><button>XML</button></a></td>
+                 <td><a href="%(root)s/relationships/predicate/%(refPredicate)s?format=tsv"><button>TSV</button></a></td>
+                 <td><a href="%(root)s/relationships/predicate/%(refPredicate)s?format=ditatable"><button>DITA</button></a></td>
+                 <td><a href="%(root)s/relationships/predicate/%(refPredicate)s?format=cntable"><button>CollabNet</button></a></td>
+                 <td><a href="%(root)s/relationships/predicate/%(refPredicate)s?format=json"><button>JSON</button></a></td>
+             </tr>
+             <tr>
+                 <td/>
+                 <td><a href="%(root)s/relationships/target">Relationships for target concept</a></td>
+                 <td><a href="%(root)s/relationships/target/%(refTargetConcept)s?format=xml"><button>XML</button></a></td>
+                 <td><a href="%(root)s/relationships/target/%(refTargetConcept)s?format=tsv"><button>TSV</button></a></td>
+                 <td><a href="%(root)s/relationships/target/%(refTargetConcept)s?format=ditatable"><button>DITA</button></a></td>
+                 <td><a href="%(root)s/relationships/target/%(refTargetConcept)s?format=cntable"><button>CollabNet</button></a></td>
+                 <td><a href="%(root)s/relationships/target/%(refTargetConcept)s?format=json"><button>JSON</button></a></td>
+             </tr>
+        </table>
+         <button class="parmsButton" onClick="show_hide()">Show Parms</button>
+    <h2>Reference Sets</h2>
+        <table border="1">
+             <tr>
+                 <th>Refset</th>
+                 <th>Operation</th>
+                 <th colspan="4">Formats</th>
+             </tr>
+             <tr>
+                 <td>Language</td>
+                 <td><a href="%(root)s/language/description">Read by Description Id</a></td>
+                 <td><a href="%(root)s/language/description/%(refDesc)s?format=tsv"><button>XML</button></a></td>
+                 <td><a href="%(root)s/language/description/%(refDesc)s?format=ditatable"><button>DITA</button></a></td>
+                 <td><a href="%(root)s/language/description/%(refDesc)s?format=cntable"><button>CollabNet</button></a></td>
+                 <td><a href="%(root)s/language/description/%(refDesc)s?format=json"><button>JSON</button></a></td>
+             </tr>
+            <tr>
+                <td/>
+                <td><a href="%(root)s/language/concept">Read by Concept Id</a></td>
+                <td><a href="%(root)s/language/concept/%(refConcept)s?format=tsv"><button>XML</button></a></td>
+                <td><a href="%(root)s/language/concept/%(refConcept)sformat=ditatable"><button>DITA</button></a></td>
+                <td><a href="%(root)s/language/concept/%(refConcept)s?format=cntable"><button>CollabNet</button></a></td>
+                <td><a href="%(root)s/language/concept/%(refConcept)s?format=json"><button>JSON</button></a></td>
+            </tr>
+            <tr>
+                <td>Simple</td>
+                <td><a href="%(root)s/simplerefset/refset">Read by Refset Id</a></td>
+                <td><a href="%(root)s/simplerefset/refset/%(refSet)s?format=tsv"><button>XML</button></a></td>
+                <td><a href="%(root)s/simplerefset/refset/%(refSet)s?format=ditatable"><button>DITA</button></a></td>
+                <td><a href="%(root)s/simplerefset/refset/%(refSet)s?format=cntable"><button>CollabNet</button></a></td>
+                <td><a href="%(root)s/simplerefset/refset/%(refSet)s?format=json"><button>JSON</button></a></td>
+            </tr>
+            <tr>
+                <td/>
+                <td><a href="%(root)s/simplerefset/component">Read by Referenced Component</a></td>
+                <td><a href="%(root)s/simplerefset/component/%(refComponent)s?format=tsv"><button>XML</button></a></td>
+                <td><a href="%(root)s/simplerefset/component/%(refComponent)s?format=ditatable"><button>DITA</button></a></td>
+                <td><a href="%(root)s/simplerefset/component/%(refComponent)s?format=cntable"><button>CollabNet</button></a></td>
+                <td><a href="%(root)s/simplerefset/component/%(refComponent)s?format=json"><button>JSON</button></a></td>
+            </tr>
+            <tr>
+                <td>Simple Map</td>
+                <td><a href="%(root)s/simplemap">Read by Map Id</a></td>
+                <td><a href="%(root)s/simplemap/%(refSimpleMap)s?format=tsv"><button>XML</button></a></td>
+                <td><a href="%(root)s/simplemap/%(refSimpleMap)s?format=ditatable"><button>DITA</button></a></td>
+                <td><a href="%(root)s/simplemap/%(refSimpleMap)s?format=cntable"><button>CollabNet</button></a></td>
+                <td><a href="%(root)s/simplemap/%(refSimpleMap)s?format=json"><button>JSON</button></a></td>
+            </tr>
+            <tr>
+                <td/>
+                <td><a href="%(root)s/simplemap/source">Map for source concept</a></td>
+                <td><a href="%(root)s/simplemap/%(refSimpleMap)s/source/%(refMapSource)s?format=tsv"><button>XML</button></a></td>
+                <td><a href="%(root)s/simplemap/%(refSimpleMap)s/source/%(refMapSource)s?format=ditatable"><button>DITA</button></a></td>
+                <td><a href="%(root)s/simplemap/%(refSimpleMap)s/source/%(refMapSource)s?format=cntable"><button>CollabNet</button></a></td>
+                <td><a href="%(root)s/simplemap/%(refSimpleMap)s/source/%(refMapSource)s?format=json"><button>JSON</button></a></td>
+            </tr>
+            <tr>
+                <td/>
+                <td><a href="%(root)s/simplemap/source">Map for target</a></td>
+                <td><a href="%(root)s/simplemap/%(refSimpleMap)s/target/%(refMapTarget)s?format=tsv"><button>XML</button></a></td>
+                <td><a href="%(root)s/simplemap/%(refSimpleMap)s/target/%(refMapTarget)s?format=ditatable"><button>DITA</button></a></td>
+                <td><a href="%(root)s/simplemap/%(refSimpleMap)s/target/%(refMapTarget)s?format=cntable"><button>CollabNet</button></a></td>
+                <td><a href="%(root)s/simplemap/%(refSimpleMap)s/target/%(refMapTarget)s?format=json"><button>JSON</button></a></td>
+            </tr>
+        </table>
+        <button class="parmsButton" onClick="show_hide()">Show Parms</button>
+    </body>
+ </html>
