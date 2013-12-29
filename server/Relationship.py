@@ -28,9 +28,9 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 import cherrypy
 
-from rf2db.db.RF2RelationshipFile import RelationshipDB
+from rf2db.db.RF2RelationshipFile import RelationshipDB, rel_parms, rellist_parms
 from rf2db.db.RF2StatedRelationshipFile import StatedRelationshipDB
-from rf2db.db.RF2ConceptFile import ConceptDB
+from rf2db.db.RF2ConceptFile import ConceptDB, concept_parms
 from rf2db.utils.sctid  import sctid
 from server.BaseNode import expose
 from server.RF2BaseNode import RF2BaseNode
@@ -39,6 +39,8 @@ from server.config.Rf2Entries import settings
 reldb  =  RelationshipDB()
 statedreldb = StatedRelationshipDB()
 concdb =  ConceptDB()
+
+# TODO: add sort="relationshipGroup, id"  to the sort list and implement
 
 reltypes = """<br/>
     <label>Stated: </label><input type="checkbox" name="stated" value="true" checked="checked"/>
@@ -78,6 +80,16 @@ class Relationships(RF2BaseNode):
         raise cherrypy.HTTPRedirect(direct + ('/%s' % value) if value else '')
 
 
+def validateAndExecute(cid, fctn, **kwargs):
+    if not concept_parms.validate(**kwargs):
+        return None, (404, concept_parms.invalidMessage(**kwargs))
+    if not rellist_parms.validate(**kwargs):
+        return None, (404, rellist_parms.invalidMessage(**kwargs))
+    if not concdb.getConcept(cid, concept_parms.parse(**kwargs)):
+        return None, (404, "Concept %s doesn't exist" % cid)
+    parmlist = rellist_parms.parse(**kwargs)
+    return reldb.asRelationshipList(fctn(cid,parmlist), parmlist)
+
 class RelationshipsForSource(RF2BaseNode):
     title = "<p>Relationship entries for source SCTID</p>"
     label     = "Subject SCTID"
@@ -86,10 +98,7 @@ class RelationshipsForSource(RF2BaseNode):
 
     @expose
     def default(self, source=None, **kwargs):
-        if concdb.getConcept(source):
-            dbrecs = reldb.asRelationshipList(reldb.getSourceRecs(source, **kwargs), **kwargs)
-            return dbrecs, (0, "")
-        return None, (404, "Concept %s doesn't exist" % source)
+        return validateAndExecute(source, reldb.getSourceRecs, **kwargs)
 
 class RelationshipsForPredicate(RF2BaseNode):
     title = "<p>Relationship entries for predicate SCTID</p>"
@@ -98,10 +107,8 @@ class RelationshipsForPredicate(RF2BaseNode):
 
     @expose
     def default(self, predicate=None, **kwargs):
-        if concdb.getConcept(predicate):
-            dbrecs = reldb.asRelationshipList(reldb.getPredicateRecs(predicate,**kwargs), **kwargs)
-            return dbrecs, (0, "")
-        return None, (404, "Concept %s doesn't exist" % predicate)
+        return validateAndExecute(predicate, reldb.getPredicateRecs, **kwargs)
+
 
 class RelationshipsForTarget(RF2BaseNode):
     title = "<p>Relationshp entries for target SCTID</p>"
@@ -110,8 +117,6 @@ class RelationshipsForTarget(RF2BaseNode):
 
     @expose
     def default(self, target=None, **kwargs):
-        if concdb.getConcept(target):
-            dbrecs = reldb.asRelationshipList(reldb.getTargetRecs(target, **kwargs), **kwargs)
-            return dbrecs, (0, "")
-        return None, (404, "Concept %s doesn't exist" % target)
+        return validateAndExecute(target, reldb.getTargetRecs, **kwargs)
+
 

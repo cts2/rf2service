@@ -32,15 +32,17 @@ import os
 import socket
 from lxml import etree
 
-from py4j.java_gateway import JavaGateway, GatewayClient, Py4JError, Py4JNetworkError
-from rf2db.utils import listutils, xmlutils
-from server.utils import URLUtil
-from server.config import ServiceSettings
 
+from rf2db.utils import listutils
+from rf2db.utils.kwutil import kwget, best_match, preference_order
+from server.utils import URLUtil, negotiateFormat
+from server.converters.toxml import as_xml
+from server.converters.tojson import as_json
+from server.converters.tohtml import as_html
 
 htmlHead = "<!DOCTYPE html>"
 
-def expose(f, format='xml', methods=None): #@ReservedAssignment
+def expose(f, methods=None): #@ReservedAssignment
     """ Expose function - wrapper to manage arguments and control formatting into and out of web services """
     if not methods: methods = []
 
@@ -59,12 +61,13 @@ def expose(f, format='xml', methods=None): #@ReservedAssignment
             return f(self, *args, **kwargs)
 
         # Acquire the required return format information and strip the bypass information
-        rtnfmt = kwargs.pop('format', 'xml')
+        rtnfmt = kwargs.pop('format', None)
+
         kwargs.pop('bypass',None)
  
-        kwargs['_formats'] = {'xml':  toXML,
-                              'json': toJSON,
-                              'html': toHTML}.copy()
+        kwargs['_formats'] = {'xml':  as_xml,
+                              'json': as_json,
+                              'html': as_html}.copy()
         kwargs['_ns'] = [None]
         if self.namespace:
             kwargs['_ns'][0] = self.namespace
@@ -85,6 +88,8 @@ def expose(f, format='xml', methods=None): #@ReservedAssignment
             raise cherrypy.HTTPError(err, msg)
         if str(rval).startswith(htmlHead):
             return rval
+        if not rtnfmt:
+            rtnfmt = negotiateFormat.negotiate_format(kwargs['_formats'].keys(), cherrypy.request.headers)
         rtnfmt = listutils.flatten(rtnfmt)
         if rtnfmt in kwargs['_formats']:
             ns = kwargs['_ns'][0] if kwargs['_ns'] else None
@@ -97,55 +102,33 @@ def expose(f, format='xml', methods=None): #@ReservedAssignment
                 	
     return wrapped_f
 
-# Built in format converters
-def toXML(rval, ns=None, **kwargs):
-    if 'toxml' in [method for method in dir(rval) if callable(getattr(rval, method))]:
-        xslt = kwargs.pop('xslt', None)     
-        if xslt: 
-            xsltPath = ServiceSettings.settings.staticroot + "xsl/%s.xsl" % xslt
-            xslt = '\n<?xml-stylesheet type="text/xsl" href="%s"?>' % xsltPath
-        return xmlutils.prettyxml(rval, ns=ns, xslt=xslt, validate=True), 'application/xml;charset=UTF-8'
-    return str(rval), None
 
-     
-def toJSON(rval, ns=None, **kwargs):
-    if 'toxml' in [method for method in dir(rval) if callable(getattr(rval, method))]:
-        rval = xmlutils.prettyxml(rval, ns=ns)
-        if not BaseNode.xmltojson:
-            BaseNode.newConverter()
-        if not BaseNode.xmltojson:
-            raise cherrypy.HTTPError(503, "XML to JSON converter is unavailable");
-        try:
-            rval = BaseNode.xmltojson.toJson(rval)
-        except Py4JError:
-            BaseNode.newConverter()
-            rval = BaseNode.xmltojson.toJson(rval)
-        return rval, 'application/json;charset=UTF-8'
-    return str(rval), None
 
-knownXSLT = { }
 
-class FileResolver(etree.Resolver):
-    def __init__(self):
-        parser = etree.XMLParser()
-        parser.resolvers.add(self)
-        
-    def resolve(self, url, pubid, context):
-        return os.path.join(os.path.dirname(__file__), 'cts2xform/xsl/%s' % url)
 
-foo = FileResolver()
-
-def toHTML(rval, ns=None, **kwargs):
-    if hasattr(rval, 'resource'):
-        if rval.resource in knownXSLT:
-            # kwargs['xslt'] = knownXSLT[rval.resource]
-
-            xsltdocname = os.path.join(os.path.dirname(__file__), 'cts2xform/xsl/%s.xsl' % knownXSLT[rval.resource])
-            style = etree.XSLT(etree.parse(xsltdocname)) 
-            doc   = etree.XML(rval.toxml())
-            return etree.tostring(style(doc)), 'text/html;charset=UTF-8'
-
-    return toXML(rval, ns, **kwargs)
+# knownXSLT = { }
+#
+# class FileResolver(etree.Resolver):
+#     def __init__(self):
+#         parser = etree.XMLParser()
+#         parser.resolvers.add(self)
+#
+#     def resolve(self, url, pubid, context):
+#         return os.path.join(os.path.dirname(__file__), 'cts2xform/xsl/%s' % url)
+#
+# foo = FileResolver()
+#
+# def toHTML(rval, ns=None, **kwargs):
+#     if hasattr(rval, 'resource'):
+#         if rval.resource in knownXSLT:
+#             # kwargs['xslt'] = knownXSLT[rval.resource]
+#
+#             xsltdocname = os.path.join(os.path.dirname(__file__), 'cts2xform/xsl/%s.xsl' % knownXSLT[rval.resource])
+#             style = etree.XSLT(etree.parse(xsltdocname))
+#             doc   = etree.XML(rval.toxml())
+#             return etree.tostring(style(doc)), 'text/html;charset=UTF-8'
+#
+#     return toXML(rval, ns, **kwargs)
             
     
 
@@ -206,17 +189,6 @@ function validateForm()
     _cp_config = {
         'tools.auth_basic.no_auth': False}
 
-    @staticmethod
-    def newConverter():
-        print "Starting Java gateway on port: %s" % ServiceSettings.settings.gatewayport
-        try:
-            BaseNode.xmltojson = JavaGateway(GatewayClient(port=int(ServiceSettings.settings.gatewayport))).jvm.org.json.XMLToJson()
-        except socket.error as e:
-            print e
-            BaseNode.xmltojson = None
-        except Py4JNetworkError as e:
-            print e
-            BaseNode.xmltojson = None
 
     @cherrypy.expose
     @cherrypy.tools.allow()
@@ -257,5 +229,3 @@ function validateForm()
     
     def unknownPath(self, base, *args):
         return None, (404, "Unrecognized path: %s" % (base + '/' + '/'.join(args)))
-
-BaseNode.newConverter()

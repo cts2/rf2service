@@ -37,6 +37,7 @@ from rf2db.utils     import xmlutils
 dropParms = ['bypass']
 
 
+
 def redirect(reluri):
     raise HTTPRedirect(baseURI() + '/' + reluri)
 

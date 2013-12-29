@@ -21,34 +21,22 @@
 # WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
 # IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
 # INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-# BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
 # DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
-from server.BaseNode import BaseNode
-from rf2db.schema import rf2
-from server.converters.totsv import as_tsv
-from server.converters.toditatable import as_dita_table
-from server.converters.tocollabnet import as_collabnet_table
-from server.converters.topython import as_python_string
-from server.converters.tohtml import as_html
 
+from server.converters.totsv import normalize
 
+def as_collabnet_table(parser_object, **_):
+    (hdrRow, entryRows) = normalize(parser_object)
+    if not (hdrRow or entryRows):
+        try:
+            return "Number of matching items: %s" % parser_object.numEntries, "text/plain"
+        except:
+            return "Unknown object type - cannot format", 'text/plain'
 
-class RF2BaseNode(BaseNode):
-    extension = """<p><b>Format:</b><input type="radio" name="format" value="xml" checked="True">XML</input>
-<input type="radio" name="format" value="tsv">TSV</input>
-<input type="radio" name="format" value="ditatable">DITA</input>
-<input type="radio" name="format" value="cntable">CollabNet</input>
-<input type="radio" name="format" value="json">JSON</input>
-<input type="radio" name="format" value="html">HTML</input></p>"""
-    namespace = rf2.Namespace
-    formats = {'tsv':as_tsv,
-               'ditatable':as_dita_table,
-               'cntable':as_collabnet_table,
-               'python':as_python_string,
-               'html':as_html}
-
-
-        
+    hdrs = ' || '.join(hdrRow._fieldNames) if hdrRow else ''
+    bodys = '\n| '.join([' | '.join([e.strify(fn) for fn in e._fieldNames]) for e in entryRows])
+    return '|| ' + hdrs + '\n| ' + bodys, 'text/plain;charset=UTF-8'

@@ -21,34 +21,27 @@
 # WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
 # IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
 # INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-# BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
 # DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
-from server.BaseNode import BaseNode
-from rf2db.schema import rf2
-from server.converters.totsv import as_tsv
-from server.converters.toditatable import as_dita_table
-from server.converters.tocollabnet import as_collabnet_table
-from server.converters.topython import as_python_string
-from server.converters.tohtml import as_html
 
+from server.config import ServiceSettings
+from rf2db.utils.xmlutils import prettyxml
 
-
-class RF2BaseNode(BaseNode):
-    extension = """<p><b>Format:</b><input type="radio" name="format" value="xml" checked="True">XML</input>
-<input type="radio" name="format" value="tsv">TSV</input>
-<input type="radio" name="format" value="ditatable">DITA</input>
-<input type="radio" name="format" value="cntable">CollabNet</input>
-<input type="radio" name="format" value="json">JSON</input>
-<input type="radio" name="format" value="html">HTML</input></p>"""
-    namespace = rf2.Namespace
-    formats = {'tsv':as_tsv,
-               'ditatable':as_dita_table,
-               'cntable':as_collabnet_table,
-               'python':as_python_string,
-               'html':as_html}
-
-
-        
+""" Convert a pyxb object into XML """
+def as_xml(rval, ns=None, **kwargs):
+    """ Convert a pyxb object into xml, otherwise return a string representation
+    @param rval: pyxb or string object
+    @param ns: namespace to use for object in place of default
+    @param kwargs: if 'xslt' in the objects, add it to the return value
+    @return: tuple - xml or string rendering, mime type if xml else None
+    """
+    if 'toxml' in [method for method in dir(rval) if callable(getattr(rval, method))]:
+        xslt = kwargs.pop('xslt', None)
+        if xslt:
+            xsltPath = ServiceSettings.settings.staticroot + "xsl/%s.xsl" % xslt
+            xslt = '\n<?xml-stylesheet type="text/xsl" href="%s"?>' % xsltPath
+        return prettyxml(rval, ns=ns, xslt=xslt, validate=True), 'application/xml;charset=UTF-8'
+    return str(rval), 'application/xml;charset=UTF-8' if str(rval).startswith('<?xml version="1.0"') else None

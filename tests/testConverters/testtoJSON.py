@@ -26,29 +26,36 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
-from server.BaseNode import BaseNode
-from rf2db.schema import rf2
-from server.converters.totsv import as_tsv
-from server.converters.toditatable import as_dita_table
-from server.converters.tocollabnet import as_collabnet_table
-from server.converters.topython import as_python_string
-from server.converters.tohtml import as_html
+
+import unittest
+from server.converters.tojson import as_json
+from rf2db.utils.xmlutils import diffxml
+from rf2db.utils.jsonutils import cleanJson
+from rf2db.parsers.RF2BaseParser import RF2Description
 
 
+class JSONConverterTestCase(unittest.TestCase):
+    def test_tojson(self):
+        desc = RF2Description(
+            '517048016\t20100131\t1\t900000000000380005\t10027005\ten\t900000000000003001\tPatchy (qualifier value)\t900000000000022005')
+        json, mimetype = as_json(desc)
+        self.assertEqual('application/json;charset=UTF-8', mimetype)
+        self.assertDictEqual(cleanJson(
+            {
+                "_xmlns": "http://snomed.info/schema/rf2",
+                "Description": {
+                    "id": "517048016",
+                    "effectiveTime": "20100131",
+                    "active": "1",
+                    "moduleId": "900000000000380005",
+                    "conceptId": "10027005",
+                    "languageCode": "en",
+                    "typeId": "900000000000003001",
+                    "term": "Patchy (qualifier value)",
+                    "caseSignificanceId": "900000000000022005"
+                }
+            }), cleanJson(eval(json)))
 
-class RF2BaseNode(BaseNode):
-    extension = """<p><b>Format:</b><input type="radio" name="format" value="xml" checked="True">XML</input>
-<input type="radio" name="format" value="tsv">TSV</input>
-<input type="radio" name="format" value="ditatable">DITA</input>
-<input type="radio" name="format" value="cntable">CollabNet</input>
-<input type="radio" name="format" value="json">JSON</input>
-<input type="radio" name="format" value="html">HTML</input></p>"""
-    namespace = rf2.Namespace
-    formats = {'tsv':as_tsv,
-               'ditatable':as_dita_table,
-               'cntable':as_collabnet_table,
-               'python':as_python_string,
-               'html':as_html}
 
-
-        
+if __name__ == '__main__':
+    unittest.main()
