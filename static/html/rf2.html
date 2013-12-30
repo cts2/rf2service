@@ -45,7 +45,7 @@
             <tr>
                 <th>Table</th>
                 <th>Operation</th>
-                <th colspan="5">Formats</th>
+                <th colspan="6">Formats</th>
                 <th>Signature</th>
                 <th class="parms">Parameters</th>
             </tr>
@@ -57,6 +57,7 @@
                 <td><a href="%(root)s/concept/%(refConcept)s?format=ditatable"><button>DITA</button></a></td>
                 <td><a href="%(root)s/concept/%(refConcept)s?format=cntable"><button>CollabNet</button></a></td>
                 <td><a href="%(root)s/concept/%(refConcept)s?format=json"><button>JSON</button></a></td>
+                <td><a href="%(root)s/concept/%(refConcept)s?format=html"><button>HTML</button></a></td>
                 <td>/concept/{conceptid}</td>
                 <td class="parms">
                     <table class="parmstable">
@@ -81,6 +82,7 @@
                 <td><a href="%(root)s/description/%(refDesc)s/concept?format=ditatable"><button>DITA</button></a></td>
                 <td><a href="%(root)s/description/%(refDesc)s/concept?format=cntable"><button>CollabNet</button></a></td>
                 <td><a href="%(root)s/description/%(refDesc)s/concept?format=json"><button>JSON</button></a></td>
+                <td><a href="%(root)s/description/%(refDesc)s/concept?format=html"><button>HTML</button></a></td>
                 <td>/description/{descid}/concept</td>
                 <td class="parms">
                     <table class="parmstable">
@@ -105,6 +107,7 @@
                 <td><a href="%(root)s/concepts/?format=ditatable"><button>DITA</button></a></td>
                 <td><a href="%(root)s/concepts/?format=cntable"><button>CollabNet</button></a></td>
                 <td><a href="%(root)s/concepts/?format=json"><button>JSON</button></a></td>
+                <td><a href="%(root)s/concepts/?format=html"><button>HTML</button></a></td>
                 <td class="signature">/concepts/</td>
                 <td class="parms">
                     <table class="parmstable">
@@ -156,6 +159,7 @@
                  <td><a href="%(root)s/description/%(refDesc)s?format=ditatable"><button>DITA</button></a></td>
                  <td><a href="%(root)s/description/%(refDesc)s?format=cntable"><button>CollabNet</button></a></td>
                  <td><a href="%(root)s/description/%(refDesc)s?format=json"><button>JSON</button></a></td>
+                 <td><a href="%(root)s/description/%(refDesc)s?format=html"><button>HTML</button></a></td>
                  <td>/description/{descid}</td>
                  <td class="parms">
                      <table class="parmstable">
@@ -185,6 +189,7 @@
                 <td><a href="%(root)s/concept/%(refConcept)s/descriptions?format=ditatable"><button>DITA</button></a></td>
                 <td><a href="%(root)s/concept/%(refConcept)s/descriptions?format=cntable"><button>CollabNet</button></a></td>
                 <td><a href="%(root)s/concept/%(refConcept)s/descriptions?format=json"><button>JSON</button></a></td>
+                <td><a href="%(root)s/concept/%(refConcept)s/descriptions?format=html"><button>HTML</button></a></td>
                 <td class="signature">/concept/{concept}/descriptions</td>
                 <td class="parms">
                     <table class="parmstable">
@@ -228,6 +233,7 @@
                 <td><a href="%(root)s/descriptions/%(refMatchvalue)s?format=ditatable"><button>DITA</button></a></td>
                 <td><a href="%(root)s/descriptions/%(refMatchvalue)s?format=cntable"><button>CollabNet</button></a></td>
                 <td><a href="%(root)s/descriptions/%(refMatchvalue)s?format=json"><button>JSON</button></a></td>
+                <td><a href="%(root)s/descriptions/%(refMatchvalue)s?format=html"><button>HTML</button></a></td>
                 <td>/descriptions/{matchvalue}</td>
                  <td class="parms">
                     <table class="parmstable">
@@ -290,6 +296,7 @@
                  <td><a href="%(root)s/relationship/%(refRel)s?format=ditatable"><button>DITA</button></a></td>
                  <td><a href="%(root)s/relationship/%(refRel)s?format=cntable"><button>CollabNet</button></a></td>
                  <td><a href="%(root)s/relationship/%(refRel)s?format=json"><button>JSON</button></a></td>
+                 <td><a href="%(root)s/relationship/%(refRel)s?format=html"><button>HTML</button></a></td>
                   <td>/relationship/{relid}</td>
                   <td class="parms">
                      <table class="parmstable">
@@ -335,6 +342,7 @@
                  <td><a href="%(root)s/relationships/source/%(refConcept)s?format=ditatable"><button>DITA</button></a></td>
                  <td><a href="%(root)s/relationships/source/%(refConcept)s?format=cntable"><button>CollabNet</button></a></td>
                  <td><a href="%(root)s/relationships/source/%(refConcept)s?format=json"><button>JSON</button></a></td>
+                 <td><a href="%(root)s/relationships/source/%(refConcept)s?format=html"><button>HTML</button></a></td>
                  <td>/relationships/source/{concept}</td>
                   <td class="parms">
                      <table class="parmstable">
@@ -398,6 +406,7 @@
                  <td><a href="%(root)s/relationships/predicate/%(refPredicate)s?format=ditatable"><button>DITA</button></a></td>
                  <td><a href="%(root)s/relationships/predicate/%(refPredicate)s?format=cntable"><button>CollabNet</button></a></td>
                  <td><a href="%(root)s/relationships/predicate/%(refPredicate)s?format=json"><button>JSON</button></a></td>
+                 <td><a href="%(root)s/relationships/predicate/%(refPredicate)s?format=html"><button>HTML</button></a></td>
              </tr>
              <tr>
                  <td/>
@@ -407,6 +416,7 @@
                  <td><a href="%(root)s/relationships/target/%(refTargetConcept)s?format=ditatable"><button>DITA</button></a></td>
                  <td><a href="%(root)s/relationships/target/%(refTargetConcept)s?format=cntable"><button>CollabNet</button></a></td>
                  <td><a href="%(root)s/relationships/target/%(refTargetConcept)s?format=json"><button>JSON</button></a></td>
+                 <td><a href="%(root)s/relationships/target/%(refTargetConcept)s?format=html"><button>HTML</button></a></td>
              </tr>
         </table>
          <button class="parmsButton" onClick="show_hide()">Show Parms</button>
@@ -415,23 +425,27 @@
              <tr>
                  <th>Refset</th>
                  <th>Operation</th>
-                 <th colspan="4">Formats</th>
+                 <th colspan="6">Formats</th>
              </tr>
              <tr>
                  <td>Language</td>
-                 <td><a href="%(root)s/language/description">Read by Description Id</a></td>
-                 <td><a href="%(root)s/language/description/%(refDesc)s?format=tsv"><button>XML</button></a></td>
-                 <td><a href="%(root)s/language/description/%(refDesc)s?format=ditatable"><button>DITA</button></a></td>
-                 <td><a href="%(root)s/language/description/%(refDesc)s?format=cntable"><button>CollabNet</button></a></td>
-                 <td><a href="%(root)s/language/description/%(refDesc)s?format=json"><button>JSON</button></a></td>
+                 <td><a href="%(root)s/description/languages">Read by Description Id</a></td>
+                 <td><a href="%(root)s/description/%(refDesc)s/languages?format=xml"><button>XML</button></a></td>
+                 <td><a href="%(root)s/description/%(refDesc)s/languages?format=tsv"><button>TSV</button></a></td>
+                 <td><a href="%(root)s/description/%(refDesc)s/languages?format=ditatable"><button>DITA</button></a></td>
+                 <td><a href="%(root)s/description/%(refDesc)s/languages?format=cntable"><button>CollabNet</button></a></td>
+                 <td><a href="%(root)s/description/%(refDesc)s/languages?format=json"><button>JSON</button></a></td>
+                 <td><a href="%(root)s/description/%(refDesc)s/languages?format=html"><button>HTML</button></a></td>
              </tr>
             <tr>
                 <td/>
-                <td><a href="%(root)s/language/concept">Read by Concept Id</a></td>
-                <td><a href="%(root)s/language/concept/%(refConcept)s?format=tsv"><button>XML</button></a></td>
-                <td><a href="%(root)s/language/concept/%(refConcept)sformat=ditatable"><button>DITA</button></a></td>
-                <td><a href="%(root)s/language/concept/%(refConcept)s?format=cntable"><button>CollabNet</button></a></td>
-                <td><a href="%(root)s/language/concept/%(refConcept)s?format=json"><button>JSON</button></a></td>
+                <td><a href="%(root)s/concept/languages">Read by Concept Id</a></td>
+                <td><a href="%(root)s/concept/%(refConcept)s/languages?format=xml"><button>XML</button></a></td>
+                <td><a href="%(root)s/concept/%(refConcept)s/languages?format=tsv"><button>TSV</button></a></td>
+                <td><a href="%(root)s/concept/%(refConcept)s/languages?format=ditatable"><button>DITA</button></a></td>
+                <td><a href="%(root)s/concept/%(refConcept)s/languages?format=cntable"><button>CollabNet</button></a></td>
+                <td><a href="%(root)s/concept/%(refConcept)s/languagess?format=json"><button>JSON</button></a></td>
+                <td><a href="%(root)s/concept/%(refConcept)s/languagess?format=html"><button>HTML</button></a></td>
             </tr>
             <tr>
                 <td>Simple</td>

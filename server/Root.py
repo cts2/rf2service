@@ -29,6 +29,7 @@
 
 import cherrypy
 import os
+from string import Template
 from utils import URLUtil
 from cherrypy.lib.static import serve_file
 
@@ -36,7 +37,33 @@ from server.config import Rf2Entries
 
 _curdir = os.path.join(os.getcwd(), os.path.dirname(__file__))
 
-refEntries = Rf2Entries.settings.section()
+refEntries = Rf2Entries.settings
+poss_formats = [
+    ('html','HTML'),
+    ('xml', 'XML'),
+    ('tsv', 'Tab Sep'),
+    ('bsv', 'Bar Sep'),
+    ('ditatable', 'Dita Table'),
+    ('cntable', 'CollabNet Table'),
+    ('json','JSON'),
+    ]
+
+formats_tmpl=Template('<td><a href="$root/$path?format=$fmt$sep$args"><button>$fmtlabel</button></a></td>')
+
+def formats(path=None,args=""):
+    root = URLUtil.baseURI()
+    sep = '&' if args else ''
+    fmts = Template(formats_tmpl.safe_substitute(locals()))
+    return '\t\n'.join(fmts.safe_substitute(locals()) for (fmt, fmtlabel) in poss_formats)
+
+
+fcn_tmpl=Template("""<td>$label</td>
+                <td><a href="$base_fcn">$fcn_desc</a></td>
+                $fmts_sig
+                <td>$fcn_sig</td>""")
+def row(path, args, label='',base_fcn='',fcn_desc='',fcn_sig=''):
+    fmts_sig = formats(path, args)
+    return fcn_tmpl.safe_substitute(locals())
 
 class Root(object):
 
@@ -53,7 +80,8 @@ class Root(object):
 
     @cherrypy.expose
     def default(self, *kwargs):
-        return ''.join(list(serve_file(os.path.join(_curdir,'..','static', *kwargs)))) % dict({'root':URLUtil.baseURI()}, **refEntries)
+        print row(path='concept/%s' % refEntries.refConcept, args='', label='Concept', base_fcn='concept', fcn_desc='Read by id', fcn_sig='concept/{conceptid}')
+        return ''.join(list(serve_file(os.path.join(_curdir,'..','static', *kwargs)))) % dict({'root':URLUtil.baseURI()}, **(refEntries.section()))
 
 
 

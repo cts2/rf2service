@@ -31,10 +31,24 @@ from rf2db.schema import rf2
 from server.converters.totsv import as_tsv
 from server.converters.toditatable import as_dita_table
 from server.converters.tocollabnet import as_collabnet_table
-from server.converters.topython import as_python_string
+from server.converters.tobsv import as_bsv
 from server.converters.tohtml import as_html
+from rf2db.db.RF2ModuleVersionsFile import ModuleVersionsDB
 
 
+def loadmodules():
+    global_rf2_parms_tmpl = """
+    <p>
+        <label><b>Include inactive records: </b><input type="radio" name="active" value="False"/></label><br/>
+        <br/><b>Restrict to module id(s):</b>
+        %(modulelist)s
+    </p>"""
+    moduleentry_tmpl = """<input type="checkbox" name="moduleid" value=%s>%s</input>"""
+    modulelist = '\t\t\n'.join(moduleentry_tmpl % (e[0],e[1]) for e in map(lambda rec: rec.split('\t'),
+                                                                           ModuleVersionsDB().getModulesids()))
+    return global_rf2_parms_tmpl % locals()
+
+global_rf2_parms = loadmodules()
 
 class RF2BaseNode(BaseNode):
     extension = """<p><b>Format:</b><input type="radio" name="format" value="xml" checked="True">XML</input>
@@ -42,12 +56,12 @@ class RF2BaseNode(BaseNode):
 <input type="radio" name="format" value="ditatable">DITA</input>
 <input type="radio" name="format" value="cntable">CollabNet</input>
 <input type="radio" name="format" value="json">JSON</input>
-<input type="radio" name="format" value="html">HTML</input></p>"""
+<input type="radio" name="format" value="html">HTML</input></p>""" + global_rf2_parms
     namespace = rf2.Namespace
     formats = {'tsv':as_tsv,
                'ditatable':as_dita_table,
                'cntable':as_collabnet_table,
-               'python':as_python_string,
+               'bsv':as_bsv,
                'html':as_html}
 
 

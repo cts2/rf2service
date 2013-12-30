@@ -31,6 +31,7 @@ import cherrypy
 from server.Concept import Concept, Concepts
 from server.Description import Description, Descriptions, DescriptionsForConcept, ConceptForDescription
 from server.Relationship import Relationship, Relationships, RelationshipsForSource, RelationshipsForTarget, RelationshipsForPredicate
+from server.Language import LanguagesForConcept, LanguagesForDescription, Languages
 from server.Root import Root
 
 # Note:  This function requires the python routes package - install with PIP
@@ -48,9 +49,11 @@ resources = [Resource(r'/', Root, action='index'),
              Resource(r'/concepts', Concepts, action='index'),
              Resource(r'/concepts/:after', Concepts),
              Resource(r'/concepts/', Concepts),
+             Resource(r'/concept/languages', LanguagesForConcept, action='index'),
              Resource(r'/concept/:concept/descriptions/:matchvalue', DescriptionsForConcept),
              Resource(r'/concept/:concept/descriptions/', DescriptionsForConcept, action='index'),
              Resource(r'/concept/:concept/descriptions', DescriptionsForConcept),
+             Resource(r'/concept/:concept/languages', LanguagesForConcept),
              Resource(r'/concept/:concept', Concept),
              Resource(r'/concept', Concept, action='index'),
 
@@ -59,8 +62,10 @@ resources = [Resource(r'/', Root, action='index'),
              Resource(r'/descriptions', Descriptions, action='index'),
 
              Resource(r'/description/concept', ConceptForDescription, action='index'),
+             Resource(r'/description/languages', LanguagesForDescription, action='index'),
              Resource(r'/description/:desc/concept/', ConceptForDescription),
              Resource(r'/description/:desc/concept', ConceptForDescription),
+             Resource(r'/description/:desc/languages', LanguagesForDescription),
              Resource(r'/description/:desc', Description),
              Resource(r'/description', Description, action='index'),
 
@@ -74,7 +79,8 @@ resources = [Resource(r'/', Root, action='index'),
              Resource(r'/relationships/target', RelationshipsForTarget, action='index'),
              Resource(r'/relationships/:value', Relationships),
              Resource(r'/relationships/', Relationships),
-             Resource(r'/relationships', Relationships, action='index')]
+             Resource(r'/relationships', Relationships, action='index'),
+             Resource(r'/language', Languages, action='index' )]
 
 
 

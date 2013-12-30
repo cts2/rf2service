@@ -29,6 +29,7 @@
 
 from server.converters.totsv import normalize
 
-def as_python_string(parser_object, **_):
+def as_bsv(parser_object, **_):
     (_, entryRows) = normalize(parser_object)
-    return '\t"' + '"\n\t"'.join(['|'.join([e.strify(fn) for fn in e._fieldNames]) for e in entryRows]) + '"'
+    return '\t"' + '"\n\t"'.join(['|'.join([e.strify(fn) for fn in e._fieldNames]) for e in entryRows]) + '"', \
+           'text/plain;charset=UTF-8'

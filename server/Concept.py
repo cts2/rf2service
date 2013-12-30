@@ -44,7 +44,6 @@ class Concept(RF2BaseNode):
     title = "Read RF2 concept by concept id"
     label = "Concept SCTID"
     value = settings.refConcept
-    extension = activeq
 
     @expose
     def default(self, concept=None, **kwargs):
