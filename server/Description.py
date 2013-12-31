@@ -44,14 +44,11 @@ descdb =  DescriptionDB()
 concdb =  ConceptDB()
 desctextdb = DescriptionTextDB()
 
-activeq = """
-    <br/><label>Include inactive descriptions: <input type="checkbox" name="active" value="False"/></label><br/>"""
 
 class Description(RF2BaseNode):
     title     = "Read description by description ID"
     label     = "Description SCTID"
     value = settings.refDesc
-    extension = activeq
         
     @expose
     def default(self, desc=None, **kwargs):
@@ -68,7 +65,6 @@ class Descriptions(RF2BaseNode):
     title = "Find descriptions matching supplied text"
     label = "Match Text"
     value = settings.refMatchvalue
-    extension = activeq
 
     
     @expose
@@ -83,7 +79,6 @@ class DescriptionsForConcept(RF2BaseNode):
     label = "Concept SCTID"
     value = settings.refConcept
     relpath = "/concept/~/descriptions"
-    extension = activeq
 
     @expose
     def default(self, concept, **kwargs):
@@ -98,7 +93,6 @@ class ConceptForDescription(RF2BaseNode):
     title = "Read concept record for description sctid"
     label = "Description SCTID"
     value = settings.refDesc
-    extension = activeq
     relpath = "/description/~/concept"
             
     @expose

@@ -42,16 +42,13 @@ concdb =  ConceptDB()
 
 # TODO: add sort="relationshipGroup, id"  to the sort list and implement
 
-reltypes = """<br/>
+reltypes = """
     <label>Stated: </label><input type="checkbox" name="stated" value="true" checked="checked"/>
     <label>Inferred: </label><input type="checkbox" name="inferred" value="true" checked="checked"/>
     <label>Canonical Only: </label><input type="checkbox" name="canonical" value="true"/>
     <br/>"""
 
-activetypes = """<br/>
-    <label>Active Only: </label><input type="radio" name="active" value="true" checked="checked"/>
-    <label>Active and Inactive: </label><input type="radio" name="active" value="false"/>
-    <br/>"""
+
 
 
 class Relationship(RF2BaseNode):
@@ -69,7 +66,7 @@ class Relationship(RF2BaseNode):
 class Relationships(RF2BaseNode):
     label = "Relationship SCTID"
     value = settings.refConcept
-    extension = """
+    extension = RF2BaseNode.extension + """
     <br/><label><input type="radio" name="direct" value="source" checked="checked"/>Source of</label>
     <label><input type="radio" name="direct" value="predicate"/>Predicate of</label>
     <label><input type="radio" name="direct" value="target" />Target of</label><br/>"""
@@ -94,7 +91,7 @@ class RelationshipsForSource(RF2BaseNode):
     title = "<p>Relationship entries for source SCTID</p>"
     label     = "Subject SCTID"
     value = settings.refConcept
-    extension = reltypes + activetypes
+    extension = RF2BaseNode.extension + reltypes
 
     @expose
     def default(self, source=None, **kwargs):
@@ -104,6 +101,8 @@ class RelationshipsForPredicate(RF2BaseNode):
     title = "<p>Relationship entries for predicate SCTID</p>"
     label     = "Predicate SCTID"
     value = settings.refPredicate
+    extension = RF2BaseNode.extension + reltypes
+
 
     @expose
     def default(self, predicate=None, **kwargs):
@@ -114,6 +113,8 @@ class RelationshipsForTarget(RF2BaseNode):
     title = "<p>Relationshp entries for target SCTID</p>"
     label     = "Target SCTID"
     value = settings.refTargetConcept
+    extension = RF2BaseNode.extension + reltypes
+
 
     @expose
     def default(self, target=None, **kwargs):

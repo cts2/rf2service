@@ -36,8 +36,6 @@ from server.Description import DescriptionsForConcept
 from server.config.Rf2Entries import settings
 
 concdb = ConceptDB()
-activeq = """
-    <br/><label>Include inactive concepts: <input type="checkbox" name="active" value="False"/></label><br/>"""
 
 
 class Concept(RF2BaseNode):
@@ -59,7 +57,6 @@ class Concepts(RF2BaseNode):
     title = "List concepts starting after"
     label = "Concept SCTID"
     value = 0
-    extension = activeq
 
     @expose
     def default(self, **kwargs):
