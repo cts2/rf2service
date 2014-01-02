@@ -28,7 +28,7 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-from cherrypy        import request, config, HTTPRedirect
+from cherrypy        import request, HTTPRedirect
 from urlparse        import urlsplit,parse_qs, urlunsplit
 from urllib          import urlencode
 
@@ -81,8 +81,8 @@ def stripControlParams(url):
       
 def appendParams(baseURL,parms):
     """ Append a parameter to the base URI 
-    @param baseURI: The uri to append the parameters to
-    @type baseURI: c{URI}
+    @param baseURL: The uri to append the parameters to
+    @type baseURL: c{URI}
     
     @param parms: the list of parameters to append
     @type parms: c{dict}
@@ -97,8 +97,8 @@ def appendParams(baseURL,parms):
 
 def removeParams(baseURL,parms):
     """ Remove parameter or parameters from the base URI
-     @param baseURI: The uri to append the parameters to
-    @type baseURI: c{URI}
+    @param baseURL: The uri to append the parameters to
+    @type baseURL: c{URI}
     
     @param parms: the list of parameters to remove
     @type parms: c{list} or c{string}

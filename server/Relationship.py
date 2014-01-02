@@ -28,7 +28,7 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 import cherrypy
 
-from rf2db.db.RF2RelationshipFile import RelationshipDB, rel_parms, rellist_parms
+from rf2db.db.RF2RelationshipFile import RelationshipDB, rellist_parms
 from rf2db.db.RF2StatedRelationshipFile import StatedRelationshipDB
 from rf2db.db.RF2ConceptFile import ConceptDB, concept_parms
 from rf2db.utils.sctid  import sctid
@@ -57,7 +57,7 @@ class Relationship(RF2BaseNode):
     value = settings.refRel
 
     @expose
-    def default(self, rel=None, **kwargs):
+    def default(self, rel=None, **_):
         if not sctid.isValid(rel):
             return None, (400, "Invalid concept id: %s" % rel)
         dbrec = reldb.getRelationship(rel)
@@ -66,10 +66,10 @@ class Relationship(RF2BaseNode):
 class Relationships(RF2BaseNode):
     label = "Relationship SCTID"
     value = settings.refConcept
-    extension = RF2BaseNode.extension + """
+    extensions = RF2BaseNode.extensions + ["""
     <br/><label><input type="radio" name="direct" value="source" checked="checked"/>Source of</label>
     <label><input type="radio" name="direct" value="predicate"/>Predicate of</label>
-    <label><input type="radio" name="direct" value="target" />Target of</label><br/>"""
+    <label><input type="radio" name="direct" value="target" />Target of</label><br/>"""]
 
     @cherrypy.expose
     @cherrypy.tools.allow()
@@ -91,7 +91,7 @@ class RelationshipsForSource(RF2BaseNode):
     title = "<p>Relationship entries for source SCTID</p>"
     label     = "Subject SCTID"
     value = settings.refConcept
-    extension = RF2BaseNode.extension + reltypes
+    extensions = RF2BaseNode.extensions + [reltypes]
 
     @expose
     def default(self, source=None, **kwargs):
@@ -101,7 +101,7 @@ class RelationshipsForPredicate(RF2BaseNode):
     title = "<p>Relationship entries for predicate SCTID</p>"
     label     = "Predicate SCTID"
     value = settings.refPredicate
-    extension = RF2BaseNode.extension + reltypes
+    extensions = RF2BaseNode.extensions + [reltypes]
 
 
     @expose
@@ -113,7 +113,7 @@ class RelationshipsForTarget(RF2BaseNode):
     title = "<p>Relationshp entries for target SCTID</p>"
     label     = "Target SCTID"
     value = settings.refTargetConcept
-    extension = RF2BaseNode.extension + reltypes
+    extensions = RF2BaseNode.extensions + [reltypes]
 
 
     @expose

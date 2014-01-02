@@ -30,7 +30,7 @@ import cherrypy
 
 from server.BaseNode    import expose
 from server.RF2BaseNode import RF2BaseNode
-from rf2db.utils.sctid import sctid
+
 
 from rf2db.db.RF2LanguageFile import LanguageDB, language_list_parms
 
@@ -41,7 +41,7 @@ langdb = LanguageDB()
 class Languages:
 
     @cherrypy.expose
-    def index(self, **kwargs):
+    def index(self, *_, **__):
         return '''
             <html><body><h2>RF2 Language Refset Access</h2>
             The Language Refset has been massaged in this implementation.  It consists of <i>active</i> entries where either:

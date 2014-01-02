@@ -29,9 +29,10 @@
 
 import cherrypy
 from server.Concept import Concept, Concepts
-from server.Description import Description, Descriptions, DescriptionsForConcept, ConceptForDescription
+from server.Description import Description, Descriptions, DescriptionsForConcept, ConceptForDescription, PreferredDescriptionForConcept
 from server.Relationship import Relationship, Relationships, RelationshipsForSource, RelationshipsForTarget, RelationshipsForPredicate
 from server.Language import LanguagesForConcept, LanguagesForDescription, Languages
+from server.SimpleMap import SimpleMapEntries
 from server.Root import Root
 
 # Note:  This function requires the python routes package - install with PIP
@@ -50,10 +51,12 @@ resources = [Resource(r'/', Root, action='index'),
              Resource(r'/concepts/:after', Concepts),
              Resource(r'/concepts/', Concepts),
              Resource(r'/concept/languages', LanguagesForConcept, action='index'),
+             Resource(r'/concept/prefdescription', PreferredDescriptionForConcept, action='index'),
              Resource(r'/concept/:concept/descriptions/:matchvalue', DescriptionsForConcept),
              Resource(r'/concept/:concept/descriptions/', DescriptionsForConcept, action='index'),
              Resource(r'/concept/:concept/descriptions', DescriptionsForConcept),
              Resource(r'/concept/:concept/languages', LanguagesForConcept),
+             Resource(r'/concept/:concept/prefdescription', PreferredDescriptionForConcept),
              Resource(r'/concept/:concept', Concept),
              Resource(r'/concept', Concept, action='index'),
 
@@ -80,7 +83,12 @@ resources = [Resource(r'/', Root, action='index'),
              Resource(r'/relationships/:value', Relationships),
              Resource(r'/relationships/', Relationships),
              Resource(r'/relationships', Relationships, action='index'),
-             Resource(r'/language', Languages, action='index' )]
+
+             Resource(r'/language', Languages, action='index' ),
+
+             Resource(r'/simplemap', SimpleMapEntries, action='index'),
+             Resource(r'/simplemap/', SimpleMapEntries),
+             Resource(r'/simplemap?', SimpleMapEntries)]
 
 
 

@@ -27,13 +27,13 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 from server.BaseNode import expose
-from server.RF2BaseNode import RF2BaseNode
+from server.RF2BaseNode import RF2BaseNode, global_iter_parms
 from rf2db.utils.sctid import sctid
 
-from rf2db.db.RF2FileCommon import global_rf2_parms
 from rf2db.db.RF2DescriptionFile import DescriptionDB, description_parms, description_list_parms
 from rf2db.db.RF2DescriptionTextFile import DescriptionTextDB, description_match_parms
 from rf2db.db.RF2ConceptFile import ConceptDB, concept_parms
+from rf2db.db.RF2LanguageFile import LanguageDB
 
 
 from server.config.Rf2Entries import settings
@@ -43,6 +43,7 @@ from server.config.Rf2Entries import settings
 descdb =  DescriptionDB()
 concdb =  ConceptDB()
 desctextdb = DescriptionTextDB()
+langdb = LanguageDB()
 
 
 class Description(RF2BaseNode):
@@ -65,6 +66,16 @@ class Descriptions(RF2BaseNode):
     title = "Find descriptions matching supplied text"
     label = "Match Text"
     value = settings.refMatchvalue
+    extensions = RF2BaseNode.extensions + [
+                  """<p><b>Match Algorithm:</b>
+<input type="radio" name="matchalgorithm" value="wordstart" checked="True">Word Starts With</input>
+<input type="radio" name="matchalgorithm" value="contains">Term Contains</input>
+<input type="radio" name="matchalgorithm" value="startswith">Term Starts With</input>
+<input type="radio" name="matchalgorithm" value="endswith">Term Ends With</input>
+<input type="radio" name="matchalgorithm" value="exactmatch">Exact Term Match</input>
+<input type="radio" name="matchalgorithm" value="wordend">Word Ends With</input>
+</p>""",
+    global_iter_parms]
 
     
     @expose
@@ -80,6 +91,7 @@ class DescriptionsForConcept(RF2BaseNode):
     value = settings.refConcept
     relpath = "/concept/~/descriptions"
 
+
     @expose
     def default(self, concept, **kwargs):
         if not description_list_parms.validate(**kwargs):
@@ -87,6 +99,26 @@ class DescriptionsForConcept(RF2BaseNode):
         parmlist = description_list_parms.parse(**kwargs)
         return descdb.asDescriptionList(descdb.getConceptDescription(concept, parmlist), parmlist),\
                (404, "Description for concept %s not found" % concept)
+
+class PreferredDescriptionForConcept(RF2BaseNode):
+    label = "Concept SCTID"
+    value = settings.refConcept
+    relpath = "/concept/~/prefdescription"
+
+
+    @expose
+    def default(self, concept, **kwargs):
+        if not description_list_parms.validate(**kwargs):
+            return None, (404, description_list_parms.invalidMessage(**kwargs))
+
+        parmlist = description_list_parms.parse(**kwargs)
+        pt_entry = langdb.preferred_term_for_concepts(concept, parmlist)
+        if not pt_entry:
+            return None, (404, "Preferred term for concept %s not found" % concept)
+        desc = pt_entry[concept][1]
+        return descdb.getDescriptionById(desc, description_parms.parse(**kwargs)), \
+            (404, "Description id %s not found" % desc)
+
 
 
 class ConceptForDescription(RF2BaseNode):

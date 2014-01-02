@@ -30,7 +30,6 @@
 from server.config import ServiceSettings
 from rf2db.utils.xmlutils import prettyxml
 
-""" Convert a pyxb object into XML """
 def as_xml(rval, ns=None, **kwargs):
     """ Convert a pyxb object into xml, otherwise return a string representation
     @param rval: pyxb or string object

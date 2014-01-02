@@ -33,14 +33,15 @@ from server.converters.toxml import as_xml
 from server.config import ServiceSettings
 from py4j.java_gateway import JavaGateway, GatewayClient, Py4JError, Py4JNetworkError
 
-""" Convert an XML rendering to JSON using an external py4j xml to josn conversion package """
+
 def as_json(rval, ns=None, **kwargs):
+    """ Convert an XML rendering to JSON using an external py4j xml to josn conversion package """
     rval, mimetype = as_xml(rval,ns,**kwargs)
     if mimetype.startswith('application/xml;'):
         if not converter_link:
             newConverter()
         if not converter_link:
-            raise cherrypy.HTTPError(503, "XML to JSON converter is unavailable");
+            raise cherrypy.HTTPError(503, "XML to JSON converter is unavailable")
         try:
             rval = converter_link.toJson(rval)
             mimetype = 'application/json;charset=UTF-8'

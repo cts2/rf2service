@@ -86,14 +86,19 @@ count_template = """<!DOCTYPE html>
 
 td = """<td>%s</td>"""
 row = """<tr>%s</tr>"""
+a = """<a href="/rf2/concept/%s/prefdescription">%s</a>"""
 
 def as_html(parser_object, **_):
     """
     @param parser_object:
     @return: tab separated value list of parser_object
     """
+    def a_link(arg):
+        return a % (arg[1], arg[1]) if arg[0] else arg[1]
+
     def td_row(items):
-        return '\t\n'.join(td % e for e in items)
+        return '\t\n'.join(td % a_link(e) for e in items)
+
     title = "RF2 Entry"
     (hdrRow, entryRows) = normalize(parser_object)
     if not (hdrRow or entryRows):
@@ -101,6 +106,7 @@ def as_html(parser_object, **_):
             return count_template % parser_object.numEntries, "text/html"
         except:
             return "Unknown object type - cannot format", 'text/plain'
-    headings = td_row(hdrRow._fieldNames)
-    body = '\t\n'.join(row % (td_row(e.strify(fn) for fn in e._fieldNames)) for e in entryRows)
+    headings = td_row( (False, e) for e in hdrRow._fieldNames)
+    body = '\t\n'.join(row % (td_row( (e.issctid(fn), e.strify(fn)) for fn in e._fieldNames)) for e in entryRows)
+    print body
     return doc_template % locals(), 'text/html;charset=UTF-8'

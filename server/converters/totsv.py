@@ -51,8 +51,6 @@ def as_tsv(parser_object, **_):
 
 def normalize(parser_object):
     """ Split the return into a header row and a list of entries
-    @param rval:
-    @return:
     """
     if hasattr(parser_object, '_fieldNames'):
         return parser_object, [parser_object]

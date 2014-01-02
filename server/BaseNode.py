@@ -28,13 +28,9 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import cherrypy
-import os
-import socket
-from lxml import etree
 
 
 from rf2db.utils import listutils
-from rf2db.utils.kwutil import kwget, best_match, preference_order
 from server.utils import URLUtil, negotiateFormat
 from server.converters.toxml import as_xml
 from server.converters.tojson import as_json
@@ -166,14 +162,24 @@ function validateForm()
             url = url + '/';
         url = url + x;
     }
+
     document.forms["in"].action = url;
     document.forms["in"]["value"].removeAttribute('name');
+    var inputs = document.getElementsByTagName('input')
+    
+    for (var i = 0, len = inputs.length - 1; i < len; i++) {
+        if (!inputs[i].value)
+        {
+            inputs[i].removeAttribute('name');
+        }
+    }
+
 }
 </script>
 <h2>%(title)s</h2>
 <form name="in" method="GET" onsubmit="return validateForm()">
     <b>%(label)s:</b>
-    <input type="text" name="value" value="%(value)s" size="40"/> <br/>
+    <input type="text" name="value" value="%(value)s" size="40"/><br/>
     %(extension)s
     <br/>
     <input type="submit" />
@@ -182,7 +188,7 @@ function validateForm()
 </html>'''
 
     title     = ""
-    extension = ""
+    extensions = ""
     value     = ""
     relpath   = None
     formats   = {}
@@ -192,15 +198,17 @@ function validateForm()
 
     @cherrypy.expose
     @cherrypy.tools.allow()
-    def index(self, *args, **kwargs):
+    def index(self, *_, **__):
         """ Invoked with no additional path elements
         @param args: empty - there are no path elements
         @param kwargs: parameters
         @return: Menu for particular node
         """
         # TODO: There has to be a better way of doing this...
+        self.extension = [''.join(self.extensions)]
         _vars = {k:getattr(self,k) for k in dir(self) if not k.startswith('_')}
         _vars['path'] = cherrypy.request.script_name+ (self.relpath if self.relpath else cherrypy.request.path_info)
+        _vars['extension'] = '\n\t'.join(self.extensions)
         return self.menu % _vars
 
     @cherrypy.expose

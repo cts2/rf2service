@@ -1,25 +1,21 @@
+ <!--suppress ALL -->
+
  <html>
  <style type="text/css">
      table.parmstable {
-        border-width: 0px;
-        border-spacing: 0px;
-        border-style: none;
-        border-color: black;
+        border-spacing: 0;
+        border: 0px none black;
         border-collapse: separate;
         background-color: white;
     }
     table.parmstable th {
-        border-width: 1px;
         padding: 3px;
-        border-style: solid;
-        border-color: gray;
+        border: 1px solid gray;
         background-color: white;
     }
     table.parmstable td {
-        border-width: 1px;
         padding: 3px;
-        border-style: solid;
-        border-color: gray;
+        border: 1px solid gray;
         background-color: white;
     }
      table .parms {display : none; }
@@ -28,11 +24,12 @@
  function show_hide() {
      var text = document.getElementById("parmsButton").firstChild;
      var parms = document.getElementsByClassName("parms");
-     for(var i=0;i<parms.length;i++) {
+     var i;
+     for(i=0;i<parms.length;i++) {
          parms[i].style.display = text.data == "Show Parms"? "block" : "none";
      }
      var btns = document.getElementsByClassName("parmsButton");
-     for(var i=0;i<btns.length;i++) {
+     for(i=0;i<btns.length;i++) {
          btns[i].firstChild.data = btns[i].firstChild.data == "Show Parms"? "Hide Parms" : "Show Parms";
      }
  }
@@ -75,7 +72,7 @@
                 </table></td>
             </tr>
             <tr>
-                <td/>
+                <td></td>
                 <td><a href="%(root)s/description/concept">Read concept for description id</a></td>
                 <td><a href="%(root)s/description/%(refDesc)s/concept?format=xml"><button>XML</button></a></td>
                 <td><a href="%(root)s/description/%(refDesc)s/concept?format=tsv"><button>TSV</button></a></td>
@@ -226,7 +223,43 @@
                 </td>
             </tr>
             <tr>
-                <td/>
+                <td></td>
+                <td><a href="%(root)s/concept/prefdescription">Preferred description for a concept</a></td>
+                <td><a href="%(root)s/concept/%(refConcept)s/prefdescription?format=xml"><button>XML</button></a></td>
+                <td><a href="%(root)s/concept/%(refConcept)s/prefdescription?format=tsv"><button>TSV</button></a></td>
+                <td><a href="%(root)s/concept/%(refConcept)s/prefdescription?format=ditatable"><button>DITA</button></a></td>
+                <td><a href="%(root)s/concept/%(refConcept)s/prefdescription?format=cntable"><button>CollabNet</button></a></td>
+                <td><a href="%(root)s/concept/%(refConcept)s/prefdescription?format=json"><button>JSON</button></a></td>
+                <td><a href="%(root)s/concept/%(refConcept)s/prefdescription?format=html"><button>HTML</button></a></td>
+                <td class="signature">/concept/{concept}/prefdescription</td>
+                <td class="parms">
+                    <table class="parmstable">
+                        <tr>
+                            <td>active</td>
+                            <td><i>true</i> - active entries only (default)<br/>
+                                <i>false</i> - active and inactive entries</td>
+                        </tr>
+
+                         <tr>
+                            <td>moduleid</td>
+                            <td>only return descriptions defined in this module</td>
+                        </tr>
+                        <tr>
+                            <td>format</td>
+                            <td>
+                                <i>xml</i><br/>
+                                <i>tsv</i><br/>
+                                <i>ditatable</i><br/>
+                                <i>cntable</i><br/>
+                                <i>json</i><br/>
+                                <i>html</i><br/>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
                 <td><a href="%(root)s/descriptions">Matching descriptions</a></td>
                 <td><a href="%(root)s/descriptions/%(refMatchvalue)s?format=xml"><button>XML</button></a></td>
                 <td><a href="%(root)s/descriptions/%(refMatchvalue)s?format=tsv"><button>TSV</button></a></td>
@@ -384,7 +417,7 @@
                             <td>moduleid</td>
                             <td>only return relationships defined in this module</td>
                         </tr>
-                         <embed type="text/html" src="snippets/format.html"/>
+                         <embed type="text/html" src="snippets/format.html"></embed>
                         <tr>
                             <td>format</td>
                             <td><i>xml</i><br/>
@@ -399,7 +432,7 @@
                  </td>
              </tr>
              <tr>
-                 <td/>
+                 <td></td>
                  <td><a href="%(root)s/relationships/predicate">Relationships for relationship type</a></td>
                  <td><a href="%(root)s/relationships/predicate/%(refPredicate)s?format=xml"><button>XML</button></a></td>
                  <td><a href="%(root)s/relationships/predicate/%(refPredicate)s?format=tsv"><button>TSV</button></a></td>
@@ -409,7 +442,7 @@
                  <td><a href="%(root)s/relationships/predicate/%(refPredicate)s?format=html"><button>HTML</button></a></td>
              </tr>
              <tr>
-                 <td/>
+                 <td></td>
                  <td><a href="%(root)s/relationships/target">Relationships for target concept</a></td>
                  <td><a href="%(root)s/relationships/target/%(refTargetConcept)s?format=xml"><button>XML</button></a></td>
                  <td><a href="%(root)s/relationships/target/%(refTargetConcept)s?format=tsv"><button>TSV</button></a></td>
@@ -438,7 +471,7 @@
                  <td><a href="%(root)s/description/%(refDesc)s/languages?format=html"><button>HTML</button></a></td>
              </tr>
             <tr>
-                <td/>
+                <td></td>
                 <td><a href="%(root)s/concept/languages">Read by Concept Id</a></td>
                 <td><a href="%(root)s/concept/%(refConcept)s/languages?format=xml"><button>XML</button></a></td>
                 <td><a href="%(root)s/concept/%(refConcept)s/languages?format=tsv"><button>TSV</button></a></td>
@@ -456,7 +489,7 @@
                 <td><a href="%(root)s/simplerefset/refset/%(refSet)s?format=json"><button>JSON</button></a></td>
             </tr>
             <tr>
-                <td/>
+                <td></td>
                 <td><a href="%(root)s/simplerefset/component">Read by Referenced Component</a></td>
                 <td><a href="%(root)s/simplerefset/component/%(refComponent)s?format=tsv"><button>XML</button></a></td>
                 <td><a href="%(root)s/simplerefset/component/%(refComponent)s?format=ditatable"><button>DITA</button></a></td>
@@ -472,7 +505,7 @@
                 <td><a href="%(root)s/simplemap/%(refSimpleMap)s?format=json"><button>JSON</button></a></td>
             </tr>
             <tr>
-                <td/>
+                <td></td>
                 <td><a href="%(root)s/simplemap/source">Map for source concept</a></td>
                 <td><a href="%(root)s/simplemap/%(refSimpleMap)s/source/%(refMapSource)s?format=tsv"><button>XML</button></a></td>
                 <td><a href="%(root)s/simplemap/%(refSimpleMap)s/source/%(refMapSource)s?format=ditatable"><button>DITA</button></a></td>
@@ -480,7 +513,7 @@
                 <td><a href="%(root)s/simplemap/%(refSimpleMap)s/source/%(refMapSource)s?format=json"><button>JSON</button></a></td>
             </tr>
             <tr>
-                <td/>
+                <td></td>
                 <td><a href="%(root)s/simplemap/source">Map for target</a></td>
                 <td><a href="%(root)s/simplemap/%(refSimpleMap)s/target/%(refMapTarget)s?format=tsv"><button>XML</button></a></td>
                 <td><a href="%(root)s/simplemap/%(refSimpleMap)s/target/%(refMapTarget)s?format=ditatable"><button>DITA</button></a></td>
