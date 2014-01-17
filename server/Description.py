@@ -90,6 +90,7 @@ class DescriptionsForConcept(RF2BaseNode):
     label = "Concept SCTID"
     value = settings.refConcept
     relpath = "/concept/~/descriptions"
+    extensions = RF2BaseNode.extensions + [global_iter_parms]
 
 
     @expose

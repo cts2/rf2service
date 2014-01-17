@@ -28,12 +28,12 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 import cherrypy
 
-from rf2db.db.RF2RelationshipFile import RelationshipDB, rellist_parms
+from rf2db.db.RF2RelationshipFile import RelationshipDB, rel_parms, rellist_parms
 from rf2db.db.RF2StatedRelationshipFile import StatedRelationshipDB
 from rf2db.db.RF2ConceptFile import ConceptDB, concept_parms
 from rf2db.utils.sctid  import sctid
 from server.BaseNode import expose
-from server.RF2BaseNode import RF2BaseNode
+from server.RF2BaseNode import RF2BaseNode, global_iter_parms
 from server.config.Rf2Entries import settings
 
 reldb  =  RelationshipDB()
@@ -42,13 +42,11 @@ concdb =  ConceptDB()
 
 # TODO: add sort="relationshipGroup, id"  to the sort list and implement
 
-reltypes = """
+reltypes = """<b>Relationship Type: </b>
     <label>Stated: </label><input type="checkbox" name="stated" value="true" checked="checked"/>
     <label>Inferred: </label><input type="checkbox" name="inferred" value="true" checked="checked"/>
     <label>Canonical Only: </label><input type="checkbox" name="canonical" value="true"/>
     <br/>"""
-
-
 
 
 class Relationship(RF2BaseNode):
@@ -57,10 +55,10 @@ class Relationship(RF2BaseNode):
     value = settings.refRel
 
     @expose
-    def default(self, rel=None, **_):
+    def default(self, rel=None, **parms):
         if not sctid.isValid(rel):
             return None, (400, "Invalid concept id: %s" % rel)
-        dbrec = reldb.getRelationship(rel)
+        dbrec = reldb.getRelationship(rel, rel_parms.parse(**parms))
         return dbrec, (404, "Relationship record %s not found" % rel)
 
 class Relationships(RF2BaseNode):
@@ -69,7 +67,8 @@ class Relationships(RF2BaseNode):
     extensions = RF2BaseNode.extensions + ["""
     <br/><label><input type="radio" name="direct" value="source" checked="checked"/>Source of</label>
     <label><input type="radio" name="direct" value="predicate"/>Predicate of</label>
-    <label><input type="radio" name="direct" value="target" />Target of</label><br/>"""]
+    <label><input type="radio" name="direct" value="target" />Target of</label><br/>""",
+    global_iter_parms]
 
     @cherrypy.expose
     @cherrypy.tools.allow()
@@ -91,7 +90,7 @@ class RelationshipsForSource(RF2BaseNode):
     title = "<p>Relationship entries for source SCTID</p>"
     label     = "Subject SCTID"
     value = settings.refConcept
-    extensions = RF2BaseNode.extensions + [reltypes]
+    extensions = RF2BaseNode.extensions + [reltypes, global_iter_parms]
 
     @expose
     def default(self, source=None, **kwargs):
@@ -101,7 +100,7 @@ class RelationshipsForPredicate(RF2BaseNode):
     title = "<p>Relationship entries for predicate SCTID</p>"
     label     = "Predicate SCTID"
     value = settings.refPredicate
-    extensions = RF2BaseNode.extensions + [reltypes]
+    extensions = RF2BaseNode.extensions + [reltypes, global_iter_parms]
 
 
     @expose
@@ -113,7 +112,7 @@ class RelationshipsForTarget(RF2BaseNode):
     title = "<p>Relationshp entries for target SCTID</p>"
     label     = "Target SCTID"
     value = settings.refTargetConcept
-    extensions = RF2BaseNode.extensions + [reltypes]
+    extensions = RF2BaseNode.extensions + [reltypes, global_iter_parms]
 
 
     @expose

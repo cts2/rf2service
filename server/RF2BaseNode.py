@@ -51,18 +51,18 @@ def loadmodules():
 global_rf2_parms = loadmodules()
 
 global_iter_parms = """<p>
-<b>Start on page:</b><input type="number", size=3, name="page"/>
-<b>Maximum to return (0 means return a count):</b><input type="number" size=4 name="maxtoreturn"/>
+<b>Start on page:</b><input type="number" size=3 name="page"/>
+<b> Maximum to return</b> (0 means return a count):<input type="number" size=4 name="maxtoreturn"/>
 </p>"""
 
 class RF2BaseNode(BaseNode):
     extensions = ["<br/>",
-                  """<p><b>Format:</b><input type="radio" name="format" value="xml" checked="True">XML</input>
+                  """<p><b>Format:</b><input type="radio" name="format" value="xml">XML</input>
 <input type="radio" name="format" value="tsv">TSV</input>
 <input type="radio" name="format" value="ditatable">DITA</input>
 <input type="radio" name="format" value="cntable">CollabNet</input>
 <input type="radio" name="format" value="json">JSON</input>
-<input type="radio" name="format" value="html">HTML</input></p>""",
+<input type="radio" name="format" value="html" checked="True">HTML</input></p>""",
                   global_rf2_parms]
     namespace = rf2.Namespace
     formats = {'tsv':as_tsv,

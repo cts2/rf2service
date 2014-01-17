@@ -27,6 +27,11 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 from server.converters.totsv import normalize
+from rf2db.db.RF2LanguageFile import LanguageDB
+from rf2db.db.RF2DescriptionFile import DescriptionDB
+
+ldb = LanguageDB()
+ddb = DescriptionDB()
 
 doc_template = """<!DOCTYPE html>
 <html>
@@ -86,15 +91,24 @@ count_template = """<!DOCTYPE html>
 
 td = """<td>%s</td>"""
 row = """<tr>%s</tr>"""
-a = """<a href="/rf2/concept/%s/prefdescription">%s</a>"""
+a = """<span title='%s'><a href="/rf2/concept/%s/prefdescription">%s</a></span>"""
 
 def as_html(parser_object, **_):
+    def _pnFor(cid_or_did):
+        cid_pn_did = ldb.preferred_term_for_concepts(cid_or_did)
+        if cid_pn_did:
+            return cid_pn_did[cid_or_did][0]
+        pn = ddb.getDescriptionById_p(cid_or_did)
+        return pn.term if pn else ''
+
+
+
     """
     @param parser_object:
     @return: tab separated value list of parser_object
     """
     def a_link(arg):
-        return a % (arg[1], arg[1]) if arg[0] else arg[1]
+        return a % (_pnFor(arg[1]), arg[1], arg[1]) if arg[0] else arg[1]
 
     def td_row(items):
         return '\t\n'.join(td % a_link(e) for e in items)
@@ -108,5 +122,4 @@ def as_html(parser_object, **_):
             return "Unknown object type - cannot format", 'text/plain'
     headings = td_row( (False, e) for e in hdrRow._fieldNames)
     body = '\t\n'.join(row % (td_row( (e.issctid(fn), e.strify(fn)) for fn in e._fieldNames)) for e in entryRows)
-    print body
     return doc_template % locals(), 'text/html;charset=UTF-8'

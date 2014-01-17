@@ -28,7 +28,7 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from server.BaseNode    import expose
-from server.RF2BaseNode import RF2BaseNode
+from server.RF2BaseNode import RF2BaseNode, global_iter_parms
 from rf2db.utils.sctid import sctid
 
 from rf2db.db.RF2ConceptFile import ConceptDB, concept_parms, concept_list_parms
@@ -57,6 +57,7 @@ class Concepts(RF2BaseNode):
     title = "List concepts starting after"
     label = "Concept SCTID"
     value = 0
+    extensions = RF2BaseNode.extensions + [global_iter_parms]
 
     @expose
     def default(self, **kwargs):
