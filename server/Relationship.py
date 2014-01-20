@@ -40,11 +40,11 @@ reldb  =  RelationshipDB()
 statedreldb = StatedRelationshipDB()
 concdb =  ConceptDB()
 
-# TODO: add sort="relationshipGroup, id"  to the sort list and implement
 
 reltypes = """<b>Relationship Type: </b>
     <label>Stated: </label><input type="checkbox" name="stated" value="true" checked="checked"/>
     <label>Inferred: </label><input type="checkbox" name="inferred" value="true" checked="checked"/>
+    <label>Additional: </label><input type="checkbox" name="additional" value="true" checked="checked"/>
     <label>Canonical Only: </label><input type="checkbox" name="canonical" value="true"/>
     <br/>"""
 
