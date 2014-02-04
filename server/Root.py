@@ -83,8 +83,7 @@ class Root(object):
 
     @cherrypy.expose
     def default(self, *kwargs):
-        print row(path='concept/%s' % refEntries.refConcept, args='', label='Concept', base_fcn='concept', fcn_desc='Read by id', fcn_sig='concept/{conceptid}')
-        return ''.join(list(serve_file(os.path.join(_curdir,'..','static', *kwargs)))) % dict({'root':URLUtil.baseURI()}, **(refEntries.section()))
+        return ''.join(list(serve_file(os.path.join(_curdir,'..','static', *kwargs)))) % dict({'root':URLUtil.baseURI()}, **(refEntries.asdict()))
 
 
 
