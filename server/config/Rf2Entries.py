@@ -32,7 +32,6 @@ from config.ConfigArgs import ConfigArg, ConfigArgs
 from config.ConfigManager import ConfigManager
 
 _curdir = os.path.join(os.getcwd(), os.path.dirname(__file__))
-settings_filename = os.path.join(os.path.dirname(__file__), '..', '..','settings.conf')
 
 config_parms = ConfigArgs('rf2entries',
                           [ConfigArg('refConcept', help='Sample RF2 Concept Id', default='206421002'),

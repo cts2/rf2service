@@ -1,6 +1,6 @@
 *.py[cod]
 *.log
-*.conf
+settings.conf
 *.cfg
 
 # C extensions

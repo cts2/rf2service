@@ -30,8 +30,8 @@
 import cherrypy
 
 
-from rf2db.utils import listutils
-from server.utils import URLUtil, negotiateFormat
+from rf2db.utils import listutils, urlutil
+from server.utils import negotiateFormat
 from server.converters.toxml import as_xml
 from server.converters.tojson import as_json
 from server.converters.tohtml import as_html
@@ -209,7 +209,6 @@ function validateForm()
         self.extension = [''.join(self.extensions)]
         _vars = {k:getattr(self,k) for k in dir(self) if not k.startswith('_')}
         _vars['path'] = self.buildpath()
-        print _vars['path']
         _vars['extension'] = '\n\t'.join(self.extensions)
         return self.menu % _vars
 
@@ -223,7 +222,7 @@ function validateForm()
         @return:
         """
         if value:
-            raise cherrypy.HTTPRedirect(URLUtil.appendParams(value + ('/' + '/'.join(args) if args else ''),kwargs))
+            urlutil.redirect(urlutil.append_params(value + ('/' + '/'.join(args) if args else ''),kwargs))
 
     
     def redirect(self, newURL, parmsToRemove=None, parmsToAdd=None, path=None):
@@ -233,8 +232,8 @@ function validateForm()
         
         for p in parmsToRemove:
             self._kwargs.pop(p, None)       
-        kwargs = dict([(k,v) for (k,v) in self._kwargs.items() if not k.startswith('_')])    
-        raise cherrypy.HTTPRedirect(URLUtil.appendParams(newURL + ('/' + '/'.join(path) if path else ''),
+        kwargs = dict([(k,v) for (k,v) in self._kwargs.items() if not k.startswith('_')])
+        urlutil.redirect(urlutil.append_params(newURL + ('/' + '/'.join(path) if path else ''),
                                                           dict(parmsToAdd, **kwargs)))
     
     def unknownPath(self, base, *args):

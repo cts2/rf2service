@@ -26,11 +26,10 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
-import os
-import cherrypy
+
 
 from string import Template
-from utils import URLUtil
+from rf2db.utils import urlutil
 from cherrypy.lib.static import serve_file
 
 from server.config import Rf2Entries
@@ -52,7 +51,7 @@ poss_formats = [
 formats_tmpl=Template('<td><a href="$root/$path?format=$fmt$sep$args"><button>$fmtlabel</button></a></td>')
 
 def formats(path=None,args=""):
-    root = URLUtil.baseURI()
+    root = urlutil.base_uri()
     sep = '&' if args else ''
     fmts = Template(formats_tmpl.safe_substitute(locals()))
     return '\t\n'.join(fmts.safe_substitute(locals()) for (fmt, fmtlabel) in poss_formats)
@@ -83,7 +82,7 @@ class Root(object):
 
     @cherrypy.expose
     def default(self, *kwargs):
-        return ''.join(list(serve_file(os.path.join(_curdir,'..','static', *kwargs)))) % dict({'root':URLUtil.baseURI()}, **(refEntries.asdict()))
+        return ''.join(list(serve_file(os.path.join(_curdir,'..','static', *kwargs)))) % dict({'root':urlutil.base_uri()}, **(refEntries.asdict()))
 
 
 
