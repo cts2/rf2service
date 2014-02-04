@@ -139,31 +139,32 @@ class BaseNode(object):
         extension  - (opt) additional information for the menu (see menu below)   
         value      - default value     
     """
-    menu = htmlHead + '''
-<html>
+    def buildpath(self):
+        """ Return the javascript segment needed to generate a URL out of the parameters.  If C{self.relpath} is present
+            and it contains the '~' metacharacter, then we just use it.  Otherwise, we add the value onto the end of
+            the current path.
+        """
+        basepath = cherrypy.request.script_name + (self.relpath if self.relpath else cherrypy.request.path_info)
+        if basepath.find('~') < 0:
+            basepath += ('' if basepath.endswith('/') else '/') + '~'
+        if cherrypy.request.query_string:
+            basepath += ('&' if basepath.find('?') >= 0 else '?') + cherrypy.request.query_string
+        return basepath
+
+
+    menu = htmlHead + '''<html>
 <body>
 <script>
 function validateForm()
 {
     var x=document.forms["in"]["value"].value;
     var url = '%(path)s';
-    if (x==null || x=="")
-      {
+    if (x==null || x=="") {
       alert("Value must be supplied");
       return false;
-      }
-    if (url.match(/~/))
-    {
-       url = url.replace(/~/,x);
     }
-    else
-    {
-        if (!/\/$/.test(url))
-            url = url + '/';
-        url = url + x;
-    }
-
-    document.forms["in"].action = url;
+    document.forms["in"].action = url.replace(/~/,x);
+    x = document.forms["in"].action;
     document.forms["in"]["value"].removeAttribute('name');
     var inputs = document.getElementsByTagName('input')
     
@@ -207,7 +208,8 @@ function validateForm()
         # TODO: There has to be a better way of doing this...
         self.extension = [''.join(self.extensions)]
         _vars = {k:getattr(self,k) for k in dir(self) if not k.startswith('_')}
-        _vars['path'] = cherrypy.request.script_name+ (self.relpath if self.relpath else cherrypy.request.path_info)
+        _vars['path'] = self.buildpath()
+        print _vars['path']
         _vars['extension'] = '\n\t'.join(self.extensions)
         return self.menu % _vars
 
