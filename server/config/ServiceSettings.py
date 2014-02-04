@@ -46,4 +46,4 @@ config_parms = ConfigArgs('settings',
                            ConfigArg('staticroot', help='path to static server files'),
                           ])
 
-settings = ConfigManager(config_parms, cfgfile=settings_filename)
+settings = ConfigManager(config_parms)

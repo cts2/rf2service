@@ -26,14 +26,15 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
-
-import cherrypy
 import os
+import cherrypy
+
 from string import Template
 from utils import URLUtil
 from cherrypy.lib.static import serve_file
 
 from server.config import Rf2Entries
+from auth.ihtsdoauth import *
 
 _curdir = os.path.join(os.getcwd(), os.path.dirname(__file__))
 
@@ -65,13 +66,15 @@ def row(path, args, label='',base_fcn='',fcn_desc='',fcn_sig=''):
     fmts_sig = formats(path, args)
     return fcn_tmpl.safe_substitute(locals())
 
+
 class Root(object):
 
     _cp_config = {
         'tools.sessions.on': True,
+        'tools.auth.on' : True,
         'tools.auth_basic.on': False,
         'tools.auth_basic.realm' : 'rf2',
-        'tools.auth_basic.checkpassword': False,
+        'tools.auth_basic.checkpassword': False
     }
 
     @cherrypy.expose

@@ -26,10 +26,13 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
-from server.converters.normalize import normalize
 
-
-def as_bsv(parser_object, **_):
-    (_, entryRows) = normalize(parser_object)
-    return '\t"' + '"\n\t"'.join(['|'.join([e.strify(fn) for fn in e._fieldNames]) for e in entryRows]) + '"', \
-           'text/plain;charset=UTF-8'
+def normalize(parser_object):
+    """ Split the return into a header row and a list of entries
+    """
+    if hasattr(parser_object, '_fieldNames'):
+        return parser_object, [parser_object]
+    elif hasattr(parser_object, 'entry') and len(parser_object.entry):
+        return parser_object.entry[0], parser_object.entry
+    else:
+        return None, []

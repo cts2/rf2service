@@ -48,5 +48,5 @@ config_parms = ConfigArgs('rf2entries',
                            ConfigArg('refMatchvalue', help='Sample Description Match Value', default='Append')
                            ])
 
-settings = ConfigManager(config_parms, cfgfile=settings_filename)
+settings = ConfigManager(config_parms)
 

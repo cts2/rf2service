@@ -26,8 +26,7 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
-
-from server.converters.totsv import normalize
+from server.converters.normalize import normalize
 
 entryTemplate="<entry>%s</entry>"
 tableTemplate = """<?xml version="1.0" encoding="UTF-8"?>

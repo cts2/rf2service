@@ -31,6 +31,7 @@
 import cherrypy
 import os
 import sys
+from config.ConfigManager import ConfigManager
 
 
 _curdir = os.path.join(os.getcwd(), os.path.dirname(__file__))
@@ -38,11 +39,12 @@ _curdir = os.path.join(os.getcwd(), os.path.dirname(__file__))
 # Site specific configuration variables.  These are two files because of an error (feature?)
 # in cherrypy that doesn't allow 'globals' and other namespaces in the same file...
 server_conf   = os.path.join(os.path.dirname(__file__), 'server.conf')
+cfg_conf = os.path.join(os.path.dirname(__file__), 'settings.conf')
 
 # Set ourselves up on the include path automatically
 sys.path.append(_curdir)
 
-
+ConfigManager.set_configfile(cfg_conf)
 
 def http_methods_allowed(methods=None):
     """ Filter to pass the supplied methods unless overridden """
@@ -68,14 +70,16 @@ from server.RESTDispatcher import dispatcher
 conf = {'/':
          {
             'request.dispatch' : dispatcher,
-            'tools.staticdir.root': os.path.join(_curdir,"static")
+            'tools.auth.on' : True,
+            'tools.sessions.on' : True,
+            'tools.staticdir.root': os.path.join(_curdir, "static")
          },
          '/html' : {
              'tools.staticdir.on' : True,
              'tools.staticdir.dir' : 'html'
          },
          '/favicon.ico': {'tools.staticfile.on': True,
-                          'tools.staticfile.filename': os.path.join(_curdir,'static','favicon.png')
+                          'tools.staticfile.filename': os.path.join(_curdir, 'static','favicon.png')
          },
      }
 

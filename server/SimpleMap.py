@@ -44,7 +44,7 @@ class SimpleMapEntries(RF2BaseNode):
     title = "Query RF2 SimpleMap Refset"
     label = "Map SCTID "
     value = settings.refSimpleMap
-    relpath = '/simplemap/?refset=~'
+    relpath = '/simplemap/~'
     _rsnames = SimpleMapDB().refset_names()
     extensions = RF2BaseNode.extensions + [global_iter_parms,
                                            _maps_tmpl % '\t\t\n'.join(_maplist_tmpl % e for e in _rsnames.items()),

@@ -32,6 +32,9 @@
 the RF2 parsers package, where basic types have C{_fieldnames} which name the fields in the output and
 iterator types have entries.
 """
+from server.converters.normalize import normalize
+
+
 def as_tsv(parser_object, **_):
     """
     @param parser_object:
@@ -49,12 +52,3 @@ def as_tsv(parser_object, **_):
     bodys = '\n'.join(['\t'.join([e.strify(fn) for fn in e._fieldNames]) for e in entryRows])
     return hdrs + '\n' + bodys, 'text/plain;charset=UTF-8'
 
-def normalize(parser_object):
-    """ Split the return into a header row and a list of entries
-    """
-    if hasattr(parser_object, '_fieldNames'):
-        return parser_object, [parser_object]
-    elif hasattr(parser_object, 'entry') and len(parser_object.entry):
-        return parser_object.entry[0], parser_object.entry
-    else:
-        return None, []

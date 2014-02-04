@@ -34,6 +34,7 @@ from server.Relationship import Relationship, Relationships, RelationshipsForSou
 from server.Language import LanguagesForConcept, LanguagesForDescription, Languages
 from server.SimpleMap import SimpleMapEntries
 from server.Root import Root
+from auth.ihtsdoauth import License
 
 # Note:  This function requires the python routes package - install with PIP
 
@@ -47,6 +48,8 @@ class Resource():
 
 print("Connecting resources")
 resources = [Resource(r'/', Root, action='index'),
+             Resource(r'/license', License, action='index'),
+             Resource(r'/submit', License, action='submit',method='POST'),
              Resource(r'/concepts', Concepts, action='index'),
              Resource(r'/concepts/:after', Concepts),
              Resource(r'/concepts/', Concepts),
@@ -87,8 +90,8 @@ resources = [Resource(r'/', Root, action='index'),
              Resource(r'/language', Languages, action='index' ),
 
              Resource(r'/simplemap', SimpleMapEntries, action='index'),
-             Resource(r'/simplemap/', SimpleMapEntries),
-             Resource(r'/simplemap?', SimpleMapEntries)]
+             Resource(r'/simplemap/:refset', SimpleMapEntries),
+             Resource(r'/simplemap/', SimpleMapEntries)]
 
 
 

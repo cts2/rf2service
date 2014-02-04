@@ -26,12 +26,18 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
-from server.converters.totsv import normalize
+from server.converters.normalize import normalize
 from rf2db.db.RF2LanguageFile import LanguageDB
 from rf2db.db.RF2DescriptionFile import DescriptionDB
+from rf2db.schema.rf2 import Iterator
 
 ldb = LanguageDB()
 ddb = DescriptionDB()
+
+cont_template = """<div class="tcount">%s entries returned</div>"""
+next_template = """<a href="%s"><button>Next Page</button></a>"""
+prev_template = """<a href="%s"><button>Prev Page</button></a>"""""
+
 
 doc_template = """<!DOCTYPE html>
 <html>
@@ -52,6 +58,7 @@ doc_template = """<!DOCTYPE html>
     <title>%(title)s</title>
 </head>
 <body>
+%(continuation)s
 <table border="1">
     <thead>
     <tr>
@@ -79,6 +86,7 @@ count_template = """<!DOCTYPE html>
         border-color: gray;
         background-color: lightgrey;
     }
+
 
  </style>
 <head>
@@ -122,4 +130,13 @@ def as_html(parser_object, **_):
             return "Unknown object type - cannot format", 'text/plain'
     headings = td_row( (False, e) for e in hdrRow._fieldNames)
     body = '\t\n'.join(row % (td_row( (e.issctid(fn), e.strify(fn)) for fn in e._fieldNames)) for e in entryRows)
+    continuation = ''
+    if isinstance(parser_object, Iterator):
+        continuation += cont_template % parser_object.numEntries
+        if parser_object.next:
+            continuation += next_template % parser_object.next
+        if parser_object.prev:
+            continuation += prev_template % parser_object.prev
+
+
     return doc_template % locals(), 'text/html;charset=UTF-8'
