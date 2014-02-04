@@ -31,7 +31,7 @@
 import cherrypy
 import os
 import sys
-from config.ConfigManager import ConfigManager
+
 
 
 _curdir = os.path.join(os.getcwd(), os.path.dirname(__file__))
@@ -43,7 +43,11 @@ cfg_conf = os.path.join(os.path.dirname(__file__), 'settings.conf')
 
 # Set ourselves up on the include path automatically
 sys.path.append(_curdir)
+# Add the RF2DB services onto the path
+sys.path.append(os.path.join(_curdir, '..', 'rf2db'))
+sys.path.append(os.path.join(_curdir, '..', 'ihtsdoauth'))
 
+from config.ConfigManager import ConfigManager
 ConfigManager.set_configfile(cfg_conf)
 
 def http_methods_allowed(methods=None):
