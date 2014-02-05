@@ -144,7 +144,7 @@ class BaseNode(object):
             and it contains the '~' metacharacter, then we just use it.  Otherwise, we add the value onto the end of
             the current path.
         """
-        basepath = cherrypy.request.script_name + (self.relpath if self.relpath else cherrypy.request.path_info)
+        basepath = urlutil.href_settings.root + (self.relpath if self.relpath else cherrypy.request.path_info)
         if basepath.find('~') < 0:
             basepath += ('' if basepath.endswith('/') else '/') + '~'
         if cherrypy.request.query_string:

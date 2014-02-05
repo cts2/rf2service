@@ -33,6 +33,7 @@ from server.Description import Description, Descriptions, DescriptionsForConcept
 from server.Relationship import Relationship, Relationships, RelationshipsForSource, RelationshipsForTarget, RelationshipsForPredicate
 from server.Language import LanguagesForConcept, LanguagesForDescription, Languages
 from server.SimpleMap import SimpleMapEntries
+from server.ServerConf import ServerConf
 from server.Root import Root
 from auth.ihtsdoauth import License
 
@@ -48,6 +49,7 @@ class Resource():
 
 print("Connecting resources")
 resources = [Resource(r'/', Root, action='index'),
+             Resource(r'/config', ServerConf),
              Resource(r'/license', License, action='index'),
              Resource(r'/submit', License, action='submit',method='POST'),
              Resource(r'/concepts', Concepts, action='index'),

@@ -82,7 +82,7 @@ class Root(object):
 
     @cherrypy.expose
     def default(self, *kwargs):
-        return ''.join(list(serve_file(os.path.join(_curdir,'..','static', *kwargs)))) % dict({'root':urlutil.base_uri()}, **(refEntries.asdict()))
+        return ''.join(list(serve_file(os.path.join(_curdir,'..','static', *kwargs)))) % dict({'href_root':urlutil.href_settings.root}, **(refEntries.asdict()))
 
 
 
