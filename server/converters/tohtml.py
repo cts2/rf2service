@@ -31,7 +31,7 @@ from server.config import ServiceSettings
 from rf2db.db.RF2LanguageFile import LanguageDB
 from rf2db.db.RF2DescriptionFile import DescriptionDB
 from rf2db.schema.rf2 import Iterator
-from server.utils import URLUtil
+from rf2db.utils import urlutil
 
 ldb = LanguageDB()
 ddb = DescriptionDB()
@@ -124,7 +124,7 @@ def as_html(parser_object, **_):
             pn = _pnFor(arg[1])
             cid = arg[1]
             cts2root = ServiceSettings.settings.cts2base
-            rf2root = URLUtil.baseURI()
+            rf2root = urlutil.base_uri()
             return (cts2a if arg[2] == 'conceptId' else a) % locals()
         return arg[1]
 
