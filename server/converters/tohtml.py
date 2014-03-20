@@ -101,8 +101,8 @@ count_template = """<!DOCTYPE html>
 
 td = """<td>%s</td>"""
 row = """<tr>%s</tr>"""
-a = "<span title='%(pn)s'><a href='%(rf2root)s/concept/%(cid)s/prefdescription'>%(cid)s</a></span>"
-cts2a = "<span title='%(pn)s'><a href='%(cts2root)s/entity/%(cid)s?format=html'>%(cid)s</a></span"
+a = "<span title='%(pn)s'><a href='%(rf2root)sconcept/%(cid)s/prefdescription'>%(cid)s</a></span>"
+cts2a = "<span title='%(pn)s'><a href='%(cts2root)sentity/%(cid)s?format=html'>%(cid)s</a></span"
 
 
 def as_html(parser_object, **_):
