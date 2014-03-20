@@ -31,6 +31,7 @@ from server.config import ServiceSettings
 from rf2db.db.RF2LanguageFile import LanguageDB
 from rf2db.db.RF2DescriptionFile import DescriptionDB
 from rf2db.schema.rf2 import Iterator
+from server.utils import URLUtil
 
 ldb = LanguageDB()
 ddb = DescriptionDB()
@@ -100,8 +101,8 @@ count_template = """<!DOCTYPE html>
 
 td = """<td>%s</td>"""
 row = """<tr>%s</tr>"""
-a = "<span title='%s'><a href='" + ServiceSettings.settings.root + "concept/%s/prefdescription'>%s</a></span>"
-cts2a = "<span title='%s'><a href='" + ServiceSettings.settings.cts2base + "entity/%s?format=html'>%s</a></span"
+a = "<span title='%(pn)s'><a href='%(rf2root)s/concept/%(cid)s/prefdescription'>%(cid)s</a></span>"
+cts2a = "<span title='%(pn)s'><a href='%(cts2root)s/entity/%(cid)s?format=html'>%(cid)s</a></span"
 
 
 def as_html(parser_object, **_):
@@ -119,8 +120,13 @@ def as_html(parser_object, **_):
     @return: tab separated value list of parser_object
     """
     def a_link(arg):
-        rstr = cts2a if arg[2] == 'conceptId' else a
-        return rstr % (_pnFor(arg[1]), arg[1], arg[1]) if arg[0] else arg[1]
+        if arg[0]:
+            pn = _pnFor(arg[1])
+            cid = arg[1]
+            cts2root = ServiceSettings.settings.cts2base
+            rf2root = URLUtil.baseURI()
+            return (cts2a if arg[2] == 'conceptId' else a) % locals()
+        return arg[1]
 
     def td_row(items):
         return '\t\n'.join(td % a_link(e) for e in items)
