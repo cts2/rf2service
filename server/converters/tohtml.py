@@ -100,7 +100,7 @@ count_template = """<!DOCTYPE html>
 
 td = """<td>%s</td>"""
 row = """<tr>%s</tr>"""
-a = """<span title='%s'><a href="/rf2/concept/%s/prefdescription">%s</a></span>"""
+a = "<span title='%s'><a href='" + ServiceSettings.settings.root + "concept/%s/prefdescription'>%s</a></span>"
 cts2a = "<span title='%s'><a href='" + ServiceSettings.settings.cts2base + "entity/%s?format=html'>%s</a></span"
 
 

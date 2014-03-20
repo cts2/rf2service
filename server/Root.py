@@ -26,11 +26,12 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
-
+import os
 
 from string import Template
 from rf2db.utils import urlutil
 from cherrypy.lib.static import serve_file
+import cherrypy
 
 from server.config import Rf2Entries
 from auth.ihtsdoauth import *
