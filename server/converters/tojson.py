@@ -31,36 +31,16 @@ import cherrypy
 import socket
 from server.converters.toxml import as_xml
 from server.config import ServiceSettings
-from py4j.java_gateway import JavaGateway, GatewayClient, Py4JError, Py4JNetworkError
+from XSLTGateway import XSLTGateway
 
-
+gw = XSLTGateway(ServiceSettings.settings.gatewayport)
 def as_json(rval, ns=None, **kwargs):
-    """ Convert an XML rendering to JSON using an external py4j xml to josn conversion package """
+    """ Convert an XML rendering to JSON using an external py4j xml to json conversion package """
     rval, mimetype = as_xml(rval,ns,**kwargs)
     if mimetype.startswith('application/xml;'):
-        if not converter_link:
-            newConverter()
-        if not converter_link:
-            raise cherrypy.HTTPError(503, "XML to JSON converter is unavailable")
-        try:
-            rval = converter_link.toJson(rval)
-            mimetype = 'application/json;charset=UTF-8'
-        except Py4JError:
-            newConverter()
-            rval = converter_link.toJson(rval)
+        json = gw.toJSON(rval)
+        if json:
+            rval = json
             mimetype = 'application/json;charset=UTF-8'
     return rval, mimetype
 
-converter_link = None
-def newConverter():
-    global converter_link
-    print "Starting Java gateway on port: %s" % ServiceSettings.settings.gatewayport
-    try:
-        converter_link = JavaGateway(GatewayClient(port=int(ServiceSettings.settings.gatewayport))).jvm.org.json.XMLToJson()
-    except socket.error as e:
-        print e
-        converter_link = None
-    except Py4JNetworkError as e:
-        print e
-
-newConverter()
