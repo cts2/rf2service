@@ -48,14 +48,7 @@
             </tr>
             <tr>
                 <td>Concept</td>
-                <td><a href="%(href_root)s/concept">Read by id</a></td>
-                <td><a href="%(href_root)s/concept/%(refConcept)s"><button>XML</button></a></td>
-                <td><a href="%(href_root)s/concept/%(refConcept)s?format=tsv"><button>TSV</button></a></td>
-                <td><a href="%(href_root)s/concept/%(refConcept)s?format=ditatable"><button>DITA</button></a></td>
-                <td><a href="%(href_root)s/concept/%(refConcept)s?format=cntable"><button>CollabNet</button></a></td>
-                <td><a href="%(href_root)s/concept/%(refConcept)s?format=json"><button>JSON</button></a></td>
-                <td><a href="%(href_root)s/concept/%(refConcept)s?format=html"><button>HTML</button></a></td>
-                <td>/concept/{conceptid}</td>
+                <%include file="/format.html" args="base='concept', exref='concept/'+refConcept, desc='Read by id', sig='/concept/{conceptid}'"/>
                 <td class="parms">
                     <table class="parmstable">
                     <tr><td>active</td>
@@ -73,14 +66,7 @@
             </tr>
             <tr>
                 <td></td>
-                <td><a href="%(href_root)s/description/concept">Read concept for description id</a></td>
-                <td><a href="%(href_root)s/description/%(refDesc)s/concept?format=xml"><button>XML</button></a></td>
-                <td><a href="%(href_root)s/description/%(refDesc)s/concept?format=tsv"><button>TSV</button></a></td>
-                <td><a href="%(href_root)s/description/%(refDesc)s/concept?format=ditatable"><button>DITA</button></a></td>
-                <td><a href="%(href_root)s/description/%(refDesc)s/concept?format=cntable"><button>CollabNet</button></a></td>
-                <td><a href="%(href_root)s/description/%(refDesc)s/concept?format=json"><button>JSON</button></a></td>
-                <td><a href="%(href_root)s/description/%(refDesc)s/concept?format=html"><button>HTML</button></a></td>
-                <td>/description/{descid}/concept</td>
+                <%include file="/format.html" args="base='description/concept', exref='description/'+refDesc+'/concept', desc='Read concept for description id', sig='/description/{descid}/concept'"/>
                 <td class="parms">
                     <table class="parmstable">
                     <tr><td>active</td>
@@ -98,14 +84,7 @@
             </tr>
             <tr>
                 <td>Concepts</td>
-                <td><a href="%(href_root)s/concepts">List concepts</a></td>
-                <td><a href="%(href_root)s/concepts/?format=xml"><button>XML</button></a></td>
-                <td><a href="%(href_root)s/concepts/?format=tsv"><button>TSV</button></a></td>
-                <td><a href="%(href_root)s/concepts/?format=ditatable"><button>DITA</button></a></td>
-                <td><a href="%(href_root)s/concepts/?format=cntable"><button>CollabNet</button></a></td>
-                <td><a href="%(href_root)s/concepts/?format=json"><button>JSON</button></a></td>
-                <td><a href="%(href_root)s/concepts/?format=html"><button>HTML</button></a></td>
-                <td class="signature">/concepts/</td>
+                <%include file="/format.html" args="base='concepts', exref='concepts/', desc='List concepts', sig='/concepts'"/>
                 <td class="parms">
                     <table class="parmstable">
                         <tr>
@@ -150,14 +129,7 @@
             </tr>
             <tr>
                  <td>Description</td>
-                 <td><a href="%(href_root)s/description">Read by id</a></td>
-                 <td><a href="%(href_root)s/description/%(refDesc)s?format=xml"><button>XML</button></a></td>
-                 <td><a href="%(href_root)s/description/%(refDesc)s?format=tsv"><button>TSV</button></a></td>
-                 <td><a href="%(href_root)s/description/%(refDesc)s?format=ditatable"><button>DITA</button></a></td>
-                 <td><a href="%(href_root)s/description/%(refDesc)s?format=cntable"><button>CollabNet</button></a></td>
-                 <td><a href="%(href_root)s/description/%(refDesc)s?format=json"><button>JSON</button></a></td>
-                 <td><a href="%(href_root)s/description/%(refDesc)s?format=html"><button>HTML</button></a></td>
-                 <td>/description/{descid}</td>
+                 <%include file="/format.html" args="base='description', exref='description/'+refDesc, desc='Read by id', sig='/description/{descid}'"/>
                  <td class="parms">
                      <table class="parmstable">
                         <tr>
@@ -180,14 +152,7 @@
              </tr>
              <tr>
                 <td>Descriptions</td>
-                <td><a href="%(href_root)s/concept/descriptions">Descriptions for a concept</a></td>
-                <td><a href="%(href_root)s/concept/%(refConcept)s/descriptions?format=xml"><button>XML</button></a></td>
-                <td><a href="%(href_root)s/concept/%(refConcept)s/descriptions?format=tsv"><button>TSV</button></a></td>
-                <td><a href="%(href_root)s/concept/%(refConcept)s/descriptions?format=ditatable"><button>DITA</button></a></td>
-                <td><a href="%(href_root)s/concept/%(refConcept)s/descriptions?format=cntable"><button>CollabNet</button></a></td>
-                <td><a href="%(href_root)s/concept/%(refConcept)s/descriptions?format=json"><button>JSON</button></a></td>
-                <td><a href="%(href_root)s/concept/%(refConcept)s/descriptions?format=html"><button>HTML</button></a></td>
-                <td class="signature">/concept/{concept}/descriptions</td>
+                <%include file="/format.html" args="base='concept/descriptions', exref='concept/'+refConcept+'/descriptions', desc='Descriptions for a concept', sig='/concept/{concept}/descriptions'"/>
                 <td class="parms">
                     <table class="parmstable">
                         <tr>
@@ -224,14 +189,7 @@
             </tr>
             <tr>
                 <td></td>
-                <td><a href="%(href_root)s/concept/prefdescription">Preferred description for a concept</a></td>
-                <td><a href="%(href_root)s/concept/%(refConcept)s/prefdescription?format=xml"><button>XML</button></a></td>
-                <td><a href="%(href_root)s/concept/%(refConcept)s/prefdescription?format=tsv"><button>TSV</button></a></td>
-                <td><a href="%(href_root)s/concept/%(refConcept)s/prefdescription?format=ditatable"><button>DITA</button></a></td>
-                <td><a href="%(href_root)s/concept/%(refConcept)s/prefdescription?format=cntable"><button>CollabNet</button></a></td>
-                <td><a href="%(href_root)s/concept/%(refConcept)s/prefdescription?format=json"><button>JSON</button></a></td>
-                <td><a href="%(href_root)s/concept/%(refConcept)s/prefdescription?format=html"><button>HTML</button></a></td>
-                <td class="signature">/concept/{concept}/prefdescription</td>
+                <%include file="/format.html" args="base='concept/prefdescription', exref='concept/'+refConcept+'/prefdescription', desc='Preferred description for a concept', sig='/concept/{concept}/prefdescription'"/>
                 <td class="parms">
                     <table class="parmstable">
                         <tr>
@@ -260,14 +218,7 @@
             </tr>
             <tr>
                 <td></td>
-                <td><a href="%(href_root)s/descriptions">Matching descriptions</a></td>
-                <td><a href="%(href_root)s/descriptions/%(refMatchvalue)s?format=xml"><button>XML</button></a></td>
-                <td><a href="%(href_root)s/descriptions/%(refMatchvalue)s?format=tsv"><button>TSV</button></a></td>
-                <td><a href="%(href_root)s/descriptions/%(refMatchvalue)s?format=ditatable"><button>DITA</button></a></td>
-                <td><a href="%(href_root)s/descriptions/%(refMatchvalue)s?format=cntable"><button>CollabNet</button></a></td>
-                <td><a href="%(href_root)s/descriptions/%(refMatchvalue)s?format=json"><button>JSON</button></a></td>
-                <td><a href="%(href_root)s/descriptions/%(refMatchvalue)s?format=html"><button>HTML</button></a></td>
-                <td>/descriptions/{matchvalue}</td>
+                <%include file="/format.html" args="base='descriptions', exref='descriptions/'+refMatchvalue, desc='Matching descriptions', sig='/descriptions/{matchvalue}'"/>
                  <td class="parms">
                     <table class="parmstable">
                         <tr>
@@ -323,14 +274,7 @@
             </tr>
              <tr>
                  <td>Relationship</td>
-                 <td><a href="%(href_root)s/relationship">Read by Id</a></td>
-                 <td><a href="%(href_root)s/relationship/%(refRel)s?format=xml"><button>XML</button></a></td>
-                 <td><a href="%(href_root)s/relationship/%(refRel)s?format=tsv"><button>TSV</button></a></td>
-                 <td><a href="%(href_root)s/relationship/%(refRel)s?format=ditatable"><button>DITA</button></a></td>
-                 <td><a href="%(href_root)s/relationship/%(refRel)s?format=cntable"><button>CollabNet</button></a></td>
-                 <td><a href="%(href_root)s/relationship/%(refRel)s?format=json"><button>JSON</button></a></td>
-                 <td><a href="%(href_root)s/relationship/%(refRel)s?format=html"><button>HTML</button></a></td>
-                  <td>/relationship/{relid}</td>
+                 <%include file="/format.html" args="base='relationship', exref='relationship/'+refRel, desc='Read by Id', sig='/relationship/{relid}'"/>
                   <td class="parms">
                      <table class="parmstable">
                         <tr>
@@ -369,14 +313,7 @@
 
              <tr>
                  <td>Relationships</td>
-                 <td><a href="%(href_root)s/relationships/source">Relationships for source concept</a></td>
-                 <td><a href="%(href_root)s/relationships/source/%(refConcept)s?format=xml"><button>XML</button></a></td>
-                 <td><a href="%(href_root)s/relationships/source/%(refConcept)s?format=tsv"><button>TSV</button></a></td>
-                 <td><a href="%(href_root)s/relationships/source/%(refConcept)s?format=ditatable"><button>DITA</button></a></td>
-                 <td><a href="%(href_root)s/relationships/source/%(refConcept)s?format=cntable"><button>CollabNet</button></a></td>
-                 <td><a href="%(href_root)s/relationships/source/%(refConcept)s?format=json"><button>JSON</button></a></td>
-                 <td><a href="%(href_root)s/relationships/source/%(refConcept)s?format=html"><button>HTML</button></a></td>
-                 <td>/relationships/source/{concept}</td>
+                 <%include file="/format.html" args="base='relationships/source', exref='relationships/source/'+refConcept, desc='Relationships for source concept', sig='/relationships/source/{concept}'"/>
                   <td class="parms">
                      <table class="parmstable">
 
@@ -433,23 +370,11 @@
              </tr>
              <tr>
                  <td></td>
-                 <td><a href="%(href_root)s/relationships/predicate">Relationships for relationship type</a></td>
-                 <td><a href="%(href_root)s/relationships/predicate/%(refPredicate)s?format=xml"><button>XML</button></a></td>
-                 <td><a href="%(href_root)s/relationships/predicate/%(refPredicate)s?format=tsv"><button>TSV</button></a></td>
-                 <td><a href="%(href_root)s/relationships/predicate/%(refPredicate)s?format=ditatable"><button>DITA</button></a></td>
-                 <td><a href="%(href_root)s/relationships/predicate/%(refPredicate)s?format=cntable"><button>CollabNet</button></a></td>
-                 <td><a href="%(href_root)s/relationships/predicate/%(refPredicate)s?format=json"><button>JSON</button></a></td>
-                 <td><a href="%(href_root)s/relationships/predicate/%(refPredicate)s?format=html"><button>HTML</button></a></td>
+                 <%include file="/format.html" args="base='relationships/predicate', exref='relationships/predicate/'+refPredicate, desc='Relationships for relationship type', sig='/relationships/predicate/{predicate}'"/>
              </tr>
              <tr>
                  <td></td>
-                 <td><a href="%(href_root)s/relationships/target">Relationships for target concept</a></td>
-                 <td><a href="%(href_root)s/relationships/target/%(refTargetConcept)s?format=xml"><button>XML</button></a></td>
-                 <td><a href="%(href_root)s/relationships/target/%(refTargetConcept)s?format=tsv"><button>TSV</button></a></td>
-                 <td><a href="%(href_root)s/relationships/target/%(refTargetConcept)s?format=ditatable"><button>DITA</button></a></td>
-                 <td><a href="%(href_root)s/relationships/target/%(refTargetConcept)s?format=cntable"><button>CollabNet</button></a></td>
-                 <td><a href="%(href_root)s/relationships/target/%(refTargetConcept)s?format=json"><button>JSON</button></a></td>
-                 <td><a href="%(href_root)s/relationships/target/%(refTargetConcept)s?format=html"><button>HTML</button></a></td>
+                 <%include file="/format.html" args="base='relationships/target', exref='relationships/target/'+refTargetConcept, desc='Relationships for target concept', sig='/relationships/target/{target}'"/>
              </tr>
         </table>
          <button class="parmsButton" onClick="show_hide()">Show Parms</button>
@@ -459,66 +384,43 @@
                  <th>Refset</th>
                  <th>Operation</th>
                  <th colspan="6">Formats</th>
+                 <th>Signature</th>
              </tr>
              <tr>
                  <td>Language</td>
-                 <td><a href="%(href_root)s/description/languages">Read by Description Id</a></td>
-                 <td><a href="%(href_root)s/description/%(refDesc)s/languages?format=xml"><button>XML</button></a></td>
-                 <td><a href="%(href_root)s/description/%(refDesc)s/languages?format=tsv"><button>TSV</button></a></td>
-                 <td><a href="%(href_root)s/description/%(refDesc)s/languages?format=ditatable"><button>DITA</button></a></td>
-                 <td><a href="%(href_root)s/description/%(refDesc)s/languages?format=cntable"><button>CollabNet</button></a></td>
-                 <td><a href="%(href_root)s/description/%(refDesc)s/languages?format=json"><button>JSON</button></a></td>
-                 <td><a href="%(href_root)s/description/%(refDesc)s/languages?format=html"><button>HTML</button></a></td>
+                 <%include file="/format.html" args="base='description/languages', exref='description/'+refDesc+'/languages', desc='Read by Description Id', sig='/description/{descId}/languages'"/>
              </tr>
             <tr>
                 <td></td>
-                <td><a href="%(href_root)s/concept/languages">Read by Concept Id</a></td>
-                <td><a href="%(href_root)s/concept/%(refConcept)s/languages?format=xml"><button>XML</button></a></td>
-                <td><a href="%(href_root)s/concept/%(refConcept)s/languages?format=tsv"><button>TSV</button></a></td>
-                <td><a href="%(href_root)s/concept/%(refConcept)s/languages?format=ditatable"><button>DITA</button></a></td>
-                <td><a href="%(href_root)s/concept/%(refConcept)s/languages?format=cntable"><button>CollabNet</button></a></td>
-                <td><a href="%(href_root)s/concept/%(refConcept)s/languagess?format=json"><button>JSON</button></a></td>
-                <td><a href="%(href_root)s/concept/%(refConcept)s/languagess?format=html"><button>HTML</button></a></td>
+                <%include file="/format.html" args="base='concept/languages', exref='concept/'+refConcept+'/languages', desc='Read by Concept Id', sig='/concept/{conceptId}/languages'"/>
             </tr>
             <tr>
                 <td>Simple</td>
-                <td><a href="%(href_root)s/simplerefset/refset">Read by Refset Id</a></td>
-                <td><a href="%(href_root)s/simplerefset/refset/%(refSet)s?format=tsv"><button>XML</button></a></td>
-                <td><a href="%(href_root)s/simplerefset/refset/%(refSet)s?format=ditatable"><button>DITA</button></a></td>
-                <td><a href="%(href_root)s/simplerefset/refset/%(refSet)s?format=cntable"><button>CollabNet</button></a></td>
-                <td><a href="%(href_root)s/simplerefset/refset/%(refSet)s?format=json"><button>JSON</button></a></td>
+                <%include file="/format.html" args="base='simplerefset', exref='simplerefset/'+refSet, desc='Read by Refset Id', sig='/simplerefset/{refsetId}'"/>
             </tr>
             <tr>
                 <td></td>
-                <td><a href="%(href_root)s/simplerefset/component">Read by Referenced Component</a></td>
-                <td><a href="%(href_root)s/simplerefset/component/%(refComponent)s?format=tsv"><button>XML</button></a></td>
-                <td><a href="%(href_root)s/simplerefset/component/%(refComponent)s?format=ditatable"><button>DITA</button></a></td>
-                <td><a href="%(href_root)s/simplerefset/component/%(refComponent)s?format=cntable"><button>CollabNet</button></a></td>
-                <td><a href="%(href_root)s/simplerefset/component/%(refComponent)s?format=json"><button>JSON</button></a></td>
+                <%include file="/format.html" args="base='simplerefset/component', exref='simplerefset/component/'+refComponent, desc='Read by Referenced Component', sig='/simplerefset/component/{componentId}'"/>
             </tr>
             <tr>
                 <td>Simple Map</td>
-                <td><a href="%(href_root)s/simplemap">Read by Map Id</a></td>
-                <td><a href="%(href_root)s/simplemap/%(refSimpleMap)s?format=tsv"><button>XML</button></a></td>
-                <td><a href="%(href_root)s/simplemap/%(refSimpleMap)s?format=ditatable"><button>DITA</button></a></td>
-                <td><a href="%(href_root)s/simplemap/%(refSimpleMap)s?format=cntable"><button>CollabNet</button></a></td>
-                <td><a href="%(href_root)s/simplemap/%(refSimpleMap)s?format=json"><button>JSON</button></a></td>
+                <%include file="/format.html" args="base='simplemap', exref='simplemap/'+refSimpleMap, desc='Read by Map Id', sig='/simplemap/{mapId}'"/>
             </tr>
             <tr>
                 <td></td>
-                <td><a href="%(href_root)s/simplemap/source">Map for source concept</a></td>
-                <td><a href="%(href_root)s/simplemap/%(refSimpleMap)s/source/%(refMapSource)s?format=tsv"><button>XML</button></a></td>
-                <td><a href="%(href_root)s/simplemap/%(refSimpleMap)s/source/%(refMapSource)s?format=ditatable"><button>DITA</button></a></td>
-                <td><a href="%(href_root)s/simplemap/%(refSimpleMap)s/source/%(refMapSource)s?format=cntable"><button>CollabNet</button></a></td>
-                <td><a href="%(href_root)s/simplemap/%(refSimpleMap)s/source/%(refMapSource)s?format=json"><button>JSON</button></a></td>
+                <%include file="/format.html" args="base='simplemap/source', exref='simplemap/source/'+refMapSource, desc='Maps for source concept', sig='/simplemap/source/{sourceId}'"/>
             </tr>
             <tr>
                 <td></td>
-                <td><a href="%(href_root)s/simplemap/source">Map for target</a></td>
-                <td><a href="%(href_root)s/simplemap/%(refSimpleMap)s/target/%(refMapTarget)s?format=tsv"><button>XML</button></a></td>
-                <td><a href="%(href_root)s/simplemap/%(refSimpleMap)s/target/%(refMapTarget)s?format=ditatable"><button>DITA</button></a></td>
-                <td><a href="%(href_root)s/simplemap/%(refSimpleMap)s/target/%(refMapTarget)s?format=cntable"><button>CollabNet</button></a></td>
-                <td><a href="%(href_root)s/simplemap/%(refSimpleMap)s/target/%(refMapTarget)s?format=json"><button>JSON</button></a></td>
+                <%include file="/format.html" args="base='simplemap/source', exref='simplemap/'+refSimpleMap+'/source/'+refMapSource, desc='Maps for source concept in refset', sig='/simplemap/{mapId}/source/{sourceId}'"/>
+            </tr>
+            <tr>
+                <td></td>
+                <%include file="/format.html" args="base='simplemap/target', exref='simplemap/target/'+refMapTarget, desc='Maps for target concept', sig='/simplemap/target/{target}'"/>
+            </tr>
+            <tr>
+                <td></td>
+                <%include file="/format.html" args="base='simplemap/target', exref='simplemap/'+refSimpleMap+'/target/'+refMapTarget, desc='Maps for target in refset', sig='/simplemap/{mapId}/target/{target}'"/>
             </tr>
         </table>
         <button class="parmsButton" onClick="show_hide()">Show Parms</button>

@@ -32,7 +32,7 @@ from server.Concept import Concept, Concepts
 from server.Description import Description, Descriptions, DescriptionsForConcept, ConceptForDescription, PreferredDescriptionForConcept
 from server.Relationship import Relationship, Relationships, RelationshipsForSource, RelationshipsForTarget, RelationshipsForPredicate
 from server.Language import LanguagesForConcept, LanguagesForDescription, Languages
-from server.SimpleMap import SimpleMapEntries
+from server.SimpleMap import SimpleMapByMapId, SimpleMapForSource, SimpleMapForTarget
 from server.ServerConf import ServerConf
 from server.Root import Root
 from auth.ihtsdoauth import License
@@ -91,9 +91,15 @@ resources = [Resource(r'/', Root, action='index'),
 
              Resource(r'/language', Languages, action='index' ),
 
-             Resource(r'/simplemap', SimpleMapEntries, action='index'),
-             Resource(r'/simplemap/:refset', SimpleMapEntries),
-             Resource(r'/simplemap/', SimpleMapEntries)]
+             Resource(r'/simplemap/source/:component', SimpleMapForSource),
+             Resource(r'/simplemap/:refset/source/:component', SimpleMapForSource),
+             Resource(r'/simplemap/source', SimpleMapForSource, action='index'),
+             Resource(r'/simplemap/target/:target', SimpleMapForTarget),
+             Resource(r'/simplemap/:refset/target/:target', SimpleMapForTarget),
+             Resource(r'/simplemap/target', SimpleMapForTarget, action='index'),
+             Resource(r'/simplemap/:refset', SimpleMapByMapId),
+             Resource(r'/simplemap', SimpleMapByMapId, action='index'),
+             Resource(r'/simplemap/', SimpleMapByMapId)]
 
 
 

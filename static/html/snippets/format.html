@@ -1,14 +1,9 @@
-<html>
-<body>
-<tr>
-                            <td>format</td>
-                            <td><i>xml</i><br/>
-                                <i>tsv</i><br/>
-                                <i>ditatable</i><br/>
-                                <i>cntable</i><br/>
-                                <i>json</i><br/>
-                                <i>html</i><br/>
-                            </td>
-</tr>
-</body>
-</html>
+<%page args="href_root, base, exref, desc, sig"/>
+<td><a href="${href_root}/${base}">${desc}</a></td>
+<td><a href="${href_root}/${exref}?format=xml"><button>XML</button></a></td>
+<td><a href="${href_root}/${exref}?format=tsv"><button>TSV</button></a></td>
+<td><a href="${href_root}/${exref}?format=ditatable"><button>DITA</button></a></td>
+<td><a href="${href_root}/${exref}?format=cntable"><button>CollabNet</button></a></td>
+<td><a href="${href_root}/${exref}?format=json"><button>JSON</button></a></td>
+<td><a href="${href_root}/${exref}"><button>HTML</button></a></td>
+<td>${sig}</td>

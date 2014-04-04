@@ -29,9 +29,9 @@
 import os
 
 from string import Template
-from rf2db.utils import urlutil
 from cherrypy.lib.static import serve_file
-import cherrypy
+from mako.template import Template
+from mako.lookup import TemplateLookup
 
 from server.config import Rf2Entries
 from auth.ihtsdoauth import *
@@ -77,9 +77,13 @@ class Root(object):
         'tools.auth_basic.checkpassword': False
     }
 
+    htmldir = os.path.join(_curdir,'..','static','html')
     @cherrypy.expose
     def index(self):
-        return self.default('html','rf2.html')
+        mylookup = TemplateLookup(directories=[os.path.join(self.htmldir, 'snippets')])
+        mytemplate = Template(filename=os.path.join(self.htmldir,'rf2.html'), lookup=mylookup)
+        return mytemplate.render(**dict({'href_root':urlutil.href_settings.root}, **(refEntries.asdict())))
+
 
     @cherrypy.expose
     def default(self, *kwargs):

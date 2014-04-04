@@ -38,29 +38,16 @@ _maps_tmpl = """
             <br/><b>Restrict to map id(s):</b>
             %s
         </p>"""
-_maplist_tmpl = """<input type="checkbox" name="refsetid" value=%s>%s</input>"""
+_maplist_tmpl = """<input type="checkbox" name="refset" value=%s>%s</input>"""
 
-class SimpleMapEntries(RF2BaseNode):
-    title = "Query RF2 SimpleMap Refset"
-    label = "Map SCTID "
-    value = settings.refSimpleMap
-    relpath = '/simplemap/~'
-    _rsnames = SimpleMapDB().refset_names()
-    extensions = RF2BaseNode.extensions + [global_iter_parms,
-                                           _maps_tmpl % '\t\t\n'.join(_maplist_tmpl % e for e in _rsnames.items()),
-                                           """<p>
-<b>Map source:</b><input type="number" name="component"/>
-<b>Map target:</b><input type="text" name="target"/>
-</p>"""]
+simplemap_db = SimpleMapDB()
 
-    simplemap_db = SimpleMapDB()
-
-    @expose
-    def default(self, **kwargs):
-        if not self.simplemap_db.simplemap_list_parms().validate(**kwargs):
-            return None, (404, self.simplemap_db.simplemap_list_parms().invalidMessage(**kwargs))
-        parms = self.simplemap_db.simplemap_list_parms().parse(**kwargs)
-        dbrec = self.simplemap_db.as_reference_set(self.simplemap_db.get_simple_map(parms),parms)
+class SimpleMapBase(object):
+    def common(self, **kwargs):
+        if not simplemap_db.simplemap_list_parms().validate(**kwargs):
+            return None, (404, simplemap_db.simplemap_list_parms().invalidMessage(**kwargs))
+        parms = simplemap_db.simplemap_list_parms().parse(**kwargs)
+        dbrec = simplemap_db.as_reference_set(simplemap_db.get_simple_map(parms),parms)
         if dbrec: return dbrec
         rtn_message = "Simple map for"
         rtn_message += " refset %s" % parms.refset if parms.refset else ''
@@ -69,7 +56,51 @@ class SimpleMapEntries(RF2BaseNode):
         rtn_message += " not found"
         return None, (404, rtn_message)
 
+class SimpleMapByMapId(RF2BaseNode, SimpleMapBase):
+    title = "Query RF2 SimpleMap Refset"
+    label = "Map SCTID"
+    value = settings.refSimpleMap
+    relpath = '/simplemap/~'
+    extensions = RF2BaseNode.extensions + [global_iter_parms]
 
+    @expose
+    def default(self, **kwargs):
+        return self.common(**kwargs)
+
+class SimpleMapForSource(RF2BaseNode, SimpleMapBase):
+    title = "Query RF2 SimpleMap Refset"
+    label = "Source concept "
+    value = settings.refMapSource
+    relpath = '/simplemap/source/~'
+    _rsnames = SimpleMapDB().refset_names()
+    extensions = RF2BaseNode.extensions + [global_iter_parms,
+                                           _maps_tmpl % '\t\t\n'.join(_maplist_tmpl % e for e in _rsnames.items()),
+                                           """<p>
+<b>Map target:</b><input type="text" name="target"/>
+</p>"""]
+
+
+    @expose
+    def default(self, **kwargs):
+        return self.common(**kwargs)
+
+
+class SimpleMapForTarget(RF2BaseNode, SimpleMapBase):
+    title = "Query RF2 SimpleMap Refset"
+    label = "Target concept "
+    value = settings.refMapSource
+    relpath = '/simplemap/target/~'
+    _rsnames = SimpleMapDB().refset_names()
+    extensions = RF2BaseNode.extensions + [global_iter_parms,
+                                           _maps_tmpl % '\t\t\n'.join(_maplist_tmpl % e for e in _rsnames.items()),
+                                           """<p>
+<b>Map target:</b><input type="text" name="target"/>
+</p>"""]
+
+
+    @expose
+    def default(self, **kwargs):
+        return self.common(**kwargs)
 
 
 
