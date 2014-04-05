@@ -56,7 +56,7 @@
  <h2 class="panel-title">Primary Tables</h2>
  </div>
             </div>
-        <%include file="/showhide.html"/>
+        <%include file="/showhide.inc"/>
         <table class="table table-bordered table-condensed">
         <thead>
             <tr>
@@ -70,7 +70,7 @@
         <tbody>
             <tr>
                 <td>Concept</td>
-                <%include file="/format.html" args="base='concept', exref='concept/'+refConcept, desc='Read by id', sig='/concept/{conceptid}'"/>
+                <%include file="/format.inc" args="base='concept', exref='concept/'+refConcept, desc='Read by id', sig='/concept/{conceptid}'"/>
                 <td class="parms">
                     <table class="parmstable">
                         <%include file="/baseparms.inc"/>
@@ -79,7 +79,7 @@
             </tr>
             <tr>
                 <td></td>
-                <%include file="/format.html" args="base='description/concept', exref='description/'+refDesc+'/concept', desc='Read concept for description id', sig='/description/{descid}/concept'"/>
+                <%include file="/format.inc" args="base='description/concept', exref='description/'+refDesc+'/concept', desc='Read concept for description id', sig='/description/{descid}/concept'"/>
                 <td class="parms">
                     <table class="parmstable">
                         <%include file="/baseparms.inc"/>
@@ -88,7 +88,7 @@
             </tr>
             <tr>
                 <td>Concepts</td>
-                <%include file="/format.html" args="base='concepts', exref='concepts/', desc='List concepts', sig='/concepts'"/>
+                <%include file="/format.inc" args="base='concepts', exref='concepts/', desc='List concepts', sig='/concepts'"/>
                 <td class="parms">
                     <table class="parmstable">
                          <%include file="/baseparms.inc"/>
@@ -103,7 +103,7 @@
             </tr>
             <tr>
                  <td>Description</td>
-                 <%include file="/format.html" args="base='description', exref='description/'+refDesc, desc='Read by id', sig='/description/{descid}'"/>
+                 <%include file="/format.inc" args="base='description', exref='description/'+refDesc, desc='Read by id', sig='/description/{descid}'"/>
                 <td class="parms">
                     <table class="parmstable">
                         <%include file="/baseparms.inc"/>
@@ -112,7 +112,7 @@
              </tr>
              <tr>
                 <td>Descriptions</td>
-                <%include file="/format.html" args="base='concept/descriptions', exref='concept/'+refConcept+'/descriptions', desc='Descriptions for a concept', sig='/concept/{concept}/descriptions'"/>
+                <%include file="/format.inc" args="base='concept/descriptions', exref='concept/'+refConcept+'/descriptions', desc='Descriptions for a concept', sig='/concept/{concept}/descriptions'"/>
                 <td class="parms">
                     <table class="parmstable">
                          <%include file="/baseparms.inc"/>
@@ -123,7 +123,7 @@
             </tr>
             <tr>
                 <td></td>
-                <%include file="/format.html" args="base='concept/prefdescription', exref='concept/'+refConcept+'/prefdescription', desc='Preferred description for a concept', sig='/concept/{concept}/prefdescription'"/>
+                <%include file="/format.inc" args="base='concept/prefdescription', exref='concept/'+refConcept+'/prefdescription', desc='Preferred description for a concept', sig='/concept/{concept}/prefdescription'"/>
                 <td class="parms">
                    <table class="parmstable">
                          <%include file="/baseparms.inc"/>
@@ -133,7 +133,7 @@
             </tr>
             <tr>
                 <td></td>
-                <%include file="/format.html" args="base='descriptions', exref='descriptions/'+refMatchvalue, desc='Matching descriptions', sig='/descriptions/{matchvalue}'"/>
+                <%include file="/format.inc" args="base='descriptions', exref='descriptions/'+refMatchvalue, desc='Matching descriptions', sig='/descriptions/{matchvalue}'"/>
                  <td class="parms">
                     <table class="parmstable">
                          <%include file="/baseparms.inc"/>
@@ -160,7 +160,7 @@
             </tr>
              <tr>
                  <td>Relationship</td>
-                 <%include file="/format.html" args="base='relationship', exref='relationship/'+refRel, desc='Read by Id', sig='/relationship/{relid}'"/>
+                 <%include file="/format.inc" args="base='relationship', exref='relationship/'+refRel, desc='Read by Id', sig='/relationship/{relid}'"/>
                   <td class="parms">
                      <table class="parmstable">
                          <%include file="/baseparms.inc"/>
@@ -185,7 +185,7 @@
 
              <tr>
                  <td>Relationships</td>
-                 <%include file="/format.html" args="base='relationships/source', exref='relationships/source/'+refConcept, desc='Relationships for source concept', sig='/relationships/source/{concept}'"/>
+                 <%include file="/format.inc" args="base='relationships/source', exref='relationships/source/'+refConcept, desc='Relationships for source concept', sig='/relationships/source/{concept}'"/>
                   <td class="parms">
                      <table class="parmstable">
                          <%include file="/baseparms.inc"/>
@@ -217,15 +217,15 @@
              </tr>
              <tr>
                  <td></td>
-                 <%include file="/format.html" args="base='relationships/predicate', exref='relationships/predicate/'+refPredicate, desc='Relationships for relationship type', sig='/relationships/predicate/{predicate}'"/>
+                 <%include file="/format.inc" args="base='relationships/predicate', exref='relationships/predicate/'+refPredicate, desc='Relationships for relationship type', sig='/relationships/predicate/{predicate}'"/>
              </tr>
              <tr>
                  <td></td>
-                 <%include file="/format.html" args="base='relationships/target', exref='relationships/target/'+refTargetConcept, desc='Relationships for target concept', sig='/relationships/target/{target}'"/>
+                 <%include file="/format.inc" args="base='relationships/target', exref='relationships/target/'+refTargetConcept, desc='Relationships for target concept', sig='/relationships/target/{target}'"/>
              </tr>
         </tbody>
         </table>
-        <%include file="/showhide.html"/>
+        <%include file="/showhide.inc"/>
     </div>
  </div>
 <div class="row">
@@ -243,43 +243,43 @@
              </tr>
              <tr>
                  <td>Language</td>
-                 <%include file="/format.html" args="base='description/languages', exref='description/'+refDesc+'/languages', desc='Read by Description Id', sig='/description/{descId}/languages'"/>
+                 <%include file="/format.inc" args="base='description/languages', exref='description/'+refDesc+'/languages', desc='Read by Description Id', sig='/description/{descId}/languages'"/>
              </tr>
             <tr>
                 <td></td>
-                <%include file="/format.html" args="base='concept/languages', exref='concept/'+refConcept+'/languages', desc='Read by Concept Id', sig='/concept/{conceptId}/languages'"/>
+                <%include file="/format.inc" args="base='concept/languages', exref='concept/'+refConcept+'/languages', desc='Read by Concept Id', sig='/concept/{conceptId}/languages'"/>
             </tr>
 
             <tr>
                 <td>Simple</td>
-                <%include file="/format.html" args="base='simplerefset', exref='simplerefset/'+refSet, desc='Read by Refset Id', sig='/simplerefset/{refsetId}'"/>
+                <%include file="/format.inc" args="base='simplerefset', exref='simplerefset/'+refSet, desc='Read by Refset Id', sig='/simplerefset/{refsetId}'"/>
             </tr>
             <tr>
                 <td></td>
-                <%include file="/format.html" args="base='simplerefset/component', exref='simplerefset/component/'+refSetComponent, desc='Read by Referenced Component', sig='/simplerefset/component/{componentId}'"/>
+                <%include file="/format.inc" args="base='simplerefset/component', exref='simplerefset/component/'+refSetComponent, desc='Read by Referenced Component', sig='/simplerefset/component/{componentId}'"/>
             </tr>
             <tr>
                 <td>Simple Map</td>
-                <%include file="/format.html" args="base='simplemap', exref='simplemap/'+refSimpleMap, desc='Read by Map Id', sig='/simplemap/{mapId}'"/>
+                <%include file="/format.inc" args="base='simplemap', exref='simplemap/'+refSimpleMap, desc='Read by Map Id', sig='/simplemap/{mapId}'"/>
             </tr>
             <tr>
                 <td></td>
-                <%include file="/format.html" args="base='simplemap/source', exref='simplemap/source/'+refMapSource, desc='Maps for source concept', sig='/simplemap/source/{sourceId}'"/>
+                <%include file="/format.inc" args="base='simplemap/source', exref='simplemap/source/'+refMapSource, desc='Maps for source concept', sig='/simplemap/source/{sourceId}'"/>
             </tr>
             <tr>
                 <td></td>
-                <%include file="/format.html" args="base='simplemap/source', exref='simplemap/'+refSimpleMap+'/source/'+refMapSource, desc='Maps for source concept in refset', sig='/simplemap/{mapId}/source/{sourceId}'"/>
+                <%include file="/format.inc" args="base='simplemap/source', exref='simplemap/'+refSimpleMap+'/source/'+refMapSource, desc='Maps for source concept in refset', sig='/simplemap/{mapId}/source/{sourceId}'"/>
             </tr>
             <tr>
                 <td></td>
-                <%include file="/format.html" args="base='simplemap/target', exref='simplemap/target/'+refMapTarget, desc='Maps for target concept', sig='/simplemap/target/{target}'"/>
+                <%include file="/format.inc" args="base='simplemap/target', exref='simplemap/target/'+refMapTarget, desc='Maps for target concept', sig='/simplemap/target/{target}'"/>
             </tr>
             <tr>
                 <td></td>
-                <%include file="/format.html" args="base='simplemap/target', exref='simplemap/'+refSimpleMap+'/target/'+refMapTarget, desc='Maps for target in refset', sig='/simplemap/{mapId}/target/{target}'"/>
+                <%include file="/format.inc" args="base='simplemap/target', exref='simplemap/'+refSimpleMap+'/target/'+refMapTarget, desc='Maps for target in refset', sig='/simplemap/{mapId}/target/{target}'"/>
             </tr>
         </table>
-        <%include file="/showhide.html"/>
+        <%include file="/showhide.inc"/>
         <script src="js/jquery.js"></script>
         <script src="js/bootstrap.min.js"/>
         </div>
