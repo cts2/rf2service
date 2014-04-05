@@ -30,77 +30,57 @@
 from server.BaseNode    import expose
 from server.RF2BaseNode import RF2BaseNode, global_iter_parms
 
-from rf2db.db.RF2SimpleMapFile import SimpleMapDB
+from rf2db.db.RF2SimpleReferencesetFile import SimpleReferencesetDB
 from server.config.Rf2Entries import settings
 
-_maps_tmpl = """
+
+
+simplerefset_db = SimpleReferencesetDB()
+_rss_tmpl = """
         <p>
-            <br/><b>Restrict to map id(s):</b>
+            <br/><b>Restrict to refset id(s):</b>
             %s
         </p>"""
-_maplist_tmpl = """<input type="checkbox" name="refset" value=%s>%s</input>"""
+_rslist_tmpl = """<input type="checkbox" name="refset" value=%s>%s</input>"""
 
-simplemap_db = SimpleMapDB()
-
-class SimpleMapBase(object):
+class SimpleRefsetBase(object):
     def common(self, **kwargs):
-        if not simplemap_db.simplemap_list_parms().validate(**kwargs):
-            return None, (404, simplemap_db.simplemap_list_parms().invalidMessage(**kwargs))
-        parms = simplemap_db.simplemap_list_parms().parse(**kwargs)
-        dbrec = simplemap_db.as_reference_set(simplemap_db.get_simple_map(parms),parms)
+        if not simplerefset_db.simplerefset_list_parms().validate(**kwargs):
+            return None, (404, simplerefset_db.simplerefset_list_parms().invalidMessage(**kwargs))
+        parms = simplerefset_db.simplerefset_list_parms().parse(**kwargs)
+        dbrec = simplerefset_db.as_reference_set(simplerefset_db.get_simple_refset(parms),parms)
         if dbrec: return dbrec
-        rtn_message = "Simple map for"
+        rtn_message = "Simple reference set"
         rtn_message += " refset %s" % parms.refset if parms.refset else ''
         rtn_message += " component %s" % parms.component if parms.component else ''
-        rtn_message += " target %s" % parms.target if parms.target else ''
         rtn_message += " not found"
         return None, (404, rtn_message)
 
-class SimpleMapByMapId(RF2BaseNode, SimpleMapBase):
-    title = "Query RF2 SimpleMap Refset"
-    label = "Map SCTID"
-    value = settings.refSimpleMap
-    relpath = '/simplemap/~'
+class SimpleRefsetById(RF2BaseNode, SimpleRefsetBase):
+    title = "Query RF2 Simple Refset"
+    label = "Refset SCTID"
+    value = settings.refSet
+    relpath = '/simplerefset/~'
     extensions = RF2BaseNode.extensions + [global_iter_parms]
 
     @expose
     def default(self, **kwargs):
         return self.common(**kwargs)
 
-class SimpleMapForSource(RF2BaseNode, SimpleMapBase):
-    title = "Query RF2 SimpleMap Refset"
-    label = "Source concept "
-    value = settings.refMapSource
-    relpath = '/simplemap/source/~'
-    _rsnames = SimpleMapDB().refset_names()
-    extensions = RF2BaseNode.extensions + [global_iter_parms,
-                                           _maps_tmpl % '\t\t\n'.join(_maplist_tmpl % e for e in _rsnames.items()),
-                                           """<p>
-<b>Map target:</b><input type="text" name="target"/>
-</p>"""]
+class SimpleRefsetByComponent(RF2BaseNode, SimpleRefsetBase):
+    title = "Query RF2 Simple Refset"
+    label = "Component SCTID "
+    value = settings.refSetComponent
+    relpath = '/simplerefset/component/~'
+#     _rsnames = SimpleReferencesetDB().refset_names()
+#     extensions = RF2BaseNode.extensions + [global_iter_parms,
+#                                            _rss_tmpl % '\t\t\n'.join(_rslist_tmpl % e for e in _rsnames.items()),
+#                                            """<p>
+# <b>Component:</b><input type="text" name="component"/>
+# </p>"""]
 
 
     @expose
     def default(self, **kwargs):
         return self.common(**kwargs)
-
-
-class SimpleMapForTarget(RF2BaseNode, SimpleMapBase):
-    title = "Query RF2 SimpleMap Refset"
-    label = "Target concept "
-    value = settings.refMapTarget
-    relpath = '/simplemap/target/~'
-    _rsnames = SimpleMapDB().refset_names()
-    extensions = RF2BaseNode.extensions + [global_iter_parms,
-                                           _maps_tmpl % '\t\t\n'.join(_maplist_tmpl % e for e in _rsnames.items()),
-                                           """<p>
-<b>Map target:</b><input type="text" name="target"/>
-</p>"""]
-
-
-    @expose
-    def default(self, **kwargs):
-        return self.common(**kwargs)
-
-
 

@@ -38,24 +38,6 @@ from server.config.Rf2Entries import settings
 
 langdb = LanguageDB()
 
-class Languages:
-
-    @cherrypy.expose
-    def index(self, *_, **__):
-        return '''
-            <html><body><h2>RF2 Language Refset Access</h2>
-            The Language Refset has been massaged in this implementation.  It consists of <i>active</i> entries where either:
-            <ol>
-            <li>The target description in one or more languages is something other than <b>synonym</b></li> - or -
-            <li>The description has been omitted from one or more languages or dialects</li>
-            </ol|>
-            <ul>
-                <li><a href="description/languages">Language entries for a given description</a></li>
-                <li><a href="concept/languages">Language entries for a given concept</a></li>
-            </ul>
-            </body>
-            </html>'''
-
 
 class LanguagesForConcept(RF2BaseNode):
     title = "Read RF2 language refset for a given concept id"

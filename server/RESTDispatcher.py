@@ -31,7 +31,8 @@ import cherrypy
 from server.Concept import Concept, Concepts
 from server.Description import Description, Descriptions, DescriptionsForConcept, ConceptForDescription, PreferredDescriptionForConcept
 from server.Relationship import Relationship, Relationships, RelationshipsForSource, RelationshipsForTarget, RelationshipsForPredicate
-from server.Language import LanguagesForConcept, LanguagesForDescription, Languages
+from server.Language import LanguagesForConcept, LanguagesForDescription
+from server.SimpleRefset import SimpleRefsetByComponent, SimpleRefsetById
 from server.SimpleMap import SimpleMapByMapId, SimpleMapForSource, SimpleMapForTarget
 from server.ServerConf import ServerConf
 from server.Root import Root
@@ -89,7 +90,11 @@ resources = [Resource(r'/', Root, action='index'),
              Resource(r'/relationships/', Relationships),
              Resource(r'/relationships', Relationships, action='index'),
 
-             Resource(r'/language', Languages, action='index' ),
+             Resource(r'/simplerefset/component/:component', SimpleRefsetByComponent),
+             Resource(r'/simplerefset/component', SimpleRefsetByComponent, action='index'),
+             Resource(r'/simplerefset/:refset', SimpleRefsetById),
+             Resource(r'/simplerefset/', SimpleRefsetById),
+             Resource(r'/simplerefset', SimpleRefsetById, action='index'),
 
              Resource(r'/simplemap/source/:component', SimpleMapForSource),
              Resource(r'/simplemap/:refset/source/:component', SimpleMapForSource),

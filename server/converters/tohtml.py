@@ -104,6 +104,8 @@ row = """<tr>%s</tr>"""
 a = "<span title='%(pn)s'><a href='%(rf2root)sconcept/%(cid)s/prefdescription'>%(cid)s</a></span>"
 cts2a = "<span title='%(pn)s'><a href='%(cts2root)sentity/%(cid)s?format=html'>%(cid)s</a></span"
 
+def addsep(link):
+    return link + '/' if not link.endswith('/') else link
 
 def as_html(parser_object, **_):
     def _pnFor(cid_or_did):
@@ -123,8 +125,8 @@ def as_html(parser_object, **_):
         if arg[0]:
             pn = _pnFor(arg[1])
             cid = arg[1]
-            cts2root = ServiceSettings.settings.cts2base
-            rf2root = urlutil.base_uri()
+            cts2root = addsep(ServiceSettings.settings.cts2base)
+            rf2root = addsep(urlutil.base_uri())
             return (cts2a if arg[2] == 'conceptId' else a) % locals()
         return arg[1]
 
