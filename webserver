@@ -81,6 +81,18 @@ conf = {'/':
              'tools.staticdir.on' : True,
              'tools.staticdir.dir' : 'html'
          },
+         '/css' : {
+             'tools.staticdir.on' : True,
+             'tools.staticdir.dir' : 'css'
+         },
+         '/fonts' : {
+             'tools.staticdir.on' : True,
+             'tools.staticdir.dir' : 'fonts'
+         },
+         '/js' : {
+             'tools.staticdir.on' : True,
+             'tools.staticdir.dir' : 'js'
+         },
          '/favicon.ico': {'tools.staticfile.on': True,
                           'tools.staticfile.filename': os.path.join(_curdir, 'static','favicon.png')
          },
