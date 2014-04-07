@@ -30,7 +30,7 @@
 from server.BaseNode import expose
 from server.RF2BaseNode import RF2BaseNode, global_iter_parms
 
-from rf2db.db.RF2SimpleMapFile import SimpleMapDB
+from rf2db.db.RF2ComplexMapFile import ComplexMapDB
 from server.config.Rf2Entries import settings
 
 _maps_tmpl = """
@@ -40,39 +40,40 @@ _maps_tmpl = """
         </p>"""
 _maplist_tmpl = """<input type="checkbox" name="refset" value=%s>%s</input>"""
 
-simplemap_db = SimpleMapDB()
+complexmap_db = ComplexMapDB()
 
-class SimpleMapBase(object):
+class ComplexMapBase(object):
     def common(self, **kwargs):
-        if not simplemap_db.simplemap_list_parms().validate(**kwargs):
-            return None, (404, simplemap_db.simplemap_list_parms().invalidMessage(**kwargs))
-        parms = simplemap_db.simplemap_list_parms().parse(**kwargs)
-        dbrec = simplemap_db.as_reference_set(simplemap_db.get_simple_map(parms),parms)
+        if not complexmap_db.complexmap_list_parms().validate(**kwargs):
+            return None, (404, complexmap_db.complexmap_list_parms().invalidMessage(**kwargs))
+        parms = complexmap_db.complexmap_list_parms().parse(**kwargs)
+        dbrec = complexmap_db.as_reference_set(complexmap_db.get_complex_map(parms),parms)
         if dbrec: return dbrec
-        rtn_message = "Simple map for"
+        rtn_message = "Complex map for"
         rtn_message += " refset %s" % parms.refset if parms.refset else ''
         rtn_message += " component %s" % parms.component if parms.component else ''
         rtn_message += " target %s" % parms.target if parms.target else ''
         rtn_message += " not found"
         return None, (404, rtn_message)
 
-class SimpleMapByMapId(RF2BaseNode, SimpleMapBase):
-    title = "Query RF2 SimpleMap Refset"
+class ComplexMapById(RF2BaseNode, ComplexMapBase):
+    title = "Query RF2 ComplexMap Refset"
     label = "Map SCTID"
-    value = settings.refSimpleMap
-    relpath = '/simplemap/~'
+    value = settings.refComplexMap
+    relpath = '/complexmap/~'
     extensions = RF2BaseNode.extensions + [global_iter_parms]
 
     @expose
     def default(self, **kwargs):
         return self.common(**kwargs)
 
-class SimpleMapForSource(RF2BaseNode, SimpleMapBase):
-    title = "Query RF2 SimpleMap Refset"
+
+class ComplexMapForSource(RF2BaseNode, ComplexMapBase):
+    title = "Query RF2 ComplexMap Refset"
     label = "Source concept "
-    value = settings.refMapSource
-    relpath = '/simplemap/source/~'
-    _rsnames = SimpleMapDB().refset_names()
+    value = settings.refComplexMapSource
+    relpath = '/complexmap/source/~'
+    _rsnames = ComplexMapDB().refset_names()
     extensions = RF2BaseNode.extensions + [global_iter_parms,
                                            _maps_tmpl % '\t\t\n'.join(_maplist_tmpl % e for e in _rsnames.items())]
 
@@ -82,12 +83,12 @@ class SimpleMapForSource(RF2BaseNode, SimpleMapBase):
         return self.common(**kwargs)
 
 
-class SimpleMapForTarget(RF2BaseNode, SimpleMapBase):
-    title = "Query RF2 SimpleMap Refset"
+class ComplexMapForTarget(RF2BaseNode, ComplexMapBase):
+    title = "Query RF2 ComplexMap Refset"
     label = "Target concept "
-    value = settings.refMapTarget
-    relpath = '/simplemap/target/~'
-    _rsnames = SimpleMapDB().refset_names()
+    value = settings.refComplexMapTarget
+    relpath = '/complexmap/target/~'
+    _rsnames = ComplexMapDB().refset_names()
     extensions = RF2BaseNode.extensions + [global_iter_parms,
                                            _maps_tmpl % '\t\t\n'.join(_maplist_tmpl % e for e in _rsnames.items())]
 
@@ -95,6 +96,3 @@ class SimpleMapForTarget(RF2BaseNode, SimpleMapBase):
     @expose
     def default(self, **kwargs):
         return self.common(**kwargs)
-
-
-

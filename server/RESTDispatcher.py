@@ -34,6 +34,7 @@ from server.Relationship import Relationship, Relationships, RelationshipsForSou
 from server.Language import LanguagesForConcept, LanguagesForDescription
 from server.SimpleRefset import SimpleRefsetByComponent, SimpleRefsetById
 from server.SimpleMap import SimpleMapByMapId, SimpleMapForSource, SimpleMapForTarget
+from server.ComplexMap import ComplexMapById, ComplexMapForSource, ComplexMapForTarget
 from server.ServerConf import ServerConf
 from server.Root import Root
 from auth.ihtsdoauth import License
@@ -104,7 +105,18 @@ resources = [Resource(r'/', Root, action='index'),
              Resource(r'/simplemap/target', SimpleMapForTarget, action='index'),
              Resource(r'/simplemap/:refset', SimpleMapByMapId),
              Resource(r'/simplemap', SimpleMapByMapId, action='index'),
-             Resource(r'/simplemap/', SimpleMapByMapId)]
+             Resource(r'/simplemap/', SimpleMapByMapId),
+
+             Resource(r'/complexmap/source/:component', ComplexMapForSource),
+             Resource(r'/complexmap/:refset/source/:component', ComplexMapForSource),
+             Resource(r'/complexmap/source', ComplexMapForSource, action='index'),
+             Resource(r'/complexmap/target/:target', ComplexMapForTarget),
+             Resource(r'/complexmap/:refset/target/:target', ComplexMapForTarget),
+             Resource(r'/complexmap/target', ComplexMapForTarget, action='index'),
+             Resource(r'/complexmap/:refset', ComplexMapById),
+             Resource(r'/complexmap', ComplexMapById, action='index'),
+             Resource(r'/complexmap/', ComplexMapById)]
+
 
 
 
