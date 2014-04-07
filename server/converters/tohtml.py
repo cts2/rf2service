@@ -32,6 +32,7 @@ from rf2db.db.RF2LanguageFile import LanguageDB
 from rf2db.db.RF2DescriptionFile import DescriptionDB
 from rf2db.schema.rf2 import Iterator
 from rf2db.utils import urlutil
+from rf2db.utils.sctid import sctid
 
 ldb = LanguageDB()
 ddb = DescriptionDB()
@@ -122,7 +123,7 @@ def as_html(parser_object, **_):
     @return: tab separated value list of parser_object
     """
     def a_link(arg):
-        if arg[0]:
+        if arg[0] and sctid.isValid(arg[1]):
             pn = _pnFor(arg[1])
             cid = arg[1]
             cts2root = addsep(ServiceSettings.settings.cts2base)
