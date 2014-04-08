@@ -45,6 +45,7 @@ sys.path.append(_curdir)
 # Add the RF2DB services onto the path
 sys.path.append(os.path.join(_curdir, '..', 'rf2db'))
 sys.path.append(os.path.join(_curdir, '..', 'ihtsdoauth'))
+sys.path.append(os.path.join(_curdir, '..', 'pyjxslt/XLSTGateway'))
 
 from config.ConfigManager import ConfigManager
 ConfigManager.set_configfile(cfg_conf)
