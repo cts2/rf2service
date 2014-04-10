@@ -31,6 +31,10 @@
 import cherrypy
 import os
 import sys
+import mimetypes
+
+
+mimetypes.add_type(("text/xml",None),".xsd")
 
 
 _curdir = os.path.join(os.getcwd(), os.path.dirname(__file__))
@@ -93,6 +97,10 @@ conf = {'/':
          '/js' : {
              'tools.staticdir.on' : True,
              'tools.staticdir.dir' : 'js'
+         },
+         '/xsd' : {
+             'tools.staticdir.on' : True,
+             'tools.staticdir.dir' : 'xsd'
          },
          '/favicon.ico': {'tools.staticfile.on': True,
                           'tools.staticfile.filename': os.path.join(_curdir, 'static','favicon.png')
