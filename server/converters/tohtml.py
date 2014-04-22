@@ -132,7 +132,10 @@ def as_html(parser_object, **_):
         return arg[1]
 
     def td_row(items):
-        return '\t\n'.join(td % a_link(e) for e in items)
+        try:
+            return '\t\n'.join(td % a_link(e) for e in items)
+        except UnicodeDecodeError:
+            return '\t\n'.join(td % a_link(e).encode('utf-8') for e in items)
 
     title = "RF2 Entry"
     (hdrRow, entryRows) = normalize(parser_object)
