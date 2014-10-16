@@ -35,7 +35,7 @@ from server.Language import LanguagesForConcept, LanguagesForDescription
 from server.SimpleRefset import SimpleRefsetByComponent, SimpleRefsetById
 from server.SimpleMap import SimpleMapByMapId, SimpleMapForSource, SimpleMapForTarget
 from server.ComplexMap import ComplexMapById, ComplexMapForSource, ComplexMapForTarget
-from server.ServerConf import ServerConf
+from server.Serverconf import ServerConf
 from server.Root import Root
 from auth.ihtsdoauth import License
 
@@ -53,7 +53,7 @@ print("Connecting resources")
 resources = [Resource(r'/', Root, action='index'),
              Resource(r'/config', ServerConf),
              Resource(r'/license', License, action='index'),
-             Resource(r'/submit', License, action='submit',method='POST'),
+             Resource(r'/submit', License, action='submit', method='POST'),
              Resource(r'/concepts', Concepts, action='index'),
              Resource(r'/concepts/:after', Concepts),
              Resource(r'/concepts/', Concepts),

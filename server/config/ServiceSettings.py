@@ -28,8 +28,8 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 import os
 
-from config.ConfigArgs import ConfigArg, ConfigArgs
-from config.ConfigManager import ConfigManager
+from ConfigManager.ConfigArgs import ConfigArg, ConfigArgs
+from ConfigManager.ConfigManager import ConfigManager
 
 _curdir = os.path.join(os.getcwd(), os.path.dirname(__file__))
 settings_filename = os.path.join(os.path.dirname(__file__), '..', '..','settings.conf')

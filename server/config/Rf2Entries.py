@@ -28,8 +28,8 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 import os
 
-from config.ConfigArgs import ConfigArg, ConfigArgs
-from config.ConfigManager import ConfigManager
+from ConfigManager.ConfigArgs import ConfigArg, ConfigArgs
+from ConfigManager.ConfigManager import ConfigManager
 
 _curdir = os.path.join(os.getcwd(), os.path.dirname(__file__))
 
@@ -44,7 +44,8 @@ config_parms = ConfigArgs('rf2entries',
                            ConfigArg('refComponent', help='Sample RF2 Component Id', default='10495001'),
                            ConfigArg('refMapSource', help='Sample RF2 Map Source Id', default='5204005'),
                            ConfigArg('refMapTarget', help='Sample RF2 Map Target Id', default='C47.5'),
-                           ConfigArg('refMatchvalue', help='Sample Description Match Value', default='Append')
+                           ConfigArg('refMatchvalue', help='Sample Description Match Value', default='Append'),
+                           ConfigArg('rf2Release', help='RF2 Release Identifier', default='yyyymmdd')
                            ])
 
 settings = ConfigManager(config_parms)

@@ -27,4 +27,4 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 __all__ = ['config', 'converters', 'utils', 'BaseNode', 'Concept', 'Description', 'Language',
-           'Relationship', 'RESTDispatcher', 'RF2BaseNode', 'Root', 'SimpleMap']
+           'Relationship', 'RESTDispatcher', 'RF2BaseNode', 'Root', 'SimpleMap', 'ServerConf']
