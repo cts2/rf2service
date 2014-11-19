@@ -32,7 +32,6 @@ import urllib2
 import os
 import re
 from rf2db.utils.xmlutils import prettyxml, diffxml
-from rf2db.db.RF2FileCommon import global_rf2_parms
 
 def testxml(resource, testxml=None, testfile=None, save=False, printdiff=True):
     """ Compare the XML in resource to the supplied string or file
@@ -59,8 +58,7 @@ from server.config.Rf2Entries import settings
 service_uri = 'http://localhost:8081/rf2/'
 
 urls = [
-    ('concept/%s' % settings.refConcept,
-    ]
+    ('concept/%s' % settings.refConcept)]
 
 
 

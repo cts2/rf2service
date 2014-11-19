@@ -28,6 +28,7 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import cherrypy
+import types
 
 
 from rf2db.utils import listutils, urlutil
@@ -38,65 +39,74 @@ from server.converters.tohtml import as_html
 
 htmlHead = "<!DOCTYPE html>"
 
-def expose(f, methods=None): #@ReservedAssignment
-    """ Expose function - wrapper to manage arguments and control formatting into and out of web services """
-    if not methods: methods = []
+def expose(func=None, methods=None):
 
-    @cherrypy.tools.allow(methods=methods+['GET','HEAD'])
-    @cherrypy.expose
-    def wrapped_f(self, *args, **kwargs):
+    def expose_(func):
 
-        # Make a local image of the arguments for inside reference
-        self._kwargs = kwargs.copy()
-        if kwargs.get('_inside', False):
-            # The innermost formatters trump the outer
-            kwargs['_formats'] = dict(kwargs['_formats'].items(), self.formats.items())
-            # As does the namespace
+        @cherrypy.tools.allow(methods=methods)
+        @cherrypy.expose
+        def wrapped_f(self, *args, **kwargs):
+
+            # Make a local image of the arguments for inside reference
+            self._kwargs = kwargs.copy()
+            if kwargs.get('_inside', False):
+                # The innermost formatters trump the outer
+                kwargs['_formats'] = dict(kwargs['_formats'].items() + self.formats.items())
+                # As does the namespace
+                if self.namespace:
+                    kwargs['_ns'][0] = self.namespace
+                return func(self, *args, **kwargs)
+
+            # Acquire the required return format information and strip the bypass information
+            rtnfmt = kwargs.pop('format', None)
+
+            kwargs.pop('bypass',None)
+
+            kwargs['_formats'] = {'xml':  as_xml,
+                                  'json': as_json,
+                                  'html': as_html}.copy()
+            kwargs['_ns'] = [None]
             if self.namespace:
                 kwargs['_ns'][0] = self.namespace
-            return f(self, *args, **kwargs)
+            for (k,v) in self.formats.items():
+                kwargs['_formats'][k] = v
+            kwargs['_inside']  = True
+            #kwargs['_body'] = cherrypy.request.body.read()
 
-        # Acquire the required return format information and strip the bypass information
-        rtnfmt = kwargs.pop('format', None)
+            # Function can return one of:
+            # formatted string           - to be returned directly to the caller, unformatted
+            # class                      - assumed to have a toxml() function
+            # tuple                      - (rval, (error code, error message))
+            #                               rval is string or class as above
 
-        kwargs.pop('bypass',None)
- 
-        kwargs['_formats'] = {'xml':  as_xml,
-                              'json': as_json,
-                              'html': as_html}.copy()
-        kwargs['_ns'] = [None]
-        if self.namespace:
-            kwargs['_ns'][0] = self.namespace
-        for (k,v) in self.formats.items():
-            kwargs['_formats'][k] = v 
-        kwargs['_inside']  = True
-        
-        # Function can return one of:
-        # formatted string           - to be returned directly to the caller, unformatted
-        # class                      - assumed to have a toxml() function
-        # tuple                      - (rval, (error code, error message))
-        #                               rval is string or class as above
+            rtn = func(self, *args, **kwargs)
 
-        rtn = f(self, *args, **kwargs)
-        
-        rval, (err, msg) = rtn if isinstance(rtn, (list, tuple)) else (rtn, (500, 'Internal Server Error'))
-        if not rval:
-            raise cherrypy.HTTPError(err, msg)
-        if str(rval).startswith(htmlHead):
-            return rval
-        if not rtnfmt:
-            rtnfmt = negotiateFormat.negotiate_format(kwargs['_formats'].keys(), cherrypy.request.headers)
-        rtnfmt = listutils.flatten(rtnfmt)
-        if rtnfmt in kwargs['_formats']:
-            ns = kwargs['_ns'][0] if kwargs['_ns'] else None
-            (rval, enc) = kwargs['_formats'][rtnfmt](rval, ns=ns, **self._kwargs)
-            cherrypy.response.headers['Content-type'] = enc if enc else 'text/plain;charset=UTF-8'
-            return rval.encode('utf-8') if rtnfmt in('xml','html', 'json') else rval
-        else:
-            raise cherrypy.HTTPError(400, 
-                                    ("Unrecognized format: %s.  Possible formats are: " % rtnfmt) + ', '.join(kwargs['_formats']))
-                	
-    return wrapped_f
+            rval, (err, msg) = rtn if isinstance(rtn, (list, tuple)) else (rtn, (500, 'Internal Server Error'))
+            if not rval:
+                raise cherrypy.HTTPError(err, msg)
+            if str(rval).startswith(htmlHead):
+                return rval
+            if not rtnfmt:
+                rtnfmt = negotiateFormat.negotiate_format(kwargs['_formats'].keys(), cherrypy.request.headers)
+            rtnfmt = listutils.flatten(rtnfmt)
+            if rtnfmt in kwargs['_formats']:
+                ns = kwargs['_ns'][0] if kwargs['_ns'] else None
+                (rval, enc) = kwargs['_formats'][rtnfmt](rval, ns=ns, **self._kwargs)
+                cherrypy.response.headers['Content-type'] = enc if enc else 'text/plain;charset=UTF-8'
+                return rval.encode('utf-8') if rtnfmt in('xml','html', 'json') else rval
+            else:
+                raise cherrypy.HTTPError(400,
+                                        ("Unrecognized format: %s.  Possible formats are: " % rtnfmt) + ', '.join(kwargs['_formats']))
+
+        return wrapped_f
+
+
+    if isinstance(func, (types.FunctionType, types.MethodType)):
+        return expose_(func)
+    elif func is not None:
+        methods = func
+    return expose_
+
 
 
 

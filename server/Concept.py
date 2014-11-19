@@ -31,12 +31,14 @@ from server.BaseNode import expose
 from server.RF2BaseNode import RF2BaseNode, global_iter_parms
 from rf2db.utils.sctid import sctid
 
+
 from rf2db.db.RF2ConceptFile import ConceptDB, concept_parms, concept_list_parms
 from server.Description import DescriptionsForConcept
 from server.config.Rf2Entries import settings
 
-concdb = ConceptDB()
 
+concdb = ConceptDB()
+# next step - pick up the represented namespace
 
 class Concept(RF2BaseNode):
     title = "Read RF2 concept by concept id"
@@ -52,6 +54,23 @@ class Concept(RF2BaseNode):
 
         dbrec = concdb.getConcept(long(sctid(concept)), concept_parms.parse(**kwargs))
         return dbrec, (404, "Concept %s not found" % concept)
+
+    @expose("POST")
+    def new(self, changeseturi, **kwargs):
+        dbrec = concdb.newConcept(changeseturi)
+
+    @expose(methods="PUT")
+    def update(self, concept=None, **kwargs):
+        rval = self.default(concept, **kwargs)
+        return rval
+
+    @expose(methods=["DELETE"])
+    def delete(self, concept=None, **kwargs):
+        rval, err = self.default(concept, **kwargs)
+        if rval:
+            rval.active = 0
+        return rval, err
+
 
 class Concepts(RF2BaseNode):
     title = "List concepts starting after"

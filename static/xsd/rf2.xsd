@@ -7626,6 +7626,8 @@
             <xs:element name="active" type="Boolean"/>
             <!--<xs:element name="moduleId" type="Module"/>-->
             <xs:element name="moduleId" type="SCTID"/>
+            <xs:element name="changeSetId" type="UUID" minOccurs="0"/>
+            <xs:element name="locked" type="Boolean" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -8065,6 +8067,19 @@
                 <xs:sequence>
                     <xs:element name="entry" type="DescriptionFormatReferenceSetEntry" minOccurs="0"
                                 maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+
+    <xs:complexType name="ChangeSetReferenceSet">
+        <xs:complexContent>
+            <xs:extension base="RefsetBase">
+                <xs:sequence>
+                    <xs:element name="creator" type="UUID" minOccurs="0"/>
+                    <xs:element name="changeDescription" type="String" minOccurs="0"/>
+                    <xs:element name="isFinal" type="Boolean"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
