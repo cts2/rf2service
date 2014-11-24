@@ -35,6 +35,7 @@ from server.Language import LanguagesForConcept, LanguagesForDescription
 from server.SimpleRefset import SimpleRefsetByComponent, SimpleRefsetById
 from server.SimpleMap import SimpleMapByMapId, SimpleMapForSource, SimpleMapForTarget
 from server.ComplexMap import ComplexMapById, ComplexMapForSource, ComplexMapForTarget
+from server.Changeset import Changeset
 from server.Serverconf import ServerConf
 from server.Root import Root
 from auth.ihtsdoauth import License
@@ -118,7 +119,14 @@ resources = [Resource(r'/', Root, action='index'),
              Resource(r'/complexmap/target', ComplexMapForTarget, action='index'),
              Resource(r'/complexmap/:refset', ComplexMapById),
              Resource(r'/complexmap', ComplexMapById, action='index'),
-             Resource(r'/complexmap/', ComplexMapById)]
+             Resource(r'/complexmap/', ComplexMapById),
+
+             Resource(r'/changeset/:changeset/commit', Changeset, action='commit', method='PUT'),
+             Resource(r'/changeset/:changeset', Changeset, action='update', method='PUT'),
+             Resource(r'/changeset/:changeset', Changeset, action='delete', method='DELETE'),
+             Resource(r'/changeset/:changeset', Changeset),
+             Resource(r'/changeset', Changeset, action='new', method='POST'),
+             Resource(r'/changesets', Changeset, action='index'),]
 
 
 

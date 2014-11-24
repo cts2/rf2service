@@ -71,5 +71,17 @@ class RF2BaseNode(BaseNode):
                'bsv':as_bsv,
                'html':as_html}
 
+    def validParms(self, parms, **kwargs):
+        if not parms.validate(**kwargs):
+            return None, (404, parms.invalidMessage(**kwargs))
+        return parms.parse(**kwargs), None
 
-        
+
+def validate(parms):
+    def validate_(func):
+        def wrapped_f(self, *args, **kwargs):
+            if not parms.validate(**kwargs):
+                return None, (404, parms.invalidMessage(**kwargs))
+            return func(self, parms.parse(**kwargs), *args, **kwargs)
+        return wrapped_f
+    return validate_

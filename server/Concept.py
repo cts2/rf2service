@@ -32,7 +32,8 @@ from server.RF2BaseNode import RF2BaseNode, global_iter_parms
 from rf2db.utils.sctid import sctid
 
 
-from rf2db.db.RF2ConceptFile import ConceptDB, concept_parms, concept_list_parms
+from rf2db.db.RF2ConceptFile import ConceptDB, concept_parms, concept_list_parms, new_concept_parms, \
+    update_concept_parms, delete_concept_parms
 from server.Description import DescriptionsForConcept
 from server.config.Rf2Entries import settings
 
@@ -56,20 +57,31 @@ class Concept(RF2BaseNode):
         return dbrec, (404, "Concept %s not found" % concept)
 
     @expose("POST")
-    def new(self, changeseturi, **kwargs):
-        dbrec = concdb.newConcept(changeseturi)
+    def new(self, changeseturi=None, **kwargs):
+        if not new_concept_parms.validate(**kwargs):
+            return None, (404, new_concept_parms.invalidMessage(**kwargs))
+
+        # A POST cannot supply an SCTID
+        kwargs.pop('sctid', None)
+        dbrec = concdb.newConcept(new_concept_parms.parse(**kwargs))
+        if dbrec:
+            self.redirect('/concept/%s' % dbrec.id)
+        # TODO: figure out the correct error to return here
+        return None, (404, "Unable to create concept")
 
     @expose(methods="PUT")
     def update(self, concept=None, **kwargs):
-        rval = self.default(concept, **kwargs)
-        return rval
+        if not update_concept_parms.validate(**kwargs):
+            return None, (404, update_concept_parms.invalidMessage(**kwargs))
+
+        # Update an existing concept
+        return concdb.updateConcept(concept, update_concept_parms.parse(**kwargs))
 
     @expose(methods=["DELETE"])
     def delete(self, concept=None, **kwargs):
-        rval, err = self.default(concept, **kwargs)
-        if rval:
-            rval.active = 0
-        return rval, err
+        if not delete_concept_parms.validate(**kwargs):
+            return None, (404, delete_concept_parms.invalidMessage(**kwargs))
+        return concdb.deleteConcept(concept, delete_concept_parms.parse(**kwargs))
 
 
 class Concepts(RF2BaseNode):
