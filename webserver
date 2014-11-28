@@ -33,27 +33,11 @@ import os
 import sys
 import mimetypes
 
+from server.utils.SetConfig import setConfig
 
 mimetypes.add_type(("text/xml",None),".xsd")
 
-
-_curdir = os.path.join(os.getcwd(), os.path.dirname(__file__))
-
-# Site specific configuration variables.  These are two files because of an error (feature?)
-# in cherrypy that doesn't allow 'globals' and other namespaces in the same file...
-server_conf   = os.path.join(os.path.dirname(__file__), 'server.conf')
-cfg_conf = os.path.join(os.path.dirname(__file__), 'settings.conf')
-
-# Set ourselves up on the include path automatically
-sys.path.append(_curdir)
-# Add the RF2DB services onto the path
-sys.path.append(os.path.join(_curdir, '..', 'rf2db'))
-sys.path.append(os.path.join(_curdir, '..', 'ihtsdoauth'))
-sys.path.append(os.path.join(_curdir, '..', 'ConfigManager'))
-sys.path.append(os.path.join(_curdir, '..', 'pyjxslt','XSLTGateway'))
-
-from ConfigManager.ConfigManager import ConfigManager
-ConfigManager.set_configfile(cfg_conf)
+base = setConfig()
 
 def http_methods_allowed(methods=None):
     """ Filter to pass the supplied methods unless overridden """
@@ -81,7 +65,7 @@ conf = {'/':
             'request.dispatch' : dispatcher,
             'tools.auth.on' : True,
             'tools.sessions.on' : True,
-            'tools.staticdir.root': os.path.join(_curdir, "static")
+            'tools.staticdir.root': os.path.join(base, "static")
          },
          '/html' : {
              'tools.staticdir.on' : True,
@@ -104,12 +88,12 @@ conf = {'/':
              'tools.staticdir.dir' : 'xsd'
          },
          '/favicon.ico': {'tools.staticfile.on': True,
-                          'tools.staticfile.filename': os.path.join(_curdir, 'static','favicon.png')
+                          'tools.staticfile.filename': os.path.join(base, 'static','favicon.png')
          },
      }
 
 def main():
-    cherrypy.config.update(server_conf)
+    cherrypy.config.update(os.path.join(base, 'server.conf'))
     app = cherrypy.tree.mount(None, script_name='/rf2', config=conf)
     cherrypy.quickstart(app)
 

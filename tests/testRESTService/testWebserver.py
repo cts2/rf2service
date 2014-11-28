@@ -31,7 +31,10 @@ import unittest
 import urllib2
 import os
 import re
+
 from rf2db.utils.xmlutils import prettyxml, diffxml
+from server.utils.SetConfig import setConfig
+setConfig()
 
 def testxml(resource, testxml=None, testfile=None, save=False, printdiff=True):
     """ Compare the XML in resource to the supplied string or file

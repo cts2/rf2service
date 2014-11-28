@@ -35,7 +35,7 @@ from rf2db.parsers.RF2BaseParser import RF2Description
 
 class XMLConverterTestCase(unittest.TestCase):
     def test_toxml(self):
-        desc = RF2Description('517048016\t20100131\t1\t900000000000380005\t10027005\ten\t900000000000003001\tPatchy (qualifier value)\t900000000000022005')
+        desc = RF2Description('517048016\t20100131\t1\t900000000000380005\t10027005\ten\t900000000000003001\tPatchy (qualifier value)\t900000000000020002')
         xml,mimetype = as_xml(desc)
         self.assertEqual(mimetype,'application/xml;charset=UTF-8')
         self.assertTrue(diffxml("""<?xml version="1.0" encoding="UTF-8"?>
@@ -48,7 +48,7 @@ class XMLConverterTestCase(unittest.TestCase):
     <languageCode>en</languageCode>
     <typeId>900000000000003001</typeId>
     <term>Patchy (qualifier value)</term>
-    <caseSignificanceId>900000000000022005</caseSignificanceId>
+    <caseSignificanceId>900000000000020002</caseSignificanceId>
 </Description>""", xml))
         xml,mimetype = as_xml(xml)
         self.assertEqual(mimetype,'application/xml;charset=UTF-8')
@@ -62,7 +62,7 @@ class XMLConverterTestCase(unittest.TestCase):
     <languageCode>en</languageCode>
     <typeId>900000000000003001</typeId>
     <term>Patchy (qualifier value)</term>
-    <caseSignificanceId>900000000000022005</caseSignificanceId>
+    <caseSignificanceId>900000000000020002</caseSignificanceId>
 </Description>""", xml))
 
 

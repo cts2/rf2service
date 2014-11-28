@@ -15,3 +15,7 @@
         <i>html</i><br/>
     </td>
 </tr>
+<tr>
+    <td>changeset</td>
+    <td>{changeset uuid}</td>
+</tr>

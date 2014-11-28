@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2013, Mayo Clinic
+# Copyright (c) 2014, Mayo Clinic
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification,
 # are permitted provided that the following conditions are met:
 #
-#     Redistributions of source code must retain the above copyright notice, this
-#     list of conditions and the following disclaimer.
+# Redistributions of source code must retain the above copyright notice, this
+# list of conditions and the following disclaimer.
 #
 #     Redistributions in binary form must reproduce the above copyright notice,
 #     this list of conditions and the following disclaimer in the documentation
@@ -26,20 +26,22 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
+import os
+import sys
+
+def setConfig():
+    base = os.path.join(os.path.dirname(__file__), '..', '..')
 
 
-from server.converters.toxml import as_xml
-from server.config import ServiceSettings
-from XSLTGateway.XSLTGateway import XSLTGateway
+    # Set ourselves up on the include path automatically
+    sys.path.append(base)
+    # Add the RF2DB services onto the path
+    sys.path.append(os.path.join(base, '..', 'rf2db'))
+    sys.path.append(os.path.join(base, '..', 'ihtsdoauth'))
+    sys.path.append(os.path.join(base, '..', 'ConfigManager'))
+    sys.path.append(os.path.join(base, '..', 'pyjxslt','XSLTGateway'))
 
-gw = XSLTGateway(ServiceSettings.settings.gatewayport)
-def as_json(rval, ns=None, **kwargs):
-    """ Convert an XML rendering to JSON using an external py4j xml to json conversion package """
-    rval, mimetype = as_xml(rval,ns,**kwargs)
-    if mimetype.startswith('application/xml;'):
-        json = gw.toJSON(rval)
-        if json:
-            rval = json
-            mimetype = 'application/json;charset=UTF-8'
-    return rval, mimetype
+    from ConfigManager.ConfigManager import ConfigManager
+    ConfigManager.set_configfile(os.path.join(base, 'settings.conf'))
+    return base
 
