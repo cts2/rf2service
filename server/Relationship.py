@@ -28,12 +28,12 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 import cherrypy
 
-from rf2db.db.RF2RelationshipFile import RelationshipDB, rel_parms, rellist_parms
+from rf2db.db.RF2RelationshipFile import RelationshipDB, rel_parms, rellist_parms, rel_source_parms, \
+    rel_predicate_parms, rel_target_parms
 from rf2db.db.RF2StatedRelationshipFile import StatedRelationshipDB
 from rf2db.db.RF2ConceptFile import ConceptDB, concept_parms
-from rf2db.utils.sctid  import sctid
 from server.BaseNode import expose
-from server.RF2BaseNode import RF2BaseNode, global_iter_parms
+from server.RF2BaseNode import RF2BaseNode, global_iter_parms, validate
 from server.config.Rf2Entries import settings
 
 reldb  =  RelationshipDB()
@@ -55,11 +55,10 @@ class Relationship(RF2BaseNode):
     value = settings.refRel
 
     @expose
-    def default(self, rel=None, **parms):
-        if not sctid.isValid(rel):
-            return None, (400, "Invalid concept id: %s" % rel)
-        dbrec = reldb.getRelationship(rel, rel_parms.parse(**parms))
-        return dbrec, (404, "Relationship record %s not found" % rel)
+    @validate(rel_parms)
+    def default(self, parms, **_):
+        dbrec = reldb.getRelationship(**parms.dict)
+        return dbrec, (404, "Relationship record %s not found" % parms.rel)
 
 class Relationships(RF2BaseNode):
     label = "Relationship SCTID"
@@ -76,25 +75,21 @@ class Relationships(RF2BaseNode):
         raise cherrypy.HTTPRedirect(direct + ('/%s' % value) if value else '')
 
 
-def validateAndExecute(cid, fctn, **kwargs):
-    if not concept_parms.validate(**kwargs):
-        return None, (404, concept_parms.invalidMessage(**kwargs))
-    if not rellist_parms.validate(**kwargs):
-        return None, (404, rellist_parms.invalidMessage(**kwargs))
-    if not concdb.getConcept(cid, concept_parms.parse(**kwargs)):
+def validateAndExecute(cid, fctn, parms):
+    if not concdb.read(cid, **parms.dict):
         return None, (404, "Concept %s doesn't exist" % cid)
-    parmlist = rellist_parms.parse(**kwargs)
-    return reldb.asRelationshipList(fctn(cid,parmlist), parmlist)
+    return reldb.asRelationshipList( fctn(cid, **parms.dict), parms)
 
 class RelationshipsForSource(RF2BaseNode):
     title = "<p>Relationship entries for source SCTID</p>"
-    label     = "Subject SCTID"
+    label = "Subject SCTID"
     value = settings.refConcept
     extensions = RF2BaseNode.extensions + [reltypes, global_iter_parms]
 
     @expose
-    def default(self, source=None, **kwargs):
-        return validateAndExecute(source, reldb.getSourceRecs, **kwargs)
+    @validate(rel_source_parms)
+    def default(self, parms, **_):
+        return validateAndExecute(parms.source, reldb.getSourceRecs, parms)
 
 class RelationshipsForPredicate(RF2BaseNode):
     title = "<p>Relationship entries for predicate SCTID</p>"
@@ -104,8 +99,9 @@ class RelationshipsForPredicate(RF2BaseNode):
 
 
     @expose
-    def default(self, predicate=None, **kwargs):
-        return validateAndExecute(predicate, reldb.getPredicateRecs, **kwargs)
+    @validate(rel_predicate_parms)
+    def default(self, parms, **_):
+        return validateAndExecute(parms.predicate, reldb.getPredicateRecs, parms)
 
 
 class RelationshipsForTarget(RF2BaseNode):
@@ -116,7 +112,8 @@ class RelationshipsForTarget(RF2BaseNode):
 
 
     @expose
-    def default(self, target=None, **kwargs):
-        return validateAndExecute(target, reldb.getTargetRecs, **kwargs)
+    @validate(rel_target_parms)
+    def default(self, parms, **_):
+        return validateAndExecute(parms.target, reldb.getTargetRecs, parms)
 
 

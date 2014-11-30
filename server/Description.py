@@ -27,18 +27,17 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 from server.BaseNode import expose
-from server.RF2BaseNode import RF2BaseNode, global_iter_parms
+from server.RF2BaseNode import RF2BaseNode, global_iter_parms, validate
 from rf2db.utils.sctid import sctid
 
-from rf2db.db.RF2DescriptionFile import DescriptionDB, description_parms, description_list_parms
+from rf2db.db.RF2DescriptionFile import DescriptionDB, description_parms, description_list_parms, \
+    pref_description_parms, description_for_concept_parms
 from rf2db.db.RF2DescriptionTextFile import DescriptionTextDB, description_match_parms
 from rf2db.db.RF2ConceptFile import ConceptDB, concept_parms
 from rf2db.db.RF2LanguageFile import LanguageDB
 
 
 from server.config.Rf2Entries import settings
-
-
 
 descdb =  DescriptionDB()
 concdb =  ConceptDB()
@@ -47,27 +46,22 @@ langdb = LanguageDB()
 
 
 class Description(RF2BaseNode):
-    title     = "Read description by description ID"
-    label     = "Description SCTID"
+    title = "Read description by description ID"
+    label = "Description SCTID"
     value = settings.refDesc
         
     @expose
-    def default(self, desc=None, **kwargs):
-        if not desc or desc=='concept':
-            return self.index(**kwargs)
-        if not sctid.isValid(desc):
-            return None, (400, "Invalid description sctid: %s" % desc)
-        if not description_parms.validate(**kwargs):
-            return None, (404, description_parms.invalidMessage(**kwargs))
-        dbrec = descdb.getDescriptionById(desc, description_parms.parse(**kwargs))
-        return dbrec, (404, "Description id %s not found" % desc)           
+    @validate(description_parms)
+    def default(self, parms, **kwargs):
+        dbrec = descdb.getDescriptionById(int(sctid(parms.desc)), **parms.dict)
+        return dbrec, (404, "Description id %s not found" % parms.desc)
 
 class Descriptions(RF2BaseNode):
     title = "Find descriptions matching supplied text"
     label = "Match Text"
     value = settings.refMatchvalue
     extensions = RF2BaseNode.extensions + [
-                  """<p><b>Match Algorithm:</b>
+    """<p><b>Match Algorithm:</b>
 <input type="radio" name="matchalgorithm" value="wordstart" checked="True">Word Starts With</input>
 <input type="radio" name="matchalgorithm" value="contains">Term Contains</input>
 <input type="radio" name="matchalgorithm" value="startswith">Term Starts With</input>
@@ -79,11 +73,9 @@ class Descriptions(RF2BaseNode):
 
     
     @expose
-    def default(self, *_, **kwargs):
-        if not description_match_parms.validate(**kwargs):
-            return None, (404, description_match_parms.invalidMessage(**kwargs))
-        parmlist = description_match_parms.parse(**kwargs)
-        return descdb.asDescriptionList(desctextdb.getDescriptions(parmlist), parmlist)
+    @validate(description_match_parms)
+    def default(self, parms, **_):
+        return descdb.asDescriptionList(desctextdb.getDescriptions(**parms.dict), parms)
         
 
 class DescriptionsForConcept(RF2BaseNode):
@@ -92,32 +84,25 @@ class DescriptionsForConcept(RF2BaseNode):
     relpath = "/concept/~/descriptions"
     extensions = RF2BaseNode.extensions + [global_iter_parms]
 
-
     @expose
-    def default(self, concept, **kwargs):
-        if not description_list_parms.validate(**kwargs):
-            return None, (404, description_list_parms.invalidMessage(**kwargs))
-        parmlist = description_list_parms.parse(**kwargs)
-        return descdb.asDescriptionList(descdb.getConceptDescription(concept, parmlist), parmlist),\
-               (404, "Description for concept %s not found" % concept)
+    @validate(description_for_concept_parms)
+    def default(self, parms, **_):
+        return descdb.asDescriptionList(descdb.getConceptDescription(parms.concept, **parms.dict), parms),\
+               (404, "Description for concept %s not found" % parms.concept)
 
 class PreferredDescriptionForConcept(RF2BaseNode):
     label = "Concept SCTID"
     value = settings.refConcept
     relpath = "/concept/~/prefdescription"
 
-
     @expose
-    def default(self, concept, **kwargs):
-        if not description_list_parms.validate(**kwargs):
-            return None, (404, description_list_parms.invalidMessage(**kwargs))
-
-        parmlist = description_list_parms.parse(**kwargs)
-        pt_entry = langdb.preferred_term_for_concepts(concept, parmlist)
+    @validate(pref_description_parms)
+    def default(self, parms, **_):
+        pt_entry = langdb.preferred_term_for_concepts(parms.concept, **parms.dict)
         if not pt_entry:
-            return None, (404, "Preferred term for concept %s not found" % concept)
-        desc = pt_entry[concept][1]
-        return descdb.getDescriptionById(desc, description_parms.parse(**kwargs)), \
+            return None, (404, "Preferred term for concept %s not found" % parms.concept)
+        desc = pt_entry[str(parms.concept)][1]
+        return descdb.getDescriptionById(desc, **parms.dict), \
             (404, "Description id %s not found" % desc)
 
 

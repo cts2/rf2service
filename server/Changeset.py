@@ -43,7 +43,7 @@ class Changeset(RF2BaseNode):
     @expose
     @validate(changeset_parms)
     def default(self, parms, **_):
-        dbrec = csdb.get_changeset(parms)
+        dbrec = csdb.get_changeset(**parms.dict)
         return dbrec, (404, "Change set %s not found" % parms.changeset)
 
 
@@ -54,14 +54,14 @@ class Changeset(RF2BaseNode):
     @expose("POST")
     @validate(add_changeset_parms)
     def new(self, parms, **_):
-        dbrec = csdb.new_changeset(parms)
+        dbrec = csdb.new_changeset(**parms.dict)
         if dbrec:
             parms.changeset = dbrec.changeset
             self.redirect('changeset/%s' % dbrec.changeset)
         return None, (500, "Create new changeset failed")
 
     @expose(methods="PUT")
-    def update(self, concept=None, **kwargs):
+    def update(self, parms, **kwargs):
         # Update an existing concept
         return None, (501, "Update changeset not implemented")
 
@@ -69,14 +69,14 @@ class Changeset(RF2BaseNode):
     @validate(changeset_parms)
     def delete(self, parms, **_):
         # TODO - format the return parameters
-        csdb.rollback(parms)
+        csdb.rollback(**parms.dict)
         return """<!DOCTYPE html><html><body>%s deleted</body></html>""" % parms.changeset, (0,'')
 
     @expose(methods=["PUT"])
     @validate(changeset_parms)
     def commit(self, parms, **_):
         # TODO - return the concept id's, etc that are committed
-        csdb.commit(parms)
+        csdb.commit(**parms.dict)
         return """<!DOCTYPE html><html><body>%s committed</body></html>""" % parms.changeset, (0,'')
 
 

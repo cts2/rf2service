@@ -39,7 +39,7 @@ from rf2db.db.RF2ModuleVersionsFile import ModuleVersionsDB
 def loadmodules():
     global_rf2_parms_tmpl = """
     <p>
-        <label><b>Include inactive records: </b><input type="radio" name="active" value="False"/></label><br/>
+        <label><b>Include inactive records: </b><input type="checkbox" name="active" value="False"/></label><br/>
         <br/><b>Restrict to module id(s):</b>
         %(modulelist)s
     </p>"""

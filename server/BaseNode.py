@@ -71,7 +71,7 @@ def expose(func=None, methods=None):
             for (k,v) in self.formats.items():
                 kwargs['_formats'][k] = v
             kwargs['_inside']  = True
-            #kwargs['_body'] = cherrypy.request.body.read()
+
 
             # Function can return one of:
             # formatted string           - to be returned directly to the caller, unformatted
