@@ -118,7 +118,7 @@ def as_html(parser_object, **_):
         cid_pn_did = ldb.preferred_term_for_concepts(cid_or_did)
         if cid_pn_did:
             return (cid_pn_did[cid_or_did][0], 'c')
-        pn = ddb.getDescriptionById(cid_or_did)
+        pn = ddb.read(cid_or_did)
         return (pn.term, 'd') if pn else ('', '')
 
 

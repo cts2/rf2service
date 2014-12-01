@@ -52,7 +52,7 @@ cherrypy.tools.allow = cherrypy.Tool('on_start_resource', http_methods_allowed)
 
 
 cherrypy.config.environments['development'] = {
-    'engine.autoreload_on': True,
+    'engine.autoreload.on': True,
     'checker.on': True,
     'tools.log_headers.on': True,
     'request.show_tracebacks': True,

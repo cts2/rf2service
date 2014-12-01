@@ -30,8 +30,9 @@ from server.BaseNode import expose
 from server.RF2BaseNode import RF2BaseNode, global_iter_parms, validate
 from rf2db.utils.sctid import sctid
 
-from rf2db.db.RF2DescriptionFile import DescriptionDB, description_parms, description_list_parms, \
-    pref_description_parms, description_for_concept_parms
+from rf2db.db.RF2DescriptionFile import DescriptionDB, description_parms,  \
+    pref_description_parms, description_for_concept_parms, new_description_parms, update_description_parms,\
+    delete_description_parms
 from rf2db.db.RF2DescriptionTextFile import DescriptionTextDB, description_match_parms
 from rf2db.db.RF2ConceptFile import ConceptDB, concept_parms
 from rf2db.db.RF2LanguageFile import LanguageDB
@@ -53,8 +54,31 @@ class Description(RF2BaseNode):
     @expose
     @validate(description_parms)
     def default(self, parms, **kwargs):
-        dbrec = descdb.getDescriptionById(int(sctid(parms.desc)), **parms.dict)
+        dbrec = descdb.read(int(sctid(parms.desc)), **parms.dict)
         return dbrec, (404, "Description id %s not found" % parms.desc)
+
+    @expose("POST")
+    @validate(new_description_parms)
+    def new(self, parms, **kwargs):
+        # A POST cannot supply a description sctid
+        kwargs.pop('desc', None)
+        dbrec = descdb.add(**parms.dict)
+        if isinstance(dbrec, basestring):
+            return None, (400, dbrec)
+        elif not dbrec:
+            return None, (404, "Unable to create description record")
+        self.redirect('/description/%s' % dbrec.id)
+
+
+    @expose(methods="PUT")
+    @validate(update_description_parms)
+    def update(self, parms, desc, **_):
+        return concdb.update(desc, **parms.dict)
+
+    @expose(methods=["DELETE"])
+    @validate(delete_description_parms)
+    def delete(self, parms, desc, **_):
+        return concdb.delete(desc, **parms.dict)
 
 class Descriptions(RF2BaseNode):
     title = "Find descriptions matching supplied text"
@@ -102,7 +126,7 @@ class PreferredDescriptionForConcept(RF2BaseNode):
         if not pt_entry:
             return None, (404, "Preferred term for concept %s not found" % parms.concept)
         desc = pt_entry[str(parms.concept)][1]
-        return descdb.getDescriptionById(desc, **parms.dict), \
+        return descdb.read(desc, **parms.dict), \
             (404, "Description id %s not found" % desc)
 
 

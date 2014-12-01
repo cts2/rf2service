@@ -52,13 +52,15 @@ class Concept(RF2BaseNode):
     @expose("POST")
     @validate(new_concept_parms)
     def new(self, parms, **kwargs):
-        # A POST cannot supply an SCTID
-        kwargs.pop('sctid', None)
+        # A POST cannot supply a concept id
+        kwargs.pop('concept', None)
         dbrec = concdb.add(**parms.dict)
-        if dbrec:
-            self.redirect('/concept/%s' % dbrec.id)
-        # TODO: figure out the correct error to return here
-        return None, (404, "Unable to create concept")
+        if isinstance(dbrec, basestring):
+            return None, (400, dbrec)
+        elif not dbrec:
+            return None, (500, "Unable to create concept record")
+        self.redirect('/concept/%s' % dbrec.id)
+
 
     @expose(methods="PUT")
     @validate(update_concept_parms)
