@@ -29,10 +29,10 @@
 import cherrypy
 
 from server.BaseNode    import expose
-from server.RF2BaseNode import RF2BaseNode
+from server.RF2BaseNode import RF2BaseNode, validate
 
 
-from rf2db.db.RF2LanguageFile import LanguageDB, language_list_parms
+from rf2db.db.RF2LanguageFile import LanguageDB, language_list_parms, language_concept_parms, language_desc_parms
 
 from server.config.Rf2Entries import settings
 
@@ -46,11 +46,9 @@ class LanguagesForConcept(RF2BaseNode):
     relpath = "/concept/~/languages"
 
     @expose
-    def default(self, concept, **kwargs):
-        if not language_list_parms.validate(**kwargs):
-            return None, (404, language_list_parms.invalidMessage(**kwargs))
-        parmlist = language_list_parms.parse(**kwargs)
-        return langdb.as_reference_set(langdb.get_entries_for_concept(concept, parmlist), parmlist)
+    @validate(language_concept_parms)
+    def default(self, parms, **_):
+        return langdb.as_list(langdb.get_entries_for_concept(**parms.dict), parms)
 
 
 class LanguagesForDescription(RF2BaseNode):
@@ -60,10 +58,8 @@ class LanguagesForDescription(RF2BaseNode):
     relpath = "/description/~/languages"
 
     @expose
-    def default(self, desc, **kwargs):
-        if not language_list_parms.validate(**kwargs):
-            return None, (404, language_list_parms.invalidMessage(**kwargs))
-        parmlist = language_list_parms.parse(**kwargs)
-        return langdb.as_reference_set(langdb.get_entries_for_description(desc, parmlist), parmlist)
+    @validate(language_desc_parms)
+    def default(self, parms, **_):
+        return langdb.as_list(langdb.get_entries_for_description(**parms.dict), parms)
 
 

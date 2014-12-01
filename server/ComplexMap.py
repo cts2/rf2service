@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2013, Mayo Clinic
+# Copyright (c) 2014, Mayo Clinic
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification,
@@ -28,9 +28,9 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from server.BaseNode import expose
-from server.RF2BaseNode import RF2BaseNode, global_iter_parms
+from server.RF2BaseNode import RF2BaseNode, global_iter_parms, validate
 
-from rf2db.db.RF2ComplexMapFile import ComplexMapDB
+from rf2db.db.RF2ComplexMapFile import ComplexMapDB, complexmap_list_parms
 from server.config.Rf2Entries import settings
 
 _maps_tmpl = """
@@ -43,11 +43,8 @@ _maplist_tmpl = """<input type="checkbox" name="refset" value=%s>%s</input>"""
 complexmap_db = ComplexMapDB()
 
 class ComplexMapBase(object):
-    def common(self, **kwargs):
-        if not complexmap_db.complexmap_list_parms().validate(**kwargs):
-            return None, (404, complexmap_db.complexmap_list_parms().invalidMessage(**kwargs))
-        parms = complexmap_db.complexmap_list_parms().parse(**kwargs)
-        dbrec = complexmap_db.as_reference_set(complexmap_db.get_complex_map(parms),parms)
+    def common(self, parms):
+        dbrec = complexmap_db.as_list(complexmap_db.get_complex_map(**parms.dict), parms)
         if dbrec: return dbrec
         rtn_message = "Complex map for"
         rtn_message += " refset %s" % parms.refset if parms.refset else ''
@@ -64,8 +61,9 @@ class ComplexMapById(RF2BaseNode, ComplexMapBase):
     extensions = RF2BaseNode.extensions + [global_iter_parms]
 
     @expose
-    def default(self, **kwargs):
-        return self.common(**kwargs)
+    @validate(complexmap_list_parms)
+    def default(self, parms, **_):
+        return self.common(parms)
 
 
 class ComplexMapForSource(RF2BaseNode, ComplexMapBase):
@@ -79,8 +77,9 @@ class ComplexMapForSource(RF2BaseNode, ComplexMapBase):
 
 
     @expose
-    def default(self, **kwargs):
-        return self.common(**kwargs)
+    @validate(complexmap_list_parms)
+    def default(self, parms, **_):
+        return self.common(parms)
 
 
 class ComplexMapForTarget(RF2BaseNode, ComplexMapBase):
@@ -94,5 +93,6 @@ class ComplexMapForTarget(RF2BaseNode, ComplexMapBase):
 
 
     @expose
-    def default(self, **kwargs):
-        return self.common(**kwargs)
+    @validate(complexmap_list_parms)
+    def default(self, parms, **_):
+        return self.common(parms)

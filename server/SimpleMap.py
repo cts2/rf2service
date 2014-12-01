@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2013, Mayo Clinic
+# Copyright (c) 2014, Mayo Clinic
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification,
@@ -28,9 +28,9 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from server.BaseNode import expose
-from server.RF2BaseNode import RF2BaseNode, global_iter_parms
+from server.RF2BaseNode import RF2BaseNode, global_iter_parms, validate
 
-from rf2db.db.RF2SimpleMapFile import SimpleMapDB
+from rf2db.db.RF2SimpleMapFile import SimpleMapDB, simplemap_list_parms
 from server.config.Rf2Entries import settings
 
 _maps_tmpl = """
@@ -43,11 +43,8 @@ _maplist_tmpl = """<input type="checkbox" name="refset" value=%s>%s</input>"""
 simplemap_db = SimpleMapDB()
 
 class SimpleMapBase(object):
-    def common(self, **kwargs):
-        if not simplemap_db.simplemap_list_parms().validate(**kwargs):
-            return None, (404, simplemap_db.simplemap_list_parms().invalidMessage(**kwargs))
-        parms = simplemap_db.simplemap_list_parms().parse(**kwargs)
-        dbrec = simplemap_db.as_reference_set(simplemap_db.get_simple_map(parms),parms)
+    def common(self, parms):
+        dbrec = simplemap_db.as_list(simplemap_db.get_simple_map(**parms.dict), parms)
         if dbrec: return dbrec
         rtn_message = "Simple map for"
         rtn_message += " refset %s" % parms.refset if parms.refset else ''
@@ -64,8 +61,9 @@ class SimpleMapByMapId(RF2BaseNode, SimpleMapBase):
     extensions = RF2BaseNode.extensions + [global_iter_parms]
 
     @expose
-    def default(self, **kwargs):
-        return self.common(**kwargs)
+    @validate(simplemap_list_parms)
+    def default(self, parms, **_):
+        return self.common(parms)
 
 class SimpleMapForSource(RF2BaseNode, SimpleMapBase):
     title = "Query RF2 SimpleMap Refset"
@@ -78,8 +76,9 @@ class SimpleMapForSource(RF2BaseNode, SimpleMapBase):
 
 
     @expose
-    def default(self, **kwargs):
-        return self.common(**kwargs)
+    @validate(simplemap_list_parms)
+    def default(self, parms, **_):
+        return self.common(parms)
 
 
 class SimpleMapForTarget(RF2BaseNode, SimpleMapBase):
@@ -93,8 +92,9 @@ class SimpleMapForTarget(RF2BaseNode, SimpleMapBase):
 
 
     @expose
-    def default(self, **kwargs):
-        return self.common(**kwargs)
+    @validate(simplemap_list_parms)
+    def default(self, parms, **_):
+        return self.common(parms)
 
 
 

@@ -80,5 +80,5 @@ class Concepts(RF2BaseNode):
     @expose
     @validate(concept_list_parms)
     def default(self, parms, **_):
-        return concdb.asConceptList(concdb.getAllConcepts(**parms.dict), parms)
+        return concdb.as_list(concdb.getAllConcepts(**parms.dict), parms)
 

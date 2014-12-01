@@ -102,7 +102,8 @@ count_template = """<!DOCTYPE html>
 
 td = """<td>%s</td>"""
 row = """<tr>%s</tr>"""
-a = "<span title='%(pn)s'><a href='%(rf2root)sconcept/%(cid)s/prefdescription'>%(cid)s</a></span>"
+ca = "<span title='%(pn)s'><a href='%(rf2root)sconcept/%(cid)s/prefdescription'>%(cid)s</a></span>"
+da = "<span title='%(pn)s'><a href='%(rf2root)sdescription/%(cid)s'>%(cid)s</a></span>"
 cts2a = "<span title='%(pn)s'><a href='%(cts2root)sentity/%(cid)s?format=html'>%(cid)s</a></span"
 
 def addsep(link):
@@ -110,11 +111,15 @@ def addsep(link):
 
 def as_html(parser_object, **_):
     def _pnFor(cid_or_did):
+        """ Return the preferred name for a concept id or the term for a description id
+        @param cid_or_did: concept or description id
+        @return: tuple(name, type) where type is 'c' or 'd'
+        """
         cid_pn_did = ldb.preferred_term_for_concepts(cid_or_did)
         if cid_pn_did:
-            return cid_pn_did[cid_or_did][0]
-        pn = ddb.getDescriptionById_p(cid_or_did)
-        return pn.term if pn else ''
+            return (cid_pn_did[cid_or_did][0], 'c')
+        pn = ddb.getDescriptionById(cid_or_did)
+        return (pn.term, 'd') if pn else ('', '')
 
 
 
@@ -124,11 +129,12 @@ def as_html(parser_object, **_):
     """
     def a_link(arg):
         if arg[0] and sctid.isValid(arg[1]):
-            pn = _pnFor(arg[1])
+            (pn, pt) = _pnFor(arg[1])
             cid = arg[1]
             cts2root = addsep(ServiceSettings.settings.cts2base)
             rf2root = addsep(urlutil.base_uri())
-            return (cts2a if arg[2] == 'conceptId' else a) % locals()
+            if pt:
+                return (cts2a if arg[2] == 'conceptId' else ca if pt=='c' else da) % locals()
         return arg[1]
 
     def td_row(items):

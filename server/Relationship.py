@@ -78,7 +78,7 @@ class Relationships(RF2BaseNode):
 def validateAndExecute(cid, fctn, parms):
     if not concdb.read(cid, **parms.dict):
         return None, (404, "Concept %s doesn't exist" % cid)
-    return reldb.asRelationshipList( fctn(cid, **parms.dict), parms)
+    return reldb.as_list( fctn(cid, **parms.dict), parms)
 
 class RelationshipsForSource(RF2BaseNode):
     title = "<p>Relationship entries for source SCTID</p>"

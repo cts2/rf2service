@@ -27,10 +27,10 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from server.BaseNode    import expose
-from server.RF2BaseNode import RF2BaseNode, global_iter_parms
+from server.BaseNode import expose
+from server.RF2BaseNode import RF2BaseNode, global_iter_parms, validate
 
-from rf2db.db.RF2SimpleReferencesetFile import SimpleReferencesetDB
+from rf2db.db.RF2SimpleReferencesetFile import SimpleReferencesetDB, simplerefset_list_parms
 from server.config.Rf2Entries import settings
 
 
@@ -44,11 +44,8 @@ _rss_tmpl = """
 _rslist_tmpl = """<input type="checkbox" name="refset" value=%s>%s</input>"""
 
 class SimpleRefsetBase(object):
-    def common(self, **kwargs):
-        if not simplerefset_db.simplerefset_list_parms().validate(**kwargs):
-            return None, (404, simplerefset_db.simplerefset_list_parms().invalidMessage(**kwargs))
-        parms = simplerefset_db.simplerefset_list_parms().parse(**kwargs)
-        dbrec = simplerefset_db.as_reference_set(simplerefset_db.get_simple_refset(parms),parms)
+    def common(self, parms):
+        dbrec = simplerefset_db.as_list(simplerefset_db.get_simple_refset(**parms.dict),parms)
         if dbrec: return dbrec
         rtn_message = "Simple reference set"
         rtn_message += " refset %s" % parms.refset if parms.refset else ''
@@ -64,8 +61,9 @@ class SimpleRefsetById(RF2BaseNode, SimpleRefsetBase):
     extensions = RF2BaseNode.extensions + [global_iter_parms]
 
     @expose
-    def default(self, **kwargs):
-        return self.common(**kwargs)
+    @validate(simplerefset_list_parms)
+    def default(self, parms, **_):
+        return self.common(parms)
 
 class SimpleRefsetByComponent(RF2BaseNode, SimpleRefsetBase):
     title = "Query RF2 Simple Refset"
@@ -81,6 +79,7 @@ class SimpleRefsetByComponent(RF2BaseNode, SimpleRefsetBase):
 
 
     @expose
-    def default(self, **kwargs):
-        return self.common(**kwargs)
+    @validate(simplerefset_list_parms)
+    def default(self, parms, **_):
+        return self.common(parms)
 

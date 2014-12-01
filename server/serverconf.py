@@ -28,7 +28,7 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 import cherrypy
 from rf2db.utils import urlutil
-from rf2db.db.RF2DBConnection import config, dbconfig
+from rf2db.db.RF2DBConnection import cp_values
 
 html = """<!DOCTYPE html>
 <html>
@@ -82,22 +82,6 @@ html = """<!DOCTYPE html>
 </body>
 </html>"""
 
-# config_parms = ConfigArgs('dbparms',
-#                           [ConfigArg('host', help='MySQL DB Host', default='localhost'),
-#                            ConfigArg('port', help='MySQL DB Port'),
-#                            ConfigArg('user', abbrev='u', help='MySQL User Id'),
-#                            ConfigArg('passwd', abbrev='p', help='MySQL Password'),
-#                            ConfigArg('db', abbrev='db', help='Database', default='rf2'),
-#                            ConfigArg('charset', help='MySQL Character Set', default='utf8')
-#                           ])
-# config = ConfigManager(config_parms)
-#
-# debug_parms = ConfigArgs('debug',
-#                          [ConfigArg('trace', help='Trace SQL Calls', action='store_true'),
-#                           ConfigArg('nocache', help='Turn off cache for debugging', action='store_true')
-#                          ])
-# dbconfig = ConfigManager(debug_parms)
-
 
 
 class ServerConf(object):
@@ -105,10 +89,10 @@ class ServerConf(object):
     @cherrypy.expose
     def default(self, *args, **kwargs):
 
-        host = config.host
-        port = config.port
-        db = config.db
-        charset = config.charset
+        host = cp_values.host
+        port = cp_values.port
+        db = cp_values.db
+        charset = cp_values.charset
 
         href_host = urlutil.href_settings.host
         href_root = urlutil.href_settings.root

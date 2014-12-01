@@ -75,7 +75,7 @@ class Descriptions(RF2BaseNode):
     @expose
     @validate(description_match_parms)
     def default(self, parms, **_):
-        return descdb.asDescriptionList(desctextdb.getDescriptions(**parms.dict), parms)
+        return descdb.as_list(desctextdb.getDescriptions(**parms.dict), parms)
         
 
 class DescriptionsForConcept(RF2BaseNode):
@@ -87,7 +87,7 @@ class DescriptionsForConcept(RF2BaseNode):
     @expose
     @validate(description_for_concept_parms)
     def default(self, parms, **_):
-        return descdb.asDescriptionList(descdb.getConceptDescription(parms.concept, **parms.dict), parms),\
+        return descdb.as_list(descdb.getConceptDescription(parms.concept, **parms.dict), parms),\
                (404, "Description for concept %s not found" % parms.concept)
 
 class PreferredDescriptionForConcept(RF2BaseNode):
