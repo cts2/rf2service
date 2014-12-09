@@ -30,6 +30,7 @@
 from server.BaseNode import expose
 from server.RF2BaseNode import RF2BaseNode, global_iter_parms, validate
 from rf2db.utils.sctid import sctid
+from rf2db.utils.lfu_cache import lfu_cache
 
 from rf2db.db.RF2ConceptFile import ConceptDB, concept_parms, concept_list_parms, new_concept_parms, \
     update_concept_parms, delete_concept_parms

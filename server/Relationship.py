@@ -28,8 +28,8 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 import cherrypy
 
-from rf2db.db.RF2RelationshipFile import RelationshipDB, rel_parms, rellist_parms, rel_source_parms, \
-    rel_predicate_parms, rel_target_parms
+from rf2db.db.RF2RelationshipFile import RelationshipDB, rel_parms, rel_source_parms, \
+    rel_predicate_parms, rel_target_parms, new_rel_parms, del_rel_parms
 from rf2db.db.RF2StatedRelationshipFile import StatedRelationshipDB
 from rf2db.db.RF2ConceptFile import ConceptDB, concept_parms
 from server.BaseNode import expose
@@ -57,8 +57,26 @@ class Relationship(RF2BaseNode):
     @expose
     @validate(rel_parms)
     def default(self, parms, **_):
-        dbrec = reldb.getRelationship(**parms.dict)
+        dbrec = reldb.read(**parms.dict)
         return dbrec, (404, "Relationship record %s not found" % parms.rel)
+
+    @expose("POST")
+    @validate(new_rel_parms)
+    def new(self, parms, **kwargs):
+        # A POST cannot supply a relationship id
+        kwargs.pop('id', None)
+        dbrec = reldb.add(**parms.dict)
+        if isinstance(dbrec, basestring):
+            return None, (400, dbrec)
+        elif not dbrec:
+            return None, (500, "Unable to create relationship record")
+        self.redirect('/relationship/%s' % dbrec.id)
+
+
+    @expose(methods=["DELETE"])
+    @validate(del_rel_parms)
+    def delete(self, parms, rid, **_):
+        return concdb.delete(rid, **parms.dict)
 
 class Relationships(RF2BaseNode):
     label = "Relationship SCTID"
