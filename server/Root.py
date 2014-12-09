@@ -40,25 +40,25 @@ _curdir = os.path.join(os.getcwd(), os.path.dirname(__file__))
 
 refEntries = Rf2Entries.settings
 poss_formats = [
-    ('html','HTML'),
+    ('html', 'HTML'),
     ('xml', 'XML'),
     ('tsv', 'Tab Sep'),
     ('bsv', 'Bar Sep'),
     ('ditatable', 'Dita Table'),
     ('cntable', 'CollabNet Table'),
-    ('json','JSON'),
+    ('json', 'JSON'),
     ]
 
-formats_tmpl=Template('<td><a href="$root/$path?format=$fmt$sep$args"><button>$fmtlabel</button></a></td>')
+formats_tmpl = Template('<td><a href="$root/$path?format=$fmt$sep$args"><button>$fmtlabel</button></a></td>')
 
-def formats(path=None,args=""):
+def formats(path=None, args=""):
     root = urlutil.base_uri()
     sep = '&' if args else ''
     fmts = Template(formats_tmpl.safe_substitute(locals()))
     return '\t\n'.join(fmts.safe_substitute(locals()) for (fmt, fmtlabel) in poss_formats)
 
 
-fcn_tmpl=Template("""<td>$label</td>
+fcn_tmpl = Template("""<td>$label</td>
                 <td><a href="$base_fcn">$fcn_desc</a></td>
                 $fmts_sig
                 <td>$fcn_sig</td>""")
@@ -71,23 +71,24 @@ class Root(object):
 
     _cp_config = {
         'tools.sessions.on': True,
-        'tools.auth.on' : True,
+        'tools.auth.on': True,
         'tools.auth_basic.on': False,
         'tools.auth_basic.realm' : 'rf2',
         'tools.auth_basic.checkpassword': False
     }
 
-    htmldir = os.path.join(_curdir,'..','static','html')
+    htmldir = os.path.join(_curdir, '..', 'static', 'html')
     @cherrypy.expose
     def index(self):
         mylookup = TemplateLookup(directories=[os.path.join(self.htmldir, 'snippets')])
-        mytemplate = Template(filename=os.path.join(self.htmldir,'rf2.html'), lookup=mylookup)
-        return mytemplate.render(**dict({'href_root':urlutil.href_settings.root}, **(refEntries.asdict())))
+        mytemplate = Template(filename=os.path.join(self.htmldir, 'rf2.html'), lookup=mylookup)
+        return mytemplate.render(**dict({'href_root': urlutil.href_settings.root}, **(refEntries.asdict())))
 
 
     @cherrypy.expose
     def default(self, *kwargs):
-        return ''.join(list(serve_file(os.path.join(_curdir,'..','static', *kwargs)))) % dict({'href_root':urlutil.href_settings.root}, **(refEntries.asdict()))
+        return ''.join(list(serve_file(os.path.join(_curdir, '..', 'static', *kwargs)))) % \
+               dict({'href_root': urlutil.href_settings.root}, **(refEntries.asdict()))
 
 
 
