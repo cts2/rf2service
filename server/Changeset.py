@@ -43,7 +43,7 @@ class Changeset(RF2BaseNode):
     @expose
     @validate(changeset_parms)
     def default(self, parms, **_):
-        dbrec = csdb.get_changeset(**parms.dict)
+        dbrec = csdb.read(**parms.dict)
         return dbrec, (404, "Change set %s not found" % parms.changeset)
 
 
@@ -54,7 +54,7 @@ class Changeset(RF2BaseNode):
     @expose("POST")
     @validate(add_changeset_parms)
     def new(self, parms, **_):
-        dbrec = csdb.new_changeset(**parms.dict)
+        dbrec = csdb.new(**parms.dict)
         if dbrec:
             parms.changeset = dbrec.changeset
             self.redirect('changeset/%s' % dbrec.changeset)

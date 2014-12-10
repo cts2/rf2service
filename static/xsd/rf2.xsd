@@ -8078,6 +8078,7 @@
         <xs:complexContent>
             <xs:extension base="RefsetBase">
                 <xs:sequence>
+                    <xs:element name="name" type="String"/>
                     <xs:element name="creator" type="String" minOccurs="0"/>
                     <xs:element name="changeDescription" type="String" minOccurs="0"/>
                     <xs:element name="isFinal" type="Boolean"/>
