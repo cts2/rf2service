@@ -29,12 +29,12 @@
 
 from server.BaseNode import expose
 from server.RF2BaseNode import RF2BaseNode, validate
-from rf2db.db.RF2ChangeSetFile import add_changeset_parms, changeset_parms, validate_changeset_parms
+from rf2db.db.RF2ChangeSetFile import add_changeset_parms, changeset_parms, update_changeset_parms
 
 from rf2db.db.RF2ChangeSetFile import ChangeSetDB
 
 csdb = ChangeSetDB()
-# next step - pick up the represented namespace
+
 
 class Changeset(RF2BaseNode):
     title = "Read RF2 changeset by changeset id"
@@ -58,26 +58,27 @@ class Changeset(RF2BaseNode):
         if dbrec:
             parms.changeset = dbrec.changeset
             self.redirect('changeset/%s' % dbrec.changeset)
-        return None, (500, "Create new changeset failed")
+        return None, (404, csdb.invalid_new_reason(**parms.dict))
 
     @expose(methods="PUT")
+    @validate(update_changeset_parms)
     def update(self, parms, **kwargs):
-        # Update an existing concept
-        return None, (501, "Update changeset not implemented")
+        return csdb.update(**parms.dict), (404, csdb.invalid_update_reason(**parms.dict))
+
 
     @expose(methods=["DELETE"])
     @validate(changeset_parms)
     def delete(self, parms, **_):
         # TODO - format the return parameters
         csdb.rollback(**parms.dict)
-        return """<!DOCTYPE html><html><body>%s deleted</body></html>""" % parms.changeset, (0,'')
+        return """<!DOCTYPE html><html><body>%s deleted</body></html>""" % parms.changeset, (0, '')
 
     @expose(methods=["PUT"])
     @validate(changeset_parms)
     def commit(self, parms, **_):
         # TODO - return the concept id's, etc that are committed
         csdb.commit(**parms.dict)
-        return """<!DOCTYPE html><html><body>%s committed</body></html>""" % parms.changeset, (0,'')
+        return """<!DOCTYPE html><html><body>%s committed</body></html>""" % parms.changeset, (0, '')
 
 
 

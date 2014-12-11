@@ -36,23 +36,24 @@ from rf2db.utils.xmlutils import prettyxml, diffxml
 from server.utils.SetConfig import setConfig
 setConfig()
 
-def testxml(resource, testxml=None, testfile=None, save=False, printdiff=True):
+def testxml(resource, xmltotest=None, testfile=None, save=False, printdiff=True):
     """ Compare the XML in resource to the supplied string or file
     @param resource - a resource or xml text to test
-    @param testxml - xml text to test against
+    @param xmltotest - xml text to test against
     @param testfile - file name containing xml text
     @param save - if true, write the xml for resource into testfile
     @param printdiff - if true, print out any differences
     @return whether resource and testxml/textfile are the same or not
     """
-    assert (testxml or testfile) and not(testxml and testfile)
+    assert (xmltotest or testfile) and not(xmltotest and testfile)
     if save and testfile:
-        open(testfile,'w').write(prettyxml(resource))
+        open(testfile, 'w').write(prettyxml(resource))
         print "SAVED: " + testfile
         rval = True
     else:
-        if not testxml: testxml = open(testfile).read()
-        rval = diffxml(resource.toxml() if hasattr(resource, 'toxml') else resource, testxml, printdiff=printdiff)
+        if not xmltotest:
+            xmltotest = open(testfile).read()
+        rval = diffxml(resource.toxml() if hasattr(resource, 'toxml') else resource, xmltotest, printdiff=printdiff)
     return rval
 
 
@@ -61,23 +62,23 @@ from server.config.Rf2Entries import settings
 service_uri = 'http://localhost:8081/rf2/'
 
 urls = [
-    ('concept/%s' % settings.refConcept)]
-
+    ('concept/%s?format=xml' % settings.refConcept),
+    ('description/%s?format=xml' % settings.refDesc)]
 
 
 errorurls = [
-#    ('entity/sctpn:Appendicitis', (404, "Namespace sctpn not found")),
-#    ('entity/74400007', (400, "Unknown concept id"))
+    ('changeset/abc', (404, "Namespace sctpn not found")),
 ]
 
 testdir = '/rf2/'
-prefix  = 't_'
+prefix = 't_'
 
 dirname, _ = os.path.split(os.path.abspath(__file__))
 
-replaces = ['http://',':','?','=', '&amp;','+']
+replaces = ['http://', ':', '?', '=', '&amp;', '+']
 
 json_ignore = []
+
 
 class WebServerTestCase(unittest.TestCase):
 
@@ -142,11 +143,12 @@ class WebServerTestCase(unittest.TestCase):
         return not bool(error)
 
     def doErrorTest(self, u, (code, text)):
-        url = u.replace('?','?bypass=1&') if '?' in u else (u + '?bypass=1')
-        # print "READING", (service_uri+url).replace('&amp;','&')
+        url = u.replace('?', '?bypass=1&') if '?' in u else (u + '?bypass=1')
+        print "READING", (service_uri+url).replace('&amp;', '&')
         req = urllib2.Request(service_uri+url)
-        try: e = urllib2.urlopen(req)
-        except urllib2.URLError, e:
+        try:
+            e = urllib2.urlopen(req)
+        except urllib2.URLError as e:
             if e.code == code:
                 return True
 
@@ -162,11 +164,11 @@ class WebServerTestCase(unittest.TestCase):
         #    1) Set RF2ConnectionParms.py autobypass=True
         #    2) Start WebServer.py
         #    3) Make sure the json converter (java/run.sh) is running
-        self.assertTrue(reduce(lambda x,y: x and self.doTest(y), urls, True))
+        self.assertTrue(reduce(lambda x, y: x and self.doTest(y), urls, True))
 
     def testErrors(self):
         # TODO: the custom error code isn't part of the response.  The html is rxed via e.read(), but it takes work
-        self.assertTrue(reduce(lambda x,y: x and self.doErrorTest(y[0],y[1]), errorurls, True))
+        self.assertTrue(reduce(lambda x, y: x and self.doErrorTest(y[0], y[1]), errorurls, True))
 
 
 if __name__ == "__main__":

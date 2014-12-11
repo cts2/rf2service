@@ -28,6 +28,8 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import unittest
+import json
+
 from server.utils.SetConfig import setConfig
 setConfig()
 from server.converters.tojson import as_json
@@ -40,7 +42,7 @@ class JSONConverterTestCase(unittest.TestCase):
     def test_tojson(self):
         desc = RF2Description(
             '517048016\t20100131\t1\t900000000000380005\t10027005\ten\t900000000000003001\tPatchy (qualifier value)\t900000000000020002')
-        json, mimetype = as_json(desc)
+        jsonstr, mimetype = as_json(desc)
         self.assertEqual('application/json;charset=UTF-8', mimetype)
         self.assertDictEqual(cleanJson(
             {
@@ -56,7 +58,7 @@ class JSONConverterTestCase(unittest.TestCase):
                     "term": "Patchy (qualifier value)",
                     "caseSignificanceId": "900000000000020002"
                 }
-            }), cleanJson(eval(json)))
+            }), cleanJson(json.loads(jsonstr)))
 
 
 if __name__ == '__main__':

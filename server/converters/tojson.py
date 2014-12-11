@@ -33,9 +33,11 @@ from server.config import ServiceSettings
 from XSLTGateway.XSLTGateway import XSLTGateway
 
 gw = XSLTGateway(ServiceSettings.settings.gatewayport)
+
+
 def as_json(rval, ns=None, **kwargs):
     """ Convert an XML rendering to JSON using an external py4j xml to json conversion package """
-    rval, mimetype = as_xml(rval,ns,**kwargs)
+    rval, mimetype = as_xml(rval, ns, **kwargs)
     if mimetype.startswith('application/xml;'):
         json = gw.toJSON(rval)
         if json:

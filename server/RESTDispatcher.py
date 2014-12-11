@@ -132,8 +132,9 @@ resources = [Resource(r'/', Root, action='index'),
              Resource(r'/changeset/:changeset', Changeset, action='update', method='PUT'),
              Resource(r'/changeset/:changeset', Changeset, action='delete', method='DELETE'),
              Resource(r'/changeset/:changeset', Changeset),
+             Resource(r'/changeset/:csname', Changeset, action='new', method='POST'),
              Resource(r'/changeset', Changeset, action='new', method='POST'),
-             Resource(r'/changesets', Changeset, action='index'),]
+             Resource(r'/changesets', Changeset, action='index'), ]
 
 
 
