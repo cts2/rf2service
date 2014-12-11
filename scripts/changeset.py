@@ -38,7 +38,7 @@ def stub(opts):
 
 
 def genurl(opts, base=''):
-    return (opts.url + ('/changeset/%s' % opts.refset) + base + '?format=json') + \
+    return (opts.url + ('/changeset/%s' % opts.changeset) + base + '?format=json') + \
            ('&description=%s' % opts.description if opts.description else '') + \
            ('&owner=%s' % opts.owner if opts.owner else '')
 
@@ -58,21 +58,21 @@ def new(opts):
 def rollback(opts):
     data = requests.delete(genurl(opts))
     if not checkerror(data):
-        print('Changeset %s was removed' % opts.refset)
+        print('Changeset %s was removed' % opts.changeset)
     return data.ok
 
 
 def commit(opts):
     data = requests.put(genurl(opts, '/commit'))
     if not checkerror(data):
-        print('Changeset %s was committed' % opts.refset)
+        print('Changeset %s was committed' % opts.changeset)
     return data.ok
 
 
 def update(opts):
     data = requests.put(genurl(opts))
     if not checkerror(data):
-        print('Changeset %s was updated' % opts.refset)
+        print('Changeset %s was updated' % opts.changeset)
     return data.ok
 
 choices = {'new': new, 'update': update, 'commit': commit, 'rollback': rollback, 'list': stub}
@@ -81,12 +81,12 @@ def main(args):
     parser = argparse.ArgumentParser(description="RF2 Changeset Manager")
     parser.add_argument('-u', '--url', help="Base service URL")
     parser.add_argument('action', choices=choices.keys())
-    parser.add_argument('refset', help="Reference set name")
+    parser.add_argument('changeset', help="Reference set name")
     parser.add_argument('-d', '--description', help="Reference set description")
     parser.add_argument('-o', '--owner', help="Reference set owner")
     opts = parser.parse_args(args)
-    if opts.action != 'list' and not opts.refset:
-        print("Refset name must be supplied")
+    if opts.action != 'list' and not opts.changeset:
+        print("Changeset name must be supplied")
         exit(0)
     return choices[opts.action](opts)
 

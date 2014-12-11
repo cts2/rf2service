@@ -5,7 +5,7 @@
 # Redistribution and use in source and binary forms, with or without modification,
 # are permitted provided that the following conditions are met:
 #
-#     Redistributions of source code must retain the above copyright notice, this
+# Redistributions of source code must retain the above copyright notice, this
 #     list of conditions and the following disclaimer.
 #
 #     Redistributions in binary form must reproduce the above copyright notice,
@@ -30,18 +30,17 @@ from server.BaseNode import expose
 from server.RF2BaseNode import RF2BaseNode, global_iter_parms, validate
 from rf2db.utils.sctid import sctid
 
-from rf2db.db.RF2DescriptionFile import DescriptionDB, description_parms,  \
-    pref_description_parms, description_for_concept_parms, new_description_parms, update_description_parms,\
-    delete_description_parms
+from rf2db.db.RF2DescriptionFile import DescriptionDB, description_parms, \
+    pref_description_parms, description_for_concept_parms, new_description_parms, update_description_parms, \
+    delete_description_parms, fsn_parms, base_parms
 from rf2db.db.RF2DescriptionTextFile import DescriptionTextDB, description_match_parms
 from rf2db.db.RF2ConceptFile import ConceptDB, concept_parms
 from rf2db.db.RF2LanguageFile import LanguageDB
 
-
 from server.config.Rf2Entries import settings
 
-descdb =  DescriptionDB()
-concdb =  ConceptDB()
+descdb = DescriptionDB()
+concdb = ConceptDB()
 desctextdb = DescriptionTextDB()
 langdb = LanguageDB()
 
@@ -50,7 +49,7 @@ class Description(RF2BaseNode):
     title = "Read description by description ID"
     label = "Description SCTID"
     value = settings.refDesc
-        
+
     @expose
     @validate(description_parms)
     def default(self, parms, **kwargs):
@@ -80,12 +79,13 @@ class Description(RF2BaseNode):
     def delete(self, parms, desc, **_):
         return concdb.delete(desc, **parms.dict)
 
+
 class Descriptions(RF2BaseNode):
     title = "Find descriptions matching supplied text"
     label = "Match Text"
     value = settings.refMatchvalue
     extensions = RF2BaseNode.extensions + [
-    """<p><b>Match Algorithm:</b>
+        """<p><b>Match Algorithm:</b>
 <input type="radio" name="matchalgorithm" value="wordstart" checked="True">Word Starts With</input>
 <input type="radio" name="matchalgorithm" value="contains">Term Contains</input>
 <input type="radio" name="matchalgorithm" value="startswith">Term Starts With</input>
@@ -93,14 +93,14 @@ class Descriptions(RF2BaseNode):
 <input type="radio" name="matchalgorithm" value="exactmatch">Exact Term Match</input>
 <input type="radio" name="matchalgorithm" value="wordend">Word Ends With</input>
 </p>""",
-    global_iter_parms]
+        global_iter_parms]
 
-    
+
     @expose
     @validate(description_match_parms)
     def default(self, parms, **_):
         return descdb.as_list(desctextdb.getDescriptions(**parms.dict), parms)
-        
+
 
 class DescriptionsForConcept(RF2BaseNode):
     label = "Concept SCTID"
@@ -111,8 +111,33 @@ class DescriptionsForConcept(RF2BaseNode):
     @expose
     @validate(description_for_concept_parms)
     def default(self, parms, **_):
-        return descdb.as_list(descdb.getConceptDescription(parms.concept, **parms.dict), parms),\
+        return descdb.as_list(descdb.getConceptDescription(parms.concept, **parms.dict), parms), \
                (404, "Description for concept %s not found" % parms.concept)
+
+
+class FSNForConcept(RF2BaseNode):
+    label = "Concept SCTID"
+    value = settings.refConcept
+    relpath = "/concept/~/fsn"
+
+    @expose
+    @validate(fsn_parms)
+    def default(self, parms, **_):
+        return descdb.fsn(**parms.dict), (404, "FSN for concept %s not found" % parms.concept)
+
+class ConceptBase(RF2BaseNode):
+    label = "Concept SCTID"
+    value = settings.refConcept
+    relpath = "/concept/~/base"
+
+    @expose
+    @validate(base_parms)
+    def default(self, parms, **_):
+        base = descdb.base(**parms.dict)
+        if base:
+            base = '<?xml version="1.0" encoding="UTF-8"?>\n<val>' + base + '</val>'
+        return base, (404, "FSN for concept %s not found" % parms.concept)
+
 
 class PreferredDescriptionForConcept(RF2BaseNode):
     label = "Concept SCTID"
@@ -127,8 +152,7 @@ class PreferredDescriptionForConcept(RF2BaseNode):
             return None, (404, "Preferred term for concept %s not found" % parms.concept)
         desc = pt_entry[str(parms.concept)][1]
         return descdb.read(desc, **parms.dict), \
-            (404, "Description id %s not found" % desc)
-
+               (404, "Description id %s not found" % desc)
 
 
 class ConceptForDescription(RF2BaseNode):
@@ -136,7 +160,7 @@ class ConceptForDescription(RF2BaseNode):
     label = "Description SCTID"
     value = settings.refDesc
     relpath = "/description/~/concept"
-            
+
     @expose
     def default(self, desc=None, **kwargs):
         if not sctid.isValid(desc):
@@ -144,7 +168,7 @@ class ConceptForDescription(RF2BaseNode):
         if not description_parms.validate(**kwargs):
             return None, (404, description_parms.invalidMessage(**kwargs))
         conc = descdb.getConceptIdForDescription(desc, description_parms.parse(**kwargs))
-        
+
         if conc:
             concrec = concdb.getConcept(conc, concept_parms.parse(**kwargs))
             return concrec, (404, "Concept for concept %s not found" % conc)

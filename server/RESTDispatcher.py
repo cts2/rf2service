@@ -29,7 +29,8 @@
 
 import cherrypy
 from server.Concept import Concept, Concepts
-from server.Description import Description, Descriptions, DescriptionsForConcept, ConceptForDescription, PreferredDescriptionForConcept
+from server.Description import Description, Descriptions, DescriptionsForConcept, ConceptForDescription, \
+    PreferredDescriptionForConcept, FSNForConcept, ConceptBase
 from server.Relationship import Relationship, Relationships, RelationshipsForSource, RelationshipsForTarget, RelationshipsForPredicate
 from server.Language import LanguagesForConcept, LanguagesForDescription
 from server.SimpleRefset import SimpleRefsetByComponent, SimpleRefsetById
@@ -66,6 +67,8 @@ resources = [Resource(r'/', Root, action='index'),
              Resource(r'/concept/:concept/descriptions', DescriptionsForConcept),
              Resource(r'/concept/:concept/languages', LanguagesForConcept),
              Resource(r'/concept/:concept/prefdescription', PreferredDescriptionForConcept),
+             Resource(r'/concept/:concept/fsn', FSNForConcept),
+             Resource(r'/concept/:concept/base', ConceptBase),
              Resource(r'/concept/:concept', Concept, action='update', method='PUT'),
              Resource(r'/concept/:concept', Concept, action='delete', method='DELETE'),
              Resource(r'/concept/:concept', Concept),
@@ -98,7 +101,8 @@ resources = [Resource(r'/', Root, action='index'),
              Resource(r'/relationships/:value', Relationships),
              Resource(r'/relationship/:rid', Relationship, action='delete', method='DELETE'),
              Resource(r'/relationship/source/:source/target/:target', Relationship, action='new', method='POST'),
-             Resource(r'/relationship/source/:source/predicate/:predicate/target/:target', Relationship, action='new', method='POST'),
+             Resource(r'/relationship/source/:source/predicate/:predicate/target/:target', Relationship,
+                      action='new', method='POST'),
              Resource(r'/relationships/', Relationships),
              Resource(r'/relationships', Relationships, action='index'),
 
@@ -131,8 +135,11 @@ resources = [Resource(r'/', Root, action='index'),
              Resource(r'/changeset/:changeset/commit', Changeset, action='commit', method='PUT'),
              Resource(r'/changeset/:changeset', Changeset, action='update', method='PUT'),
              Resource(r'/changeset/:changeset', Changeset, action='delete', method='DELETE'),
+             Resource(r'/changeset/:changeset/details', Changeset, action='details'),
              Resource(r'/changeset/:changeset', Changeset),
              Resource(r'/changeset/:csname', Changeset, action='new', method='POST'),
+             Resource(r'/changeset', Changeset, action='index'),
+             Resource(r'/changeset/', Changeset),
              Resource(r'/changeset', Changeset, action='new', method='POST'),
              Resource(r'/changesets', Changeset, action='index'), ]
 

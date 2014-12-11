@@ -8098,5 +8098,23 @@
         </xs:complexContent>
     </xs:complexType>
 
+    <xs:element name="ChangeSetDetails" type="ChangeSetDetails"/>
+    <xs:complexType name="ChangeSetDetails">
+        <xs:complexContent>
+            <xs:extension base="ChangeSetReferenceSetEntry">
+                <xs:sequence>
+                    <xs:element name="concept" type="Concept" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="description" type="Description" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="relationship" type="Relationship" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="statedRelationship" type="Relationship" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="definition" type="Description" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="language" type="LanguageReferenceSetEntry" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="simplerefset" type="SimpleReferenceSetEntry" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="moduleDependency" type="ModuleDependencyReferenceSetEntry" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
 
 </xs:schema>

@@ -42,6 +42,7 @@ def loadmodules():
         <label><b>Include inactive records: </b><input type="checkbox" name="active" value="False"/></label><br/>
         <br/><b>Restrict to module id(s):</b>
         %(modulelist)s
+        <br/><br/><b>Changeset name or id: </b><input type="text" name="changeset" size=40/></br>
     </p>"""
     moduleentry_tmpl = """<input type="checkbox" name="moduleid" value=%s>%s</input>"""
     modulelist = '\t\t\n'.join(moduleentry_tmpl % (e[0],e[1]) for e in map(lambda rec: rec.split('\t'),

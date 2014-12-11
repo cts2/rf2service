@@ -368,6 +368,36 @@
          <%include file="/showhide.inc"/>
     </div>
 </div>
+    <div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h2 class="panel-title">Change Sets</h2>
+            </div>
+        </div>
+        <table class="table table-bordered table-condensed">
+            <thead>
+                <tr>
+                    <th>Table</th>
+                    <th>Operation</th>
+                    <th colspan="6">Formats</th>
+                    <th>Signature</th>
+                    <th class="parms">Parameters</th>
+                </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Change Set</td>
+                <%include file="/format.inc" args="base='changeset',
+                exref='changeset/'+refChangeset, desc='Read by Changeset Name',
+                sig='/changeset/{changeset}'"/>
+            </tr>
+            </tbody>
+        </table>
+
+         <%include file="/showhide.inc"/>
+    </div>
+</div>
 </div>
             <script src="js/jquery.js"></script>
             <script src="js/bootstrap.min.js"></script>

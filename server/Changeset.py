@@ -29,16 +29,16 @@
 
 from server.BaseNode import expose
 from server.RF2BaseNode import RF2BaseNode, validate
-from rf2db.db.RF2ChangeSetFile import add_changeset_parms, changeset_parms, update_changeset_parms
-
-from rf2db.db.RF2ChangeSetFile import ChangeSetDB
+from rf2db.db.RF2ChangeSetFile import add_changeset_parms, changeset_parms, update_changeset_parms, ChangeSetDB
+from server.config.Rf2Entries import settings
 
 csdb = ChangeSetDB()
 
 
 class Changeset(RF2BaseNode):
     title = "Read RF2 changeset by changeset id"
-    label = "Changeset UUID"
+    label = "Changeset Name or UUID"
+    value = settings.refChangeSet
 
     @expose
     @validate(changeset_parms)
@@ -46,10 +46,12 @@ class Changeset(RF2BaseNode):
         dbrec = csdb.read(**parms.dict)
         return dbrec, (404, "Change set %s not found" % parms.changeset)
 
-
     @expose
-    def index(self, parms):
-        return None, (501, "Changeset list not implemented")
+    @validate(changeset_parms)
+    def details(self, parms, **_):
+        dbrec = csdb.read_details(**parms.dict)
+        return dbrec, (404, "Change set %s not found" % parms.changeset)
+
 
     @expose("POST")
     @validate(add_changeset_parms)
@@ -62,7 +64,7 @@ class Changeset(RF2BaseNode):
 
     @expose(methods="PUT")
     @validate(update_changeset_parms)
-    def update(self, parms, **kwargs):
+    def update(self, parms, **_):
         return csdb.update(**parms.dict), (404, csdb.invalid_update_reason(**parms.dict))
 
 
