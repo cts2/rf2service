@@ -26,6 +26,8 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
+import html
+
 from server.converters.normalize import normalize
 from server.config import ServiceSettings
 from rf2db.db.RF2LanguageFile import LanguageDB
@@ -100,6 +102,16 @@ count_template = """<!DOCTYPE html>
 </body>
 </html>"""
 
+basic_template = """<!DOCTYPE html>
+<html>
+<head>
+    <title>Basic Return</title>
+</head>
+<body>
+<pre>%s</pre>
+</body>
+</html>"""
+
 td = """<td>%s</td>"""
 row = """<tr>%s</tr>"""
 ca = "<span title='%(pn)s'><a href='%(rf2root)sconcept/%(cid)s/prefdescription'>%(cid)s</a></span>"
@@ -149,9 +161,12 @@ def as_html(parser_object, **_):
         try:
             return count_template % parser_object.numEntries, "text/html"
         except:
-            return "Unknown object type - cannot format", 'text/plain'
-    headings = td_row( (False, e, e) for e in hdrRow._fieldNames)
-    body = '\t\n'.join(row % (td_row( (e.issctid(fn), e.strify(fn), fn) for fn in e._fieldNames)) for e in entryRows)
+            try:
+                return basic_template % html.XHTML(text=parser_object), "text/html"
+            except:
+                return parser_object, 'text/plain'
+    headings = td_row((False, e, e) for e in hdrRow._fieldNames)
+    body = '\t\n'.join(row % (td_row((e.issctid(fn), e.strify(fn), fn) for fn in e._fieldNames)) for e in entryRows)
     continuation = ''
     if isinstance(parser_object, Iterator):
         continuation += cont_template % parser_object.numEntries

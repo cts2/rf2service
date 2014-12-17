@@ -28,10 +28,15 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from server.config import ServiceSettings
-from rf2db.utils.xmlutils import prettyxml
+from rf2db.utils.xmlutils import prettyxml, cleanxml
+
+xml_value_template = """<?xml version="1.0" encoding="UTF-8"?>
+<val>%s</val>"""
+xml_mime_type = 'application/xml;charset=UTF-8'
+
 
 def as_xml(rval, ns=None, **kwargs):
-    """ Convert a pyxb object into xml, otherwise return a string representation
+    """ Convert a pyxb object into xml, otherwise return a simple xml representation with a value field
     @param rval: pyxb or string object
     @param ns: namespace to use for object in place of default
     @param kwargs: if 'xslt' in the objects, add it to the return value
@@ -43,4 +48,6 @@ def as_xml(rval, ns=None, **kwargs):
             xsltPath = ServiceSettings.settings.staticroot + "xsl/%s.xsl" % xslt
             xslt = '\n<?xml-stylesheet type="text/xsl" href="%s"?>' % xsltPath
         return prettyxml(rval, ns=ns, xslt=xslt, validate=True), 'application/xml;charset=UTF-8'
-    return str(rval), 'application/xml;charset=UTF-8' if str(rval).startswith('<?xml version="1.0"') else None
+    elif str(rval).startswith('<?xml version="1.0"'):
+        return str(rval), xml_mime_type
+    return xml_value_template % cleanxml(rval), xml_mime_type

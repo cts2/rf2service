@@ -38,6 +38,7 @@ from server.SimpleMap import SimpleMapByMapId, SimpleMapForSource, SimpleMapForT
 from server.ComplexMap import ComplexMapById, ComplexMapForSource, ComplexMapForTarget
 from server.Changeset import Changeset
 from server.Serverconf import ServerConf
+from server.SCTConverter import SCTConverter
 from server.Root import Root
 from auth.ihtsdoauth import License
 
@@ -56,6 +57,10 @@ resources = [Resource(r'/', Root, action='index'),
              Resource(r'/config', ServerConf),
              Resource(r'/license', License, action='index'),
              Resource(r'/submit', License, action='submit', method='POST'),
+             Resource(r'/toOWL', SCTConverter, method='POST'),
+             Resource(r'/toOWL', SCTConverter),
+             Resource(r'/classify', SCTConverter, action='classify', method='POST'),
+             Resource(r'/classify', SCTConverter, action='classify'),
              Resource(r'/concepts', Concepts, action='index'),
              Resource(r'/concepts/:after', Concepts),
              Resource(r'/concepts/', Concepts),

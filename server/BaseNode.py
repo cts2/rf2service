@@ -60,7 +60,7 @@ def expose(func=None, methods=None):
             # Acquire the required return format information and strip the bypass information
             rtnfmt = kwargs.pop('format', None)
 
-            kwargs.pop('bypass',None)
+            kwargs.pop('bypass', None)
 
             kwargs['_formats'] = {'xml':  as_xml,
                                   'json': as_json,
@@ -68,7 +68,7 @@ def expose(func=None, methods=None):
             kwargs['_ns'] = [None]
             if self.namespace:
                 kwargs['_ns'][0] = self.namespace
-            for (k,v) in self.formats.items():
+            for (k, v) in self.formats.items():
                 kwargs['_formats'][k] = v
             kwargs['_inside']  = True
 
@@ -242,7 +242,7 @@ function validateForm()
         
         for p in parmsToRemove:
             self._kwargs.pop(p, None)       
-        kwargs = dict([(k,v) for (k,v) in self._kwargs.items() if not k.startswith('_')])
+        kwargs = dict([(k, v) for (k, v) in self._kwargs.items() if not k.startswith('_')])
         urlutil.redirect(urlutil.append_params(newURL + ('/' + '/'.join(path) if path else ''),
                                                           dict(parmsToAdd, **kwargs)))
     
