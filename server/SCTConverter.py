@@ -30,28 +30,33 @@
 from server.BaseNode import expose, BaseNode
 from server.utils.SCTConverterGateway import SCTConverterGateway
 
+from server.config.Rf2Entries import settings
+
 
 class SCTConverter(BaseNode):
     namespace = None
-    title = "Convert or classify a SCT Compositional grammar expression"
-    label = "Expression"
-    value = """	18526009| Disorder of appendix (disorder) |+
+    label = "Subject SCTID"
+    value = settings.refConcept
+    title = "Evaluate a compositional grammar expression"
+    extensions = BaseNode.extensions + [
+        """<p><b>Expression</b><p><textarea name="expr" rows=5 cols=80> 18526009| Disorder of appendix (disorder) |+
     302168000| Inflammation of large intestine (disorder) |:
     { 116676008| Associated morphology (attribute) |=23583003| Inflammation (morphologic abnormality) |,
-    363698007| Finding site (attribute) |=66754008| Appendix structure (body structure) | }"""
+    363698007|</textarea></p> """]
+
 
     parser = None
 
     @expose(("POST", "GET"))
-    def default(self, expr='', **_):
+    def default(self, subject, expr='', **_):
         if not self.parser:
             self.parser = SCTConverterGateway()
         print("Converting: " + expr)
-        rval = str(self.parser.to_owl(expr))
+        rval = str(self.parser.parse(subject, expr))
         print(rval)
         return rval
 
-    @expose("POST")
+    @expose(("POST", "GET"))
     def classify(self, expr='', **_):
         if not self.parser:
             self.parser = SCTConverterGateway()
