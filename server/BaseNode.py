@@ -198,11 +198,11 @@ function validateForm()
 </body>
 </html>'''
 
-    title     = ""
-    extensions = ""
-    value     = ""
-    relpath   = None
-    formats   = {}
+    title = ""
+    extensions = []
+    value = ""
+    relpath = None
+    formats = {}
     _cp_config = {
         'tools.auth_basic.no_auth': False}
 
@@ -217,7 +217,7 @@ function validateForm()
         """
         # TODO: There has to be a better way of doing this...
         self.extension = [''.join(self.extensions)]
-        _vars = {k:getattr(self,k) for k in dir(self) if not k.startswith('_')}
+        _vars = {k: getattr(self,k) for k in dir(self) if not k.startswith('_')}
         _vars['path'] = self.buildpath()
         _vars['extension'] = '\n\t'.join(self.extensions)
         return self.menu % _vars
