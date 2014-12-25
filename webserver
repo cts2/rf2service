@@ -6,7 +6,7 @@
 # Redistribution and use in source and binary forms, with or without modification,
 # are permitted provided that the following conditions are met:
 #
-#     Redistributions of source code must retain the above copyright notice, this
+# Redistributions of source code must retain the above copyright notice, this
 #     list of conditions and the following disclaimer.
 #
 #     Redistributions in binary form must reproduce the above copyright notice,
@@ -35,9 +35,10 @@ import mimetypes
 
 from server.utils.SetConfig import setConfig
 
-mimetypes.add_type(("text/xml",None),".xsd")
+mimetypes.add_type(("text/xml", None), ".xsd")
 
 base = setConfig()
+
 
 def http_methods_allowed(methods=None):
     """ Filter to pass the supplied methods unless overridden """
@@ -50,7 +51,6 @@ def http_methods_allowed(methods=None):
 
 cherrypy.tools.allow = cherrypy.Tool('on_start_resource', http_methods_allowed)
 
-
 cherrypy.config.environments['development'] = {
     'engine.autoreload.on': True,
     'checker.on': True,
@@ -60,43 +60,44 @@ cherrypy.config.environments['development'] = {
     'log.screen': True}
 
 from server.RESTDispatcher import dispatcher
+
 conf = {'/':
-         {
-            'request.dispatch' : dispatcher,
-            'tools.auth.on' : True,
-            'tools.sessions.on' : True,
-            'tools.staticdir.root': os.path.join(base, "static")
-         },
-         '/html' : {
-             'tools.staticdir.on' : True,
-             'tools.staticdir.dir' : 'html'
-         },
-         '/css' : {
-             'tools.staticdir.on' : True,
-             'tools.staticdir.dir' : 'css'
-         },
-         '/fonts' : {
-             'tools.staticdir.on' : True,
-             'tools.staticdir.dir' : 'fonts'
-         },
-         '/js' : {
-             'tools.staticdir.on' : True,
-             'tools.staticdir.dir' : 'js'
-         },
-         '/xsd' : {
-             'tools.staticdir.on' : True,
-             'tools.staticdir.dir' : 'xsd'
-         },
-         '/favicon.ico': {'tools.staticfile.on': True,
-                          'tools.staticfile.filename': os.path.join(base, 'static','favicon.png')
-         },
-     }
+            {
+                'request.dispatch': dispatcher,
+                'tools.auth.on': True,
+                'tools.sessions.on': True,
+                'tools.staticdir.root': os.path.join(base, "static")
+            },
+        '/html': {
+            'tools.staticdir.on': True,
+            'tools.staticdir.dir': 'html'
+        },
+        '/css': {
+            'tools.staticdir.on': True,
+            'tools.staticdir.dir': 'css'
+        },
+        '/fonts': {
+            'tools.staticdir.on': True,
+            'tools.staticdir.dir': 'fonts'
+        },
+        '/js': {
+            'tools.staticdir.on': True,
+            'tools.staticdir.dir': 'js'
+        },
+        '/xsd': {
+            'tools.staticdir.on': True,
+            'tools.staticdir.dir': 'xsd'
+        },
+        '/favicon.ico': {'tools.staticfile.on': True,
+                         'tools.staticfile.filename': os.path.join(base, 'static', 'favicon.png')
+        },
+}
+
 
 def main():
     cherrypy.config.update(os.path.join(base, 'server.conf'))
     app = cherrypy.tree.mount(None, script_name='/rf2', config=conf)
     cherrypy.quickstart(app)
-
 
 
 if __name__ == '__main__':

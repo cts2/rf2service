@@ -32,14 +32,13 @@ import sys
 def setConfig():
     base = os.path.join(os.path.dirname(__file__), '..', '..')
 
-
     # Set ourselves up on the include path automatically
     sys.path.append(base)
     # Add the RF2DB services onto the path
     sys.path.append(os.path.join(base, '..', 'rf2db'))
     sys.path.append(os.path.join(base, '..', 'ihtsdoauth'))
     sys.path.append(os.path.join(base, '..', 'ConfigManager'))
-    sys.path.append(os.path.join(base, '..', 'pyjxslt','XSLTGateway'))
+    sys.path.append(os.path.join(base, '..', 'pyjxslt'))
 
     from ConfigManager.ConfigManager import ConfigManager
     ConfigManager.set_configfile(os.path.join(base, 'settings.conf'))
