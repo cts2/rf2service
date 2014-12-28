@@ -28,11 +28,24 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import socket
-from py4j.java_gateway import JavaGateway, GatewayClient, Py4JNetworkError
+from py4j.java_gateway import JavaGateway, GatewayClient, Py4JNetworkError, Py4JError
 import re
 
 cleanlinere = re.compile(r'(\n *\n)+', flags=re.DOTALL)
 stripcmntsre = re.compile(r'^#.*', flags=re.MULTILINE)
+
+
+def strifexists(x):
+    return str(x) if x else None
+
+def genfulluri(x):
+    if(':' in x and '/' not in x):
+        ns, name = x.split(':')
+        if ns == 'sctid':
+            return "http://snomed.info/id/" + name
+        elif ns == 'who':
+            return "http://id.who.int/icd/entity/" + name
+    return x
 
 
 class SCTConverterGateway(object):
@@ -67,17 +80,21 @@ class SCTConverterGateway(object):
         """
         return self._gateway is not None or (reconnect and self.reconnect())
 
-    def parse(self, subject, cgstring):
+    def parse(self, subject, primitive, cgstring):
+        subjuri = genfulluri(subject)
         if self.gatewayconnected():
-            return self.clean_output(str(self._parser.parse(subject, cgstring)))
+            try:
+                rval = self._parser.cgparse(subjuri, primitive, cgstring)
+            except Py4JError as e:
+                self.reconnect()
+                if self.gatewayconnected():
+                    rval = self._parser.cgparse(subjuri, primitive, cgstring)
+            return self.clean_output(strifexists(rval))
         return None
 
-    def classify(self, cgstring):
-        if self.gatewayconnected():
-            return str(self._parser.classify(self._parser.toOWL(cgstring)))
 
     @staticmethod
     def clean_output(text):
         if text:
-            text = cleanlinere.sub(r'\n', stripcmntsre.sub('', str))
+            text = cleanlinere.sub(r'\n', stripcmntsre.sub('', text))
         return text

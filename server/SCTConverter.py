@@ -29,6 +29,7 @@
 
 from server.BaseNode import expose, BaseNode
 from server.utils.SCTConverterGateway import SCTConverterGateway
+from rf2db.parameterparser.ParmParser import booleanparam
 
 from server.config.Rf2Entries import settings
 
@@ -48,13 +49,10 @@ class SCTConverter(BaseNode):
     parser = None
 
     @expose(("POST", "GET"))
-    def default(self, subject, expr='', **_):
+    def default(self, subject, expr='', primitive=True, **_):
         if not self.parser:
             self.parser = SCTConverterGateway()
-        print("Converting: " + expr)
-        rval = str(self.parser.parse(subject, expr))
-        print(rval)
-        return rval
+        return self.parser.parse(subject, booleanparam.v(primitive, True), expr)
 
     @expose(("POST", "GET"))
     def classify(self, expr='', **_):
