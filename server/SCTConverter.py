@@ -38,7 +38,7 @@ from server.config.Rf2Entries import settings
 class SCTConverter(BaseNode):
     namespace = None
     label = "Subject SCTID"
-    value = settings.refConcept
+    value = "who:" + settings.refConcept
     title = "Evaluate a compositional grammar expression"
     extensions = BaseNode.extensions + [
         """<p><b>Expression</b><p><textarea name="expr" rows=5 cols=80> 18526009| Disorder of appendix (disorder) |+
