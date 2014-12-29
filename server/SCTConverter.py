@@ -42,9 +42,10 @@ class SCTConverter(BaseNode):
     title = "Evaluate a compositional grammar expression"
     extensions = BaseNode.extensions + [
         """<p><b>Expression</b><p><textarea name="expr" rows=5 cols=80> 18526009| Disorder of appendix (disorder) |+
-    302168000| Inflammation of large intestine (disorder) |:
-    { 116676008| Associated morphology (attribute) |=23583003| Inflammation (morphologic abnormality) |,
-    363698007|</textarea></p> """]
+	302168000| Inflammation of large intestine (disorder) |+
+	64572001| Disease (disorder) |:
+	{ 116676008| Associated morphology (attribute) |=23583003| Inflammation (morphologic abnormality) |,
+	363698007| Finding site (attribute) |=66754008| Appendix structure (body structure) | }</textarea></p> """]
 
     parser = None
 
