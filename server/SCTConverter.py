@@ -8,7 +8,7 @@
 # Redistributions of source code must retain the above copyright notice, this
 # list of conditions and the following disclaimer.
 #
-#     Redistributions in binary form must reproduce the above copyright notice,
+# Redistributions in binary form must reproduce the above copyright notice,
 #     this list of conditions and the following disclaimer in the documentation
 #     and/or other materials provided with the distribution.
 #
@@ -26,6 +26,7 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
+import re
 
 from server.BaseNode import expose, BaseNode
 from server.utils.SCTConverterGateway import SCTConverterGateway
@@ -45,23 +46,16 @@ class SCTConverter(BaseNode):
     { 116676008| Associated morphology (attribute) |=23583003| Inflammation (morphologic abnormality) |,
     363698007|</textarea></p> """]
 
-
     parser = None
 
     @expose(("POST", "GET"))
     def default(self, subject, expr='', primitive=True, **_):
         if not self.parser:
             self.parser = SCTConverterGateway()
-        return self.parser.parse(subject, booleanparam.v(primitive, True), expr)
+        return (self.parser.parse(subject, booleanparam.v(primitive, True), re.sub(r'\s+', '', expr, flags=re.DOTALL)),
+        (404, "Unable to parse expression"))
 
-    @expose(("POST", "GET"))
-    def classify(self, expr='', **_):
-        if not self.parser:
-            self.parser = SCTConverterGateway()
-        print("Classifying: " + expr)
-        rval = self.parser.to_owl(expr)
-        if not rval:
-            return None, (404, "Unable to parse expression")
-        rval = self.parser.classify(expr)
-        print(rval)
-        return rval, (404, "Unable to convert or classify expression")
+
+@expose(("POST", "GET"))
+def classify(self, expr='', **_):
+    return (None, (500, "Not Implemented"))
