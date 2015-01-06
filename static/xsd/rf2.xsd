@@ -8092,7 +8092,7 @@
         <xs:complexContent>
             <xs:extension base="Iterator">
                 <xs:sequence>
-                    <xs:element name="entry" type="ChangeSetReferenceSet" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="entry" type="ChangeSetReferenceSetEntry" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>

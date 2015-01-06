@@ -55,6 +55,7 @@ class Resource():
 print("Connecting resources")
 resources = [Resource(r'/', Root, action='index'),
              Resource(r'/config', ServerConf),
+             Resource(r'/status', ServerConf, action='status'),
              Resource(r'/license', License, action='index'),
              Resource(r'/submit', License, action='submit', method='POST'),
              Resource(r'/parse/:subject', SCTConverter, method='POST'),
@@ -147,7 +148,7 @@ resources = [Resource(r'/', Root, action='index'),
              Resource(r'/changeset', Changeset, action='index'),
              Resource(r'/changeset/', Changeset),
              Resource(r'/changeset', Changeset, action='new', method='POST'),
-             Resource(r'/changesets', Changeset, action='index'), ]
+             Resource(r'/changesets', Changeset, action='list'), ]
 
 
 

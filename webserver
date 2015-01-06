@@ -30,7 +30,6 @@
 
 import cherrypy
 import os
-import sys
 import mimetypes
 
 from server.utils.SetConfig import setConfig

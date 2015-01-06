@@ -46,11 +46,10 @@ class SCTConverter(BaseNode):
 	64572001| Disease (disorder) |:
 	{ 116676008| Associated morphology (attribute) |=23583003| Inflammation (morphologic abnormality) |,
 	363698007| Finding site (attribute) |=66754008| Appendix structure (body structure) | }</textarea></p> """]
-
     parser = None
 
     @expose(("POST", "GET"))
-    def default(self, subject, expr='', primitive=True, **_):
+    def default(self, subject, expr='', primitive=True, shorturis=False, removesct=False, **_):
         if not self.parser:
             self.parser = SCTConverterGateway()
         return (self.parser.parse(subject, booleanparam.v(primitive, True), re.sub(r'\s+', '', expr, flags=re.DOTALL)),

@@ -29,7 +29,8 @@
 
 from server.BaseNode import expose
 from server.RF2BaseNode import RF2BaseNode, validate
-from rf2db.db.RF2ChangeSetFile import add_changeset_parms, changeset_parms, update_changeset_parms, ChangeSetDB
+from rf2db.db.RF2ChangeSetFile import add_changeset_parms, changeset_parms, update_changeset_parms, \
+    list_changeset_parms, ChangeSetDB
 from server.config.Rf2Entries import settings
 
 csdb = ChangeSetDB()
@@ -82,6 +83,7 @@ class Changeset(RF2BaseNode):
         csdb.commit(**parms.dict)
         return """<!DOCTYPE html><html><body>%s committed</body></html>""" % parms.changeset, (0, '')
 
-
-
-
+    @expose
+    @validate(list_changeset_parms)
+    def list(self, parms, **_):
+        return csdb.as_list(csdb.list(**parms.dict), parms)
