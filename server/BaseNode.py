@@ -38,6 +38,8 @@ from server.converters.tojson import as_json
 from server.converters.tohtml import as_html
 
 htmlHead = "<!DOCTYPE html>"
+xmlHead = '<?xml version="1.0" encoding="UTF-8"?>'
+xmlVal = xmlHead + '\n<val>%s</val>'
 
 def expose(func=None, methods=None):
 
@@ -107,36 +109,6 @@ def expose(func=None, methods=None):
         methods = func
     return expose_
 
-
-
-
-
-
-# knownXSLT = { }
-#
-# class FileResolver(etree.Resolver):
-#     def __init__(self):
-#         parser = etree.XMLParser()
-#         parser.resolvers.add(self)
-#
-#     def resolve(self, url, pubid, context):
-#         return os.path.join(os.path.dirname(__file__), 'cts2xform/xsl/%s' % url)
-#
-# foo = FileResolver()
-#
-# def toHTML(rval, ns=None, **kwargs):
-#     if hasattr(rval, 'resource'):
-#         if rval.resource in knownXSLT:
-#             # kwargs['xslt'] = knownXSLT[rval.resource]
-#
-#             xsltdocname = os.path.join(os.path.dirname(__file__), 'cts2xform/xsl/%s.xsl' % knownXSLT[rval.resource])
-#             style = etree.XSLT(etree.parse(xsltdocname))
-#             doc   = etree.XML(rval.toxml())
-#             return etree.tostring(style(doc)), 'text/html;charset=UTF-8'
-#
-#     return toXML(rval, ns, **kwargs)
-            
-    
 
 class BaseNode(object):
     """ BaseNode represents a REST node that expects a value on it, such
@@ -217,7 +189,7 @@ function validateForm()
         """
         # TODO: There has to be a better way of doing this...
         self.extension = [''.join(self.extensions)]
-        _vars = {k:getattr(self,k) for k in dir(self) if not k.startswith('_')}
+        _vars = {k: getattr(self,k) for k in dir(self) if not k.startswith('_')}
         _vars['path'] = self.buildpath()
         _vars['extension'] = '\n\t'.join(self.extensions)
         return self.menu % _vars

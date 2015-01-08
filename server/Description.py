@@ -26,7 +26,7 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
-from server.BaseNode import expose
+from server.BaseNode import expose, xmlVal
 from server.RF2BaseNode import RF2BaseNode, global_iter_parms, validate
 from rf2db.utils.sctid import sctid
 
@@ -135,7 +135,7 @@ class ConceptBase(RF2BaseNode):
     def default(self, parms, **_):
         base = descdb.base(**parms.dict)
         if base:
-            base = '<?xml version="1.0" encoding="UTF-8"?>\n<val>' + base + '</val>'
+            base = xmlVal % base
         return base, (404, "FSN for concept %s not found" % parms.concept)
 
 

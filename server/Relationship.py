@@ -5,7 +5,7 @@
 # Redistribution and use in source and binary forms, with or without modification,
 # are permitted provided that the following conditions are met:
 #
-#     Redistributions of source code must retain the above copyright notice, this
+# Redistributions of source code must retain the above copyright notice, this
 #     list of conditions and the following disclaimer.
 #
 #     Redistributions in binary form must reproduce the above copyright notice,
@@ -36,10 +36,9 @@ from server.BaseNode import expose
 from server.RF2BaseNode import RF2BaseNode, global_iter_parms, validate
 from server.config.Rf2Entries import settings
 
-reldb  =  RelationshipDB()
+reldb = RelationshipDB()
 statedreldb = StatedRelationshipDB()
-concdb =  ConceptDB()
-
+concdb = ConceptDB()
 
 reltypes = """<b>Relationship Type: </b>
     <label>Stated: </label><input type="checkbox" name="stated" value="true" checked="checked"/>
@@ -78,6 +77,7 @@ class Relationship(RF2BaseNode):
     def delete(self, parms, rid, **_):
         return concdb.delete(rid, **parms.dict)
 
+
 class Relationships(RF2BaseNode):
     label = "Relationship SCTID"
     value = settings.refConcept
@@ -85,7 +85,7 @@ class Relationships(RF2BaseNode):
     <br/><label><input type="radio" name="direct" value="source" checked="checked"/>Source of</label>
     <label><input type="radio" name="direct" value="predicate"/>Predicate of</label>
     <label><input type="radio" name="direct" value="target" />Target of</label><br/>""",
-    global_iter_parms]
+                                           global_iter_parms]
 
     @cherrypy.expose
     @cherrypy.tools.allow()
@@ -96,7 +96,8 @@ class Relationships(RF2BaseNode):
 def validateAndExecute(cid, fctn, parms):
     if not concdb.read(cid, **parms.dict):
         return None, (404, "Concept %s doesn't exist" % cid)
-    return reldb.as_list( fctn(cid, **parms.dict), parms)
+    return reldb.as_list(fctn(cid, **parms.dict), parms)
+
 
 class RelationshipsForSource(RF2BaseNode):
     title = "<p>Relationship entries for source SCTID</p>"
@@ -109,9 +110,10 @@ class RelationshipsForSource(RF2BaseNode):
     def default(self, parms, **_):
         return validateAndExecute(parms.source, reldb.getSourceRecs, parms)
 
+
 class RelationshipsForPredicate(RF2BaseNode):
     title = "<p>Relationship entries for predicate SCTID</p>"
-    label     = "Predicate SCTID"
+    label = "Predicate SCTID"
     value = settings.refPredicate
     extensions = RF2BaseNode.extensions + [reltypes, global_iter_parms]
 
@@ -124,7 +126,7 @@ class RelationshipsForPredicate(RF2BaseNode):
 
 class RelationshipsForTarget(RF2BaseNode):
     title = "<p>Relationshp entries for target SCTID</p>"
-    label     = "Target SCTID"
+    label = "Target SCTID"
     value = settings.refTargetConcept
     extensions = RF2BaseNode.extensions + [reltypes, global_iter_parms]
 

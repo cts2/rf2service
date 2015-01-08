@@ -27,7 +27,7 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from server.BaseNode import expose
+from server.BaseNode import expose, xmlVal
 from server.RF2BaseNode import RF2BaseNode, validate
 from rf2db.db.RF2ChangeSetFile import add_changeset_parms, changeset_parms, update_changeset_parms, \
     list_changeset_parms, ChangeSetDB
@@ -74,14 +74,14 @@ class Changeset(RF2BaseNode):
     def delete(self, parms, **_):
         # TODO - format the return parameters
         csdb.rollback(**parms.dict)
-        return """<!DOCTYPE html><html><body>%s deleted</body></html>""" % parms.changeset, (0, '')
+        return xmlVal % (parms.changeset + " rolled back"), (0, '')
 
     @expose(methods=["PUT"])
     @validate(changeset_parms)
     def commit(self, parms, **_):
         # TODO - return the concept id's, etc that are committed
         csdb.commit(**parms.dict)
-        return """<!DOCTYPE html><html><body>%s committed</body></html>""" % parms.changeset, (0, '')
+        return xmlVal % (parms.changeset + " committed"), (0, '')
 
     @expose
     @validate(list_changeset_parms)
