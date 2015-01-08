@@ -45,7 +45,7 @@ config_parms = ConfigArgs('rf2entries',
                            ConfigArg('refMapSource', help='Sample RF2 Map Source Id', default='5204005'),
                            ConfigArg('refMapTarget', help='Sample RF2 Map Target Id', default='C47.5'),
                            ConfigArg('refMatchvalue', help='Sample Description Match Value', default='Append'),
-                           ConfigArg('rf2Release', help='RF2 Release Identifier', default='yyyymmdd')
+                           ConfigArg('rf2Release', help='RF2 Release Identifier', default='yyyymmdd'),
                            ])
 
 settings = ConfigManager(config_parms)

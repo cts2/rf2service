@@ -32,12 +32,13 @@ from server.Concept import Concept, Concepts
 from server.Description import Description, Descriptions, DescriptionsForConcept, ConceptForDescription, \
     PreferredDescriptionForConcept, FSNForConcept, ConceptBase
 from server.Relationship import Relationship, Relationships, RelationshipsForSource, RelationshipsForTarget, RelationshipsForPredicate
-from server.Language import LanguagesForConcept, LanguagesForDescription
+from server.Language import LanguagesForConcept, LanguagesForDescription, Language
 from server.SimpleRefset import SimpleRefsetByComponent, SimpleRefsetById
 from server.SimpleMap import SimpleMapByMapId, SimpleMapForSource, SimpleMapForTarget
 from server.ComplexMap import ComplexMapById, ComplexMapForSource, ComplexMapForTarget
 from server.Changeset import Changeset
-from server.Serverconf import ServerConf
+from server.OtherRefsets import ModuleDependency
+from server.Server import ServerConf
 from server.SCTConverter import SCTConverter
 from server.Root import Root
 from auth.ihtsdoauth import License
@@ -112,6 +113,13 @@ resources = [Resource(r'/', Root, action='index'),
                       action='new', method='POST'),
              Resource(r'/relationships/', Relationships),
              Resource(r'/relationships', Relationships, action='index'),
+
+             Resource(r'/language/:uuid', Language),
+             Resource(r'/language', Language, action='index'),
+
+             Resource(r'/moduledependency/:uuid', ModuleDependency),
+             Resource(r'/moduledependency', ModuleDependency, action='index'),
+
 
              Resource(r'/simplerefset/component/:component', SimpleRefsetByComponent),
              Resource(r'/simplerefset/component', SimpleRefsetByComponent, action='index'),

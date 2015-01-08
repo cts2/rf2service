@@ -5,7 +5,7 @@
 # Redistribution and use in source and binary forms, with or without modification,
 # are permitted provided that the following conditions are met:
 #
-#     Redistributions of source code must retain the above copyright notice, this
+# Redistributions of source code must retain the above copyright notice, this
 #     list of conditions and the following disclaimer.
 #
 #     Redistributions in binary form must reproduce the above copyright notice,
@@ -26,11 +26,13 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
-import cherrypy
+
 from rf2db.utils import urlutil
 from rf2db.db.RF2DBConnection import cp_values
+from rf2db.db.RF2FileCommon import rf2_values
+from server.BaseNode import BaseNode, expose, xmlVal, htmlHead
 
-html = """<!DOCTYPE html>
+html = htmlHead + """
 <html>
 <head>
     <title>RF2 Server Configuration</title>
@@ -83,12 +85,11 @@ html = """<!DOCTYPE html>
 </html>"""
 
 
+class ServerConf(BaseNode):
+    namespace = ''
 
-class ServerConf(object):
-
-    @cherrypy.expose
+    @expose
     def default(self, *args, **kwargs):
-
         host = cp_values.host
         port = cp_values.port
         db = cp_values.db
@@ -103,3 +104,7 @@ class ServerConf(object):
         return html % vars()
 
 
+    @expose
+    def status(self, *args, **kwargs):
+        return (xmlVal % ('<status>OK</status><rf2_release>%s</rf2_release>' % rf2_values.release),
+                (0, None))
