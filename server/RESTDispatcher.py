@@ -33,13 +33,13 @@ from server.Description import Description, Descriptions, DescriptionsForConcept
     PreferredDescriptionForConcept, FSNForConcept, ConceptBase
 from server.Relationship import Relationship, Relationships, RelationshipsForSource, RelationshipsForTarget, RelationshipsForPredicate
 from server.Language import LanguagesForConcept, LanguagesForDescription, Language
-from server.SimpleRefset import SimpleRefsetByComponent, SimpleRefsetById
+from server.SimpleRefset import SimpleRefsetByComponent, SimpleRefsetById, SimpleRefSet
 from server.SimpleMap import SimpleMapByMapId, SimpleMapForSource, SimpleMapForTarget
 from server.ComplexMap import ComplexMapById, ComplexMapForSource, ComplexMapForTarget
 from server.Changeset import Changeset
 from server.OtherRefsets import ModuleDependency
+from server.GenericRefset import GenericRefset
 from server.Server import ServerConf
-from server.SCTConverter import SCTConverter
 from server.Root import Root
 from auth.ihtsdoauth import License
 
@@ -59,11 +59,10 @@ resources = [Resource(r'/', Root, action='index'),
              Resource(r'/status', ServerConf, action='status'),
              Resource(r'/license', License, action='index'),
              Resource(r'/submit', License, action='submit', method='POST'),
-             Resource(r'/parse/:subject', SCTConverter, method='POST'),
-             Resource(r'/parse', SCTConverter, action='index'),
-             Resource(r'/parse/:subject', SCTConverter),
-             # Resource(r'/classify', SCTConverter, action='classify', method='POST'),
-             # Resource(r'/classify', SCTConverter, action='classify'),
+
+             Resource(r'/refset', GenericRefset, action='index'),
+             Resource(r'/refset/:uuid', GenericRefset),
+
              Resource(r'/concepts', Concepts, action='index'),
              Resource(r'/concepts/:after', Concepts),
              Resource(r'/concepts/', Concepts),
@@ -123,7 +122,10 @@ resources = [Resource(r'/', Root, action='index'),
 
              Resource(r'/simplerefset/component/:component', SimpleRefsetByComponent),
              Resource(r'/simplerefset/component', SimpleRefsetByComponent, action='index'),
+             Resource(r'/simplerefset/:refset/component/:component', SimpleRefSet, action='update', method='PUT'),
+             Resource(r'/simplerefset/:refset', SimpleRefSet, action='delete', method='DELETE'),
              Resource(r'/simplerefset/:refset', SimpleRefsetById),
+             Resource(r'/simplerefset', SimpleRefSet, action='new', method='POST'),
              Resource(r'/simplerefset/', SimpleRefsetById),
              Resource(r'/simplerefset', SimpleRefsetById, action='index'),
 

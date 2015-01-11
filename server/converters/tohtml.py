@@ -35,6 +35,7 @@ from rf2db.db.RF2DescriptionFile import DescriptionDB
 from rf2db.schema.rf2 import Iterator
 from rf2db.utils import urlutil
 from rf2db.utils.sctid import sctid
+from rf2db.parameterparser.ParmParser import uuidparam
 
 ldb = LanguageDB()
 ddb = DescriptionDB()
@@ -117,6 +118,7 @@ row = """<tr>%s</tr>"""
 ca = "<span title='%(pn)s'><a href='%(rf2root)sconcept/%(cid)s/prefdescription'>%(cid)s</a></span>"
 da = "<span title='%(pn)s'><a href='%(rf2root)sdescription/%(cid)s'>%(cid)s</a></span>"
 cts2a = "<span title='%(pn)s'><a href='%(cts2root)sentity/%(cid)s?format=html'>%(cid)s</a></span"
+refseta = "<a href='%(rf2root)srefset/%(rsid)s?format=html'>%(rsid)s</a>"
 
 def addsep(link):
     return link + '/' if not link.endswith('/') else link
@@ -147,6 +149,10 @@ def as_html(parser_object, **_):
             rf2root = addsep(urlutil.base_uri())
             if pt:
                 return (cts2a if arg[2] == 'conceptId' else ca if pt=='c' else da) % locals()
+        elif uuidparam()._isValid(arg[1]):
+            rf2root = addsep(urlutil.base_uri())
+            rsid = arg[1]
+            return refseta % locals()
         return arg[1]
 
     def td_row(items):

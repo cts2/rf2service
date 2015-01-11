@@ -30,7 +30,8 @@
 from server.BaseNode import expose
 from server.RF2BaseNode import RF2BaseNode, global_iter_parms, validate
 
-from rf2db.db.RF2SimpleReferencesetFile import SimpleReferencesetDB, simplerefset_list_parms
+from rf2db.db.RF2SimpleReferencesetFile import SimpleReferencesetDB, simplerefset_list_parms, new_simplerefset_parms, \
+    update_simplerefset_parms
 from server.config.Rf2Entries import settings
 
 
@@ -43,9 +44,11 @@ _rss_tmpl = """
         </p>"""
 _rslist_tmpl = """<input type="checkbox" name="refset" value=%s>%s</input>"""
 
+
+
 class SimpleRefsetBase(object):
     def common(self, parms):
-        dbrec = simplerefset_db.as_list(simplerefset_db.get_simple_refset(**parms.dict),parms)
+        dbrec = simplerefset_db.as_list(simplerefset_db.get_simple_refset(**parms.dict), parms)
         if dbrec: return dbrec
         rtn_message = "Simple reference set"
         rtn_message += " refset %s" % parms.refset if parms.refset else ''
@@ -83,3 +86,21 @@ class SimpleRefsetByComponent(RF2BaseNode, SimpleRefsetBase):
     def default(self, parms, **_):
         return self.common(parms)
 
+
+class SimpleRefSet(RF2BaseNode):
+
+
+    @expose("POST")
+    @validate(new_simplerefset_parms)
+    def new(self, parms, **kwargs):
+        dbrec = simplerefset_db.new(**parms.dict)
+        if isinstance(dbrec, basestring):
+            return None, (400, dbrec)
+        elif not dbrec:
+            return None, (500, "Unable to create concept record for simple refset")
+        return self.redirect('/concept/%s' % dbrec.id)
+
+    @expose("PUT")
+    @validate(update_simplerefset_parms)
+    def update(self, parms, **kwargs):
+        return simplerefset_db.update(**parms.dict)

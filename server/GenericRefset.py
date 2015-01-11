@@ -8,7 +8,7 @@
 # Redistributions of source code must retain the above copyright notice, this
 # list of conditions and the following disclaimer.
 #
-# Redistributions in binary form must reproduce the above copyright notice,
+#     Redistributions in binary form must reproduce the above copyright notice,
 #     this list of conditions and the following disclaimer in the documentation
 #     and/or other materials provided with the distribution.
 #
@@ -26,36 +26,34 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
-import re
+from server.BaseNode import expose
+from server.RF2BaseNode import RF2BaseNode, validate
+from rf2db.db.RF2ChangeSetFile import ChangeSetDB
+from rf2db.db.RF2ComplexMapFile import ComplexMapDB
+from rf2db.db.RF2LanguageFile import LanguageDB
+from rf2db.db.RF2ModuleDependencyFile import ModuleDependencyDB
+from rf2db.db.RF2SimpleMapFile import SimpleMapDB
+from rf2db.db.RF2SimpleReferencesetFile import SimpleReferencesetDB
+from rf2db.db.RF2RefsetWrapper import global_refset_parms
 
-from server.BaseNode import expose, BaseNode
-from server.utils.SCTConverterGateway import SCTConverterGateway
-from rf2db.parameterparser.ParmParser import booleanparam
+refsets = [(ChangeSetDB, 'changeset/'),
+           (ComplexMapDB, 'complexmap/'),
+           (LanguageDB, 'language/'),
+           (ModuleDependencyDB, 'moduledependency/'),
+           (SimpleReferencesetDB, 'simplerefset/'),
+           (SimpleMapDB, 'simplemap/')]
 
-from server.config.Rf2Entries import settings
+class GenericRefset(RF2BaseNode):
+    title = "Read RF2 refset by id"
+    label = "Refset UUID"
+    value = ''
 
-
-class SCTConverter(BaseNode):
-    namespace = None
-    label = "Subject SCTID"
-    value = "who:" + settings.refConcept
-    title = "Evaluate a compositional grammar expression"
-    extensions = BaseNode.extensions + [
-        """<p><b>Expression</b><p><textarea name="expr" rows=5 cols=80> 18526009| Disorder of appendix (disorder) |+
-	302168000| Inflammation of large intestine (disorder) |+
-	64572001| Disease (disorder) |:
-	{ 116676008| Associated morphology (attribute) |=23583003| Inflammation (morphologic abnormality) |,
-	363698007| Finding site (attribute) |=66754008| Appendix structure (body structure) | }</textarea></p> """]
-    parser = None
-
-    @expose(("POST", "GET"))
-    def default(self, subject, expr='', primitive=True, shorturis=False, removesct=False, **_):
-        if not self.parser:
-            self.parser = SCTConverterGateway()
-        return (self.parser.parse(subject, booleanparam.v(primitive, True), re.sub(r'\s+', '', expr, flags=re.DOTALL)),
-        (404, "Unable to parse expression"))
-
-
-@expose(("POST", "GET"))
-def classify(self, expr='', **_):
-    return (None, (500, "Not Implemented"))
+    @expose
+    @validate(global_refset_parms)
+    def default(self, parms, **kwargs):
+        for db, base in refsets:
+            rval = db().read(**dict(parms.dict, **kwargs))
+            if rval:
+                self.redirect(base, parmsToRemove=['uuid'], path=[rval.referencedComponentId.uuid]) \
+                    if db == ChangeSetDB else self.redirect(base)
+        return None, (404, "Refset entry %s not found" % parms.uuid)
