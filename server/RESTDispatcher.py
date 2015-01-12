@@ -33,7 +33,7 @@ from server.Description import Description, Descriptions, DescriptionsForConcept
     PreferredDescriptionForConcept, FSNForConcept, ConceptBase
 from server.Relationship import Relationship, Relationships, RelationshipsForSource, RelationshipsForTarget, RelationshipsForPredicate
 from server.Language import LanguagesForConcept, LanguagesForDescription, Language
-from server.SimpleRefset import SimpleRefsetByComponent, SimpleRefsetById, SimpleRefSet
+from server.SimpleRefset import SimpleRefsetByComponent, SimpleRefSet
 from server.SimpleMap import SimpleMapByMapId, SimpleMapForSource, SimpleMapForTarget
 from server.ComplexMap import ComplexMapById, ComplexMapForSource, ComplexMapForTarget
 from server.Changeset import Changeset
@@ -50,8 +50,17 @@ dispatcher = cherrypy.dispatch.RoutesDispatcher()
 class Resource():
     controllers = {}
     def __init__(self, path, controller, method='GET', action='default'):
+        """ Construct a path.  Paths are evaluated sequentially, so the most specific must occur first. Also note that
+        both this function *and* CherryPy map the path to a controller and then map the HTTP methods to functions,
+        meaning that you can't send a GET to one class and a PUT to another
+        :param path: relative path to match.  Requests format
+        :param controller: Class to instantiate
+        :param method: method to match
+        :param action: action to invoke based on method
+        """
         self.controllers.setdefault(controller, controller())
-        dispatcher.connect(path, path, controller=self.controllers[controller], action=action, conditions=dict(method=[method]))
+        dispatcher.connect(path, path, controller=self.controllers[controller], action=action,
+                           conditions=dict(method=[method]))
 
 print("Connecting resources")
 resources = [Resource(r'/', Root, action='index'),
@@ -119,15 +128,20 @@ resources = [Resource(r'/', Root, action='index'),
              Resource(r'/moduledependency/:uuid', ModuleDependency),
              Resource(r'/moduledependency', ModuleDependency, action='index'),
 
-
+             # Note: there can't be a refset called "component" -- so be it
              Resource(r'/simplerefset/component/:component', SimpleRefsetByComponent),
              Resource(r'/simplerefset/component', SimpleRefsetByComponent, action='index'),
              Resource(r'/simplerefset/:refset/component/:component', SimpleRefSet, action='update', method='PUT'),
+             Resource(r'/simplerefset/:refset/component/:component', SimpleRefSet, action='delete', method='DELETE'),
+             Resource(r'/simplerefset/:refset/component/:component', SimpleRefSet),
+             # This allows for multiple components (component=a b c...)
+             Resource(r'/simplerefset/:refset', SimpleRefSet, action='update', method='PUT'),
              Resource(r'/simplerefset/:refset', SimpleRefSet, action='delete', method='DELETE'),
-             Resource(r'/simplerefset/:refset', SimpleRefsetById),
+             Resource(r'/simplerefset/:refset', SimpleRefSet),
+             Resource(r'/simplerefset/', SimpleRefSet, action='new', method='POST'),
+             Resource(r'/simplerefset/', SimpleRefSet),
              Resource(r'/simplerefset', SimpleRefSet, action='new', method='POST'),
-             Resource(r'/simplerefset/', SimpleRefsetById),
-             Resource(r'/simplerefset', SimpleRefsetById, action='index'),
+             Resource(r'/simplerefset', SimpleRefSet, action='index'),
 
              Resource(r'/simplemap/source/:component', SimpleMapForSource),
              Resource(r'/simplemap/:refset/source/:component', SimpleMapForSource),

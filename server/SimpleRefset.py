@@ -29,11 +29,10 @@
 
 from server.BaseNode import expose
 from server.RF2BaseNode import RF2BaseNode, global_iter_parms, validate
-
-from rf2db.db.RF2SimpleReferencesetFile import SimpleReferencesetDB, simplerefset_list_parms, new_simplerefset_parms, \
-    update_simplerefset_parms
+from rf2db.db.RF2SimpleReferencesetFile import SimpleReferencesetDB, simplerefset_list_parms, update_simplerefset_parms
+from rf2db.constants.RF2ValueSets import simpleReferenceSetRoot
 from server.config.Rf2Entries import settings
-
+from server.Concept import Concept
 
 
 simplerefset_db = SimpleReferencesetDB()
@@ -46,29 +45,18 @@ _rslist_tmpl = """<input type="checkbox" name="refset" value=%s>%s</input>"""
 
 
 
-class SimpleRefsetBase(object):
-    def common(self, parms):
-        dbrec = simplerefset_db.as_list(simplerefset_db.get_simple_refset(**parms.dict), parms)
-        if dbrec: return dbrec
-        rtn_message = "Simple reference set"
-        rtn_message += " refset %s" % parms.refset if parms.refset else ''
-        rtn_message += " component %s" % parms.component if parms.component else ''
-        rtn_message += " not found"
-        return None, (404, rtn_message)
+def _srs_common(parms):
+    dbrec = simplerefset_db.as_list(simplerefset_db.get_simple_refset(**parms.dict), parms)
+    if dbrec:
+        return dbrec
+    rtn_message = "Simple reference set"
+    rtn_message += " refset %s" % parms.refset if parms.refset else ''
+    rtn_message += " component %s" % parms.component if parms.component else ''
+    rtn_message += " not found"
+    return None, (404, rtn_message)
 
-class SimpleRefsetById(RF2BaseNode, SimpleRefsetBase):
-    title = "Query RF2 Simple Refset"
-    label = "Refset SCTID"
-    value = settings.refSet
-    relpath = '/simplerefset/~'
-    extensions = RF2BaseNode.extensions + [global_iter_parms]
 
-    @expose
-    @validate(simplerefset_list_parms)
-    def default(self, parms, **_):
-        return self.common(parms)
-
-class SimpleRefsetByComponent(RF2BaseNode, SimpleRefsetBase):
+class SimpleRefsetByComponent(RF2BaseNode):
     title = "Query RF2 Simple Refset"
     label = "Component SCTID "
     value = settings.refSetComponent
@@ -84,23 +72,29 @@ class SimpleRefsetByComponent(RF2BaseNode, SimpleRefsetBase):
     @expose
     @validate(simplerefset_list_parms)
     def default(self, parms, **_):
-        return self.common(parms)
+        return _srs_common(parms)
 
 
 class SimpleRefSet(RF2BaseNode):
+    title = "Query RF2 Simple Refset"
+    label = "Refset SCTID"
+    value = settings.refSet
+    relpath = '/simplerefset/~'
+    extensions = RF2BaseNode.extensions + [global_iter_parms]
 
+    @expose
+    @validate(simplerefset_list_parms)
+    def default(self, parms, **_):
+        return _srs_common(parms)
 
     @expose("POST")
-    @validate(new_simplerefset_parms)
-    def new(self, parms, **kwargs):
-        dbrec = simplerefset_db.new(**parms.dict)
-        if isinstance(dbrec, basestring):
-            return None, (400, dbrec)
-        elif not dbrec:
-            return None, (500, "Unable to create concept record for simple refset")
-        return self.redirect('/concept/%s' % dbrec.id)
+    def new(self, **kwargs):
+        return Concept().new(parent=simpleReferenceSetRoot, **kwargs)
 
     @expose("PUT")
     @validate(update_simplerefset_parms)
-    def update(self, parms, **kwargs):
-        return simplerefset_db.update(**parms.dict)
+    def update(self, parms, **_):
+        rval = simplerefset_db.update(**parms.dict)
+        if not rval:
+            self.redirect('simplerefset/%s' % parms.refset, ['component', 'operation', 'children', 'leafonly', 'refset'])
+        return None, (404, rval)

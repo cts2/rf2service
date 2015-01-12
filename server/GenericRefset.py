@@ -43,6 +43,7 @@ refsets = [(ChangeSetDB, 'changeset/'),
            (SimpleReferencesetDB, 'simplerefset/'),
            (SimpleMapDB, 'simplemap/')]
 
+
 class GenericRefset(RF2BaseNode):
     title = "Read RF2 refset by id"
     label = "Refset UUID"
