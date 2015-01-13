@@ -31,7 +31,8 @@ import cherrypy
 from server.Concept import Concept, Concepts
 from server.Description import Description, Descriptions, DescriptionsForConcept, ConceptForDescription, \
     PreferredDescriptionForConcept, FSNForConcept, ConceptBase
-from server.Relationship import Relationship, Relationships, RelationshipsForSource, RelationshipsForTarget, RelationshipsForPredicate
+from server.Relationship import Relationship, Relationships, RelationshipsForSource, RelationshipsForTarget, \
+    RelationshipsForPredicate
 from server.Language import LanguagesForConcept, LanguagesForDescription, Language
 from server.SimpleRefset import SimpleRefsetByComponent, SimpleRefSet
 from server.SimpleMap import SimpleMapByMapId, SimpleMapForSource, SimpleMapForTarget

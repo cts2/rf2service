@@ -162,18 +162,15 @@ class ConceptForDescription(RF2BaseNode):
     relpath = "/description/~/concept"
 
     @expose
-    def default(self, desc=None, **kwargs):
+    def default(self, desc=None, **args):
         if not sctid.isValid(desc):
             return None, (400, "Invalid description sctid: %s" % desc)
-        if not description_parms.validate(**kwargs):
-            return None, (404, description_parms.invalidMessage(**kwargs))
-        conc = descdb.getConceptIdForDescription(desc, description_parms.parse(**kwargs))
+        conc = descdb.getConceptIdForDescription(desc, **args)
 
         if conc:
-            concrec = concdb.getConcept(conc, concept_parms.parse(**kwargs))
+            concrec = concdb.read(conc, **args)
             return concrec, (404, "Concept for concept %s not found" % conc)
-        else:
-            return conc, (404, "Description for SCTID %s not found" % desc)
+        return None, (404, "Description for SCTID %s not found" % desc)
 
 
 
