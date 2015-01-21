@@ -79,7 +79,7 @@ class Root(object):
 
     htmldir = os.path.join(_curdir, '..', 'static', 'html')
     @cherrypy.expose
-    def index(self):
+    def index(self, **kwargs):
         mylookup = TemplateLookup(directories=[os.path.join(self.htmldir, 'snippets')])
         mytemplate = Template(filename=os.path.join(self.htmldir, 'rf2.html'), lookup=mylookup)
         return mytemplate.render(**dict({'href_root': urlutil.href_settings.root}, **(refEntries.asdict())))

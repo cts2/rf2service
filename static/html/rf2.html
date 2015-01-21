@@ -30,7 +30,18 @@
             display: none;
         }
     </style>
+
     <script type="text/javascript">
+        (function () {
+            var protocol = location.href.substr(0, location.href.indexOf("://"));
+            var restOfUrl = location.href.substr(location.href.indexOf("://") + "://".length);
+            if (restOfUrl.match(/(rf2$)/)) {
+                location.href = protocol + "://" + restOfUrl + '/';
+            }
+            else if (restOfUrl.match(/rf2\?/)) {
+                location.href = protocol + '://' + restOfUrl.replace(/rf2\?/, 'rf2/?')
+            }
+        })();
         function show_hide() {
             var text = document.getElementById("parmsButton").firstChild;
             var parms = document.getElementsByClassName("parms");
