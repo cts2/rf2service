@@ -53,6 +53,13 @@ class Changeset(RF2BaseNode):
         dbrec = csdb.read_details(**parms.dict)
         return dbrec, (404, "Change set %s not found" % parms.changeset)
 
+    @expose
+    @validate(changeset_parms)
+    def uuid(self, parms, **_):
+        dbrec = csdb.read(**parms.dict)
+        if dbrec:
+            return xmlVal % dbrec.changeset
+        return None, (404, "Change set %s not found" % parms.changeset)
 
     @expose("POST")
     @validate(add_changeset_parms)

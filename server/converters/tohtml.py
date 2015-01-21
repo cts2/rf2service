@@ -115,10 +115,10 @@ basic_template = """<!DOCTYPE html>
 
 td = """<td>%s</td>"""
 row = """<tr>%s</tr>"""
-ca = "<span title='%(pn)s'><a href='%(rf2root)sconcept/%(cid)s/prefdescription'>%(cid)s</a></span>"
-da = "<span title='%(pn)s'><a href='%(rf2root)sdescription/%(cid)s'>%(cid)s</a></span>"
-cts2a = "<span title='%(pn)s'><a href='%(cts2root)sentity/%(cid)s?format=html'>%(cid)s</a></span"
-refseta = "<a href='%(rf2root)srefset/%(rsid)s?format=html'>%(rsid)s</a>"
+ca = "<span title='%(pn)s'><a href='%(rf2root)sconcept/%(cid)s/prefdescription?%(parms)s'>%(cid)s</a></span>"
+da = "<span title='%(pn)s'><a href='%(rf2root)sdescription/%(cid)s?%(parms)s'>%(cid)s</a></span>"
+cts2a = "<span title='%(pn)s'><a href='%(cts2root)sentity/%(cid)s?format=html&%(parms)s'>%(cid)s</a></span"
+refseta = "<a href='%(rf2root)srefset/%(rsid)s?format=html%(parms)s'>%(rsid)s</a>"
 
 def addsep(link):
     return link + '/' if not link.endswith('/') else link
@@ -142,6 +142,7 @@ def as_html(parser_object, **_):
     @return: tab separated value list of parser_object
     """
     def a_link(arg):
+        parms = urlutil.parms()
         if arg[0] and sctid.isValid(arg[1]):
             (pn, pt) = _pnFor(arg[1])
             cid = arg[1]
