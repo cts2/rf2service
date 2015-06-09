@@ -26,12 +26,13 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
-
+import os
 import requests
 import argparse
 import sys
 
-from rf2db.utils.listutils import listify
+_curdir = os.path.join(os.getcwd(), os.path.dirname(__file__))
+sys.path.append(os.path.join(_curdir, '..', '..', 'rf2db'))
 
 
 def stub(opts):
@@ -40,7 +41,7 @@ def stub(opts):
 
 
 def genurl(opts, base=''):
-    return (opts.url + '/concept' + base + '?format=json') + \
+    return (opts.url + '/concept' + base + '?format=json' + addl_opts) + \
            ('&term=%s' % opts.term if opts.term else '') + \
            ('&=%s' % opts.owner if opts.owner else '')
 
@@ -50,33 +51,43 @@ def checkerror(data):
         print("Error %s: %s" % (data.status_code, data.reason))
     return not data.ok
 
+def make_it_so(f, url):
+    return f(url+'&bypass=1')
+
+def cs_name_to_id(opts):
+    url = opts.url + '/changeset/' + opts.changeset + '?format=json'
+    data = make_it_so(requests.get, url)
+    if checkerror(data):
+        return data.ok
+    return data.json()['ChangeSetReferenceSetEntry']['referencedComponentId']['uuid']
 
 def new(opts):
     """ Add a new concept
     :param opts: opts.term = preferred name, opts.parent = parent sctid
     :return: pass/fail
     """
-    url = opts.url + '/concept/' + str(opts.parent) + '/base?format=json&changeset=' + opts.changeset
-    data = requests.get(url)
+    csid = cs_name_to_id(opts)
+    url = opts.url + '/concept/' + str(opts.parent) + '/base?format=json&changeset=' + csid
+    data = make_it_so(requests.get, url)
     if checkerror(data):
         return data.ok
     fsn = opts.term + ' ' + data.json()['val']
-    url = opts.url + '/concept/' + str(opts.parent) + '/fsn?format=json&changeset=' + opts.changeset
-    data = requests.get(url)
+    url = opts.url + '/concept/' + str(opts.parent) + '/fsn?format=json&changeset=' + csid
+    data = make_it_so(requests.get, url)
     if checkerror(data):
         return data.ok
     parent_fsn = data.json()['Description']['term']
 
-    url = opts.url + '/concept?format=json&changeset=' + opts.changeset
-    data = requests.post(url)
+    url = opts.url + '/concept?format=json&changeset=' + csid
+    data = make_it_so(requests.post, url)
     if not checkerror(data):
         conceptid = data.json()['Concept']['id']
         print('Concept id %s was created' % conceptid)
     else:
         return data.ok
 
-    url = opts.url + '/description?format=json&changeset=%s&concept=%s&term=%s' % (opts.changeset, conceptid, opts.term)
-    data = requests.post(url)
+    url = opts.url + '/description?format=json&changeset=%s&concept=%s&term=%s' % (csid, conceptid, opts.term)
+    data = make_it_so(requests.post, url)
     if not checkerror(data):
         descid = data.json()['Description']['id']
         print("Description id %s was created for prefered name '%s'" % (descid, opts.term))
@@ -84,8 +95,8 @@ def new(opts):
         return data.ok
 
     url = opts.url + '/description?format=json&type=%s&changeset=%s&concept=%s&term=%s' % \
-                     ('f', opts.changeset, conceptid, fsn)
-    data = requests.post(url)
+                     ('f', csid, conceptid, fsn)
+    data =  make_it_so(requests.post, url)
     if not checkerror(data):
         descid = data.json()['Description']['id']
         print("Description id %s was created for fsn '%s'" % (descid, fsn))
@@ -93,8 +104,8 @@ def new(opts):
         return data.ok
 
     url = opts.url + '/relationship/source/%s/target/%s?format=json&changeset=%s' % \
-                     (conceptid, opts.parent, opts.changeset)
-    data = requests.post(url)
+                     (conceptid, opts.parent, csid)
+    data = make_it_so(requests.post, url)
     if not checkerror(data):
         relid = data.json()['Relationship']['id']
         print('Relationship id %s was created (%s is_a %s)' % (relid, fsn, parent_fsn))
