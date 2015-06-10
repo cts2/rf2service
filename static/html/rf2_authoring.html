@@ -2,9 +2,147 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title></title>
+    <title>RF2 REST Services Home Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+
+    <style type="text/css">
+        table.parmstable {
+            border-spacing: 0;
+            border: 0px none black;
+            border-collapse: separate;
+            background-color: white;
+        }
+
+        table.parmstable th {
+            padding: 3px;
+            border: 1px solid gray;
+            background-color: white;
+        }
+
+        table.parmstable td {
+            padding: 3px;
+            border: 1px solid gray;
+            background-color: white;
+        }
+
+        table .parms {
+            display: none;
+        }
+    </style>
 </head>
 <body>
+<div>
+    <h2>RF2 Authoring Services.</h2>
+    <p>This service allows new concepts and value sets to be created within the context of the
+    CIMI namespace (1000160).  The CIMI module identifier is <a href="http://informatics.mayo.edu/py4cts2/entity:11000160102">11000160102</a>.
+    Value sets can then be dumped in RF2 format for distribution.</p>
+    <h3>Workflow</h3>
+    <p></p>
+</div>
+<div>
+    <div class="container-fluid">
+<div class="row">
+<div class="col-md-6">
 
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <h2 class="panel-title">RF2 Authoring Services.</h2>
+    </div>
+</div>
+<table class="table table-bordered table-condensed">
+    <thead>
+    <tr>
+        <th>Function</th>
+        <th>Description</th>
+        <th>Signature</th>
+        <th>Parameters</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>New ChangeSet</td>
+        <td>Create a new changeset.  If successful, a redirect will be issued to the new changeset record record.</td>
+        <td>POST /changeset</td>
+        <td>
+        <table class="parmstable">
+            <tr><td>csname</td><td>The unique change set name, which can be used in place of the UUID in other calls. Default: the changeset UUID</td></tr>
+            <tr><td>owner</td><td>The change set owner. Optional</td></tr>
+            <tr><td>description</td><td>A description of the purpose or intent of the change set.  Optional</td></tr>
+            <tr><td>format</td><td>Return format for the completed changeset.  Choices: 'html', 'json', 'xml'. Default: html</td></tr>
+        </table>
+        </td>
+    </tr>
+    <tr>
+        <td>Read ChangeSet</td>
+        <td>Read an existing change set</td>
+        <td>GET /changeset/{changeset uuid or name}</td>
+        <td>
+        <table class="parmstable">
+            <tr><td>format</td><td>Return format for the completed changeset.  Choices: 'html', 'json', 'xml'. Default: html</td></tr>
+        </table>
+        </td>
+    </tr>
+      <tr>
+        <td>Read ChangeSet Details.  Note that there currently isn't an HTML representation for details so "xml" or "json" will have to be explicitly stated.</td>
+        <td>Retrieve the records in an existing changeset</td>
+        <td>GET /changeset/{changeset uuid or name}/details</td>
+        <td>
+        <table class="parmstable">
+            <tr><td>format</td><td>Return format for the completed changeset.  Choices: 'json', 'xml'. Default: html</td></tr>
+        </table>
+        </td>
+    </tr>
+    <tr>
+        <td>Modify ChangeSet</td>
+        <td>Change the owner, name or description of an existing changeset a new changeset. Returns the modified changeset</td>
+        <td>PUT /changeset/{changeset uuid or name}</td>
+        <td>
+        <table class="parmstable">
+            <tr><td>csname</td><td>The unique change set name, which can be used in place of the UUID in other calls. Default: the changeset UUID</td></tr>
+            <tr><td>owner</td><td>The change set owner. Optional</td></tr>
+            <tr><td>description</td><td>A description of the purpose or intent of the change set.  Optional</td></tr>
+            <tr><td>format</td><td>Return format for the completed changeset.  Choices: 'html', 'json', 'xml'. Default: html</td></tr>
+        </table>
+        </td>
+    </tr>
+    <tr>
+        <td>Commit ChangeSet</td>
+        <td>Commit all of the changes in the changeset, making them visible (and final) to the outside world</td>
+        <td>PUT /changeset/{changeset uuid or name}/commit</td>
+        <td>
+        </td>
+    </tr>
+    <tr>
+        <td>Roll back ChangeSet</td>
+        <td>Remove the change set and all of its accompanying changes</td>
+        <td>DELETE /changeset/{changeset uuid or name}</td>
+        <td>
+        </td>
+    </tr>
+    <tr>
+        <td>Query change sets</td>
+        <td>List changesets that meet the supplied criteria</td>
+        <td>GET /changesets</td>
+        <td>
+            <table class="parmstable">
+            <tr><td>open</td><td>List open (non commited) change sets.  Default: True</td></tr>
+            <tr><td>final</td><td>List final (commited) change sets.  Default: False</td></tr>
+            <tr><td>released</td><td>List released change sets.  Default: False</td></tr>
+            <tr><td>release</td><td>List change sets that belong to a particular release. Optional</td></tr>
+            <tr><td>order</td><td>Sort order (asc or desc). Default: asc</td></tr>
+            <tr><td>maxtoreturn</td><td>Maximum number of records to return. 0 means return a count.  Default: server specific, usually 20</td></tr>
+            <tr><td>start</td><td>Start page in maxtoreturn chunks.  Zero based.  Default: 0</td></tr>
+            <tr><td>sort</td><td>Column(s) to sort by.  Default: </td></tr>
+            <tr><td>format</td><td>Return format for the list.  Choices: 'html', 'json', 'xml'. Default: html</td></tr>
+        </table>
+        </td>
+    </tr>
+</tbody>
+    </table>
+    </div>
+    </div>
+        </div>
+    </div>
 </body>
 </html>

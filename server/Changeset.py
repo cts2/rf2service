@@ -75,7 +75,6 @@ class Changeset(RF2BaseNode):
     def update(self, parms, **_):
         return csdb.update(**parms.dict), (404, csdb.invalid_update_reason(**parms.dict))
 
-
     @expose(methods=["DELETE"])
     @validate(changeset_parms)
     def delete(self, parms, **_):

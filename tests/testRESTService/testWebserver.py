@@ -28,12 +28,13 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 # -*- coding: utf-8 -*-
 import unittest
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import os
 import re
 
 from rf2db.utils.xmlutils import prettyxml, diffxml
 from server.utils.SetConfig import setConfig
+from functools import reduce
 setConfig()
 
 def testxml(resource, xmltotest=None, testfile=None, save=False, printdiff=True):
@@ -48,7 +49,7 @@ def testxml(resource, xmltotest=None, testfile=None, save=False, printdiff=True)
     assert (xmltotest or testfile) and not(xmltotest and testfile)
     if save and testfile:
         open(testfile, 'w').write(prettyxml(resource))
-        print "SAVED: " + testfile
+        print("SAVED: " + testfile)
         rval = True
     else:
         if not xmltotest:
@@ -85,7 +86,7 @@ class WebServerTestCase(unittest.TestCase):
     @staticmethod
     def cleanJson(json):
         json.pop('accessDate', None)
-        for (k,v) in json.items():
+        for (k,v) in list(json.items()):
             if isinstance(v, dict):
                 WebServerTestCase.cleanJson(v)
         return json
@@ -106,9 +107,9 @@ class WebServerTestCase(unittest.TestCase):
 
     def doTest(self, u):
         url = u.replace('?','?bypass=1&') if '?' in u else (u + '?bypass=1')
-        print "READING", (service_uri+url).replace('&amp;','&')
-        req = urllib2.Request(service_uri+url)
-        response = urllib2.urlopen(req)
+        print("READING", (service_uri+url).replace('&amp;','&'))
+        req = urllib.request.Request(service_uri+url)
+        response = urllib.request.urlopen(req)
         the_page = response.read()
 
         mungedu = reduce(lambda s,r: s.replace(r,'_'), replaces, u)
@@ -118,9 +119,9 @@ class WebServerTestCase(unittest.TestCase):
         fname = os.path.join(d, prefix + ufile)
         if not os.path.exists(d):
             os.makedirs(d)
-        print "TESTING:", fname
+        print("TESTING:", fname)
         if not os.path.exists(fname):
-            print "Writing new file image"
+            print("Writing new file image")
             f = open(fname,'w')
             f.write(the_page)
             f.close()
@@ -136,25 +137,26 @@ class WebServerTestCase(unittest.TestCase):
         else:
             error = self.straightdiff(the_page, match_txt)
         if error:
-            print 'URL', (service_uri+url).replace('&amp;','&')
-            print error
+            print('URL', (service_uri+url).replace('&amp;','&'))
+            print(error)
         if error:
-            print the_page
+            print(the_page)
         return not bool(error)
 
-    def doErrorTest(self, u, (code, text)):
+    def doErrorTest(self, u, xxx_todo_changeme):
+        (code, text) = xxx_todo_changeme
         url = u.replace('?', '?bypass=1&') if '?' in u else (u + '?bypass=1')
-        print "READING", (service_uri+url).replace('&amp;', '&')
-        req = urllib2.Request(service_uri+url)
+        print("READING", (service_uri+url).replace('&amp;', '&'))
+        req = urllib.request.Request(service_uri+url)
         try:
-            e = urllib2.urlopen(req)
-        except urllib2.URLError as e:
+            e = urllib.request.urlopen(req)
+        except urllib.error.URLError as e:
             if e.code == code:
                 return True
 
-        print 'URL', (service_uri+url).replace('&amp;','&')
-        print '\texpected: %s - %s' % (code, text)
-        print '\treceived: %s - %s' % (e.code, e.msg)
+        print('URL', (service_uri+url).replace('&amp;','&'))
+        print('\texpected: %s - %s' % (code, text))
+        print('\treceived: %s - %s' % (e.code, e.msg))
         return False
 
 

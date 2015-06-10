@@ -53,7 +53,7 @@ def expose(func=None, methods=None):
             self._kwargs = kwargs.copy()
             if kwargs.get('_inside', False):
                 # The innermost formatters trump the outer
-                kwargs['_formats'] = dict(kwargs['_formats'].items() + self.formats.items())
+                kwargs['_formats'] = dict(list(kwargs['_formats'].items()) + list(self.formats.items()))
                 # As does the namespace
                 if self.namespace:
                     kwargs['_ns'][0] = self.namespace
@@ -70,7 +70,7 @@ def expose(func=None, methods=None):
             kwargs['_ns'] = [None]
             if self.namespace:
                 kwargs['_ns'][0] = self.namespace
-            for (k, v) in self.formats.items():
+            for (k, v) in list(self.formats.items()):
                 kwargs['_formats'][k] = v
             kwargs['_inside']  = True
 
@@ -89,7 +89,7 @@ def expose(func=None, methods=None):
             if str(rval).startswith(htmlHead):
                 return rval
             if not rtnfmt:
-                rtnfmt = negotiateFormat.negotiate_format(kwargs['_formats'].keys(), cherrypy.request.headers)
+                rtnfmt = negotiateFormat.negotiate_format(list(kwargs['_formats'].keys()), cherrypy.request.headers)
             rtnfmt = listutils.flatten(rtnfmt)
             if rtnfmt in kwargs['_formats']:
                 ns = kwargs['_ns'][0] if kwargs['_ns'] else None
@@ -214,7 +214,7 @@ function validateForm()
         
         for p in parmsToRemove:
             self._kwargs.pop(p, None)       
-        kwargs = dict([(k, v) for (k, v) in self._kwargs.items() if not k.startswith('_')])
+        kwargs = dict([(k, v) for (k, v) in list(self._kwargs.items()) if not k.startswith('_')])
         urlutil.redirect(urlutil.append_params(newURL + ('/' + '/'.join(path) if path else ''),
                                                           dict(parmsToAdd, **kwargs)))
     

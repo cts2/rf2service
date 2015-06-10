@@ -65,7 +65,7 @@ class Relationship(RF2BaseNode):
         # A POST cannot supply a relationship id
         kwargs.pop('id', None)
         dbrec = reldb.add(**parms.dict)
-        if isinstance(dbrec, basestring):
+        if isinstance(dbrec, str):
             return None, (400, dbrec)
         elif not dbrec:
             return None, (500, "Unable to create relationship record")

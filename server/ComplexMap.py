@@ -73,7 +73,7 @@ class ComplexMapForSource(RF2BaseNode, ComplexMapBase):
     relpath = '/complexmap/source/~'
     _rsnames = ComplexMapDB().refset_names()
     extensions = RF2BaseNode.extensions + [global_iter_parms,
-                                           _maps_tmpl % '\t\t\n'.join(_maplist_tmpl % e for e in _rsnames.items())]
+                                           _maps_tmpl % '\t\t\n'.join(_maplist_tmpl % e for e in list(_rsnames.items()))]
 
 
     @expose
@@ -89,7 +89,7 @@ class ComplexMapForTarget(RF2BaseNode, ComplexMapBase):
     relpath = '/complexmap/target/~'
     _rsnames = ComplexMapDB().refset_names()
     extensions = RF2BaseNode.extensions + [global_iter_parms,
-                                           _maps_tmpl % '\t\t\n'.join(_maplist_tmpl % e for e in _rsnames.items())]
+                                           _maps_tmpl % '\t\t\n'.join(_maplist_tmpl % e for e in list(_rsnames.items()))]
 
 
     @expose

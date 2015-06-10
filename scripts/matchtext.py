@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2013, Mayo Clinic
+# Copyright (c) 2015, Mayo Clinic
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification,
@@ -37,7 +37,7 @@ from fuzzywuzzy import fuzz
 _curdir = os.path.join(os.getcwd(), os.path.dirname(__file__))
 sys.path.append(os.path.join(_curdir, '..', '..', 'rf2db'))
 
-from config.ConfigManager import ConfigManager
+from ConfigManager. import ConfigManager
 ConfigManager.set_configfile(os.path.join(_curdir, '..', '..', 'rf2service', 'settings.conf'))
 
 

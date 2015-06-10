@@ -29,8 +29,8 @@
 
 
 from cherrypy        import request, HTTPRedirect
-from urlparse        import urlsplit,parse_qs, urlunsplit
-from urllib          import urlencode
+from urllib.parse        import urlsplit,parse_qs, urlunsplit
+from urllib.parse          import urlencode
 
 from rf2db.utils     import xmlutils
 
@@ -89,7 +89,7 @@ def appendParams(baseURL,parms):
     """
     spliturl = urlsplit(baseURL)
     urlparms = parse_qs(spliturl.query,True)
-    for (k,v) in parms.items():
+    for (k,v) in list(parms.items()):
         urlparms[k] = v
     splitlist = list(spliturl)
     splitlist[3] = urlencode(urlparms, True)

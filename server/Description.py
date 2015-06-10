@@ -62,7 +62,7 @@ class Description(RF2BaseNode):
         # A POST cannot supply a description sctid
         kwargs.pop('desc', None)
         dbrec = descdb.add(**parms.dict)
-        if isinstance(dbrec, basestring):
+        if isinstance(dbrec, str):
             return None, (400, dbrec)
         elif not dbrec:
             return None, (404, "Unable to create description record")

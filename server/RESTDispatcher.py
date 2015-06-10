@@ -48,8 +48,10 @@ from auth.ihtsdoauth import License
 
 dispatcher = cherrypy.dispatch.RoutesDispatcher()
 
-class Resource():
+
+class Resource:
     controllers = {}
+
     def __init__(self, path, controller, method='GET', action='default'):
         """ Construct a path.  Paths are evaluated sequentially, so the most specific must occur first. Also note that
         both this function *and* CherryPy map the path to a controller and then map the HTTP methods to functions,
@@ -175,7 +177,3 @@ resources = [Resource(r'/', Root, action='index'),
              Resource(r'/changeset/', Changeset),
              Resource(r'/changeset', Changeset, action='new', method='POST'),
              Resource(r'/changesets', Changeset, action='list'), ]
-
-
-
-

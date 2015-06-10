@@ -72,7 +72,7 @@ class SimpleMapForSource(RF2BaseNode, SimpleMapBase):
     relpath = '/simplemap/source/~'
     _rsnames = SimpleMapDB().refset_names()
     extensions = RF2BaseNode.extensions + [global_iter_parms,
-                                           _maps_tmpl % '\t\t\n'.join(_maplist_tmpl % e for e in _rsnames.items())]
+                                           _maps_tmpl % '\t\t\n'.join(_maplist_tmpl % e for e in list(_rsnames.items()))]
 
 
     @expose
@@ -88,7 +88,7 @@ class SimpleMapForTarget(RF2BaseNode, SimpleMapBase):
     relpath = '/simplemap/target/~'
     _rsnames = SimpleMapDB().refset_names()
     extensions = RF2BaseNode.extensions + [global_iter_parms,
-                                           _maps_tmpl % '\t\t\n'.join(_maplist_tmpl % e for e in _rsnames.items())]
+                                           _maps_tmpl % '\t\t\n'.join(_maplist_tmpl % e for e in list(_rsnames.items()))]
 
 
     @expose

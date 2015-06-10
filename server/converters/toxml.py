@@ -29,6 +29,7 @@
 
 from server.config import ServiceSettings
 from rf2db.utils.xmlutils import prettyxml, cleanxml
+import collections
 
 xml_value_template = """<?xml version="1.0" encoding="UTF-8"?>
 <val>%s</val>"""
@@ -42,7 +43,7 @@ def as_xml(rval, ns=None, **kwargs):
     @param kwargs: if 'xslt' in the objects, add it to the return value
     @return: tuple - xml or string rendering, mime type if xml else None
     """
-    if 'toxml' in [method for method in dir(rval) if callable(getattr(rval, method))]:
+    if 'toxml' in [method for method in dir(rval) if isinstance(getattr(rval, method), collections.Callable)]:
         xslt = kwargs.pop('xslt', None)
         if xslt:
             xsltPath = ServiceSettings.settings.staticroot + "xsl/%s.xsl" % xslt

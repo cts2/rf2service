@@ -55,12 +55,11 @@ class Concept(RF2BaseNode):
         # A POST cannot supply a concept id
         kwargs.pop('concept', None)
         dbrec = concdb.add(**parms.dict)
-        if isinstance(dbrec, basestring):
+        if isinstance(dbrec, str):
             return None, (400, dbrec)
         elif not dbrec:
             return None, (500, "Unable to create concept record")
         self.redirect('/concept/%s' % dbrec.id)
-
 
     @expose(methods="PUT")
     @validate(update_concept_parms)

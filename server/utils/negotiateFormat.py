@@ -39,7 +39,7 @@ def negotiate_format(formats, rqst_header):
     bm = best_match(matchlist,
                      kwget(['Accept'], rqst_header, preference_order, 'text/html'))
     if bm:
-        for me in format_map.items():
+        for me in list(format_map.items()):
             if bm in me[1]:
                 return me[0]
     return 'html'
