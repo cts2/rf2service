@@ -68,7 +68,6 @@ class Description(RF2BaseNode):
             return None, (404, "Unable to create description record")
         self.redirect('/description/%s' % dbrec.id)
 
-
     @expose(methods="PUT")
     @validate(update_description_parms)
     def update(self, parms, desc, **_):

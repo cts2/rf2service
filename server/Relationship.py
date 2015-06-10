@@ -31,7 +31,7 @@ import cherrypy
 from rf2db.db.RF2RelationshipFile import RelationshipDB, rel_parms, rel_source_parms, \
     rel_predicate_parms, rel_target_parms, new_rel_parms, del_rel_parms
 from rf2db.db.RF2StatedRelationshipFile import StatedRelationshipDB
-from rf2db.db.RF2ConceptFile import ConceptDB, concept_parms
+from rf2db.db.RF2ConceptFile import ConceptDB
 from server.BaseNode import expose
 from server.RF2BaseNode import RF2BaseNode, global_iter_parms, validate
 from server.config.Rf2Entries import settings
@@ -70,7 +70,6 @@ class Relationship(RF2BaseNode):
         elif not dbrec:
             return None, (500, "Unable to create relationship record")
         self.redirect('/relationship/%s' % dbrec.id)
-
 
     @expose(methods=["DELETE"])
     @validate(del_rel_parms)
@@ -117,7 +116,6 @@ class RelationshipsForPredicate(RF2BaseNode):
     value = settings.refPredicate
     extensions = RF2BaseNode.extensions + [reltypes, global_iter_parms]
 
-
     @expose
     @validate(rel_predicate_parms)
     def default(self, parms, **_):
@@ -130,10 +128,7 @@ class RelationshipsForTarget(RF2BaseNode):
     value = settings.refTargetConcept
     extensions = RF2BaseNode.extensions + [reltypes, global_iter_parms]
 
-
     @expose
     @validate(rel_target_parms)
     def default(self, parms, **_):
         return validateAndExecute(parms.target, reldb.getTargetRecs, parms)
-
-
