@@ -34,14 +34,13 @@ import sys
 _curdir = os.path.join(os.getcwd(), os.path.dirname(__file__))
 sys.path.append(os.path.join(_curdir, '..', '..', 'rf2db'))
 
-
 def stub(opts):
     print("%s not implemented" % opts.action)
     return False
 
 
 def genurl(opts, base=''):
-    return (opts.url + '/concept' + base + '?format=json' + addl_opts) + \
+    return (opts.url + '/concept' + base + '?format=json') + \
            ('&term=%s' % opts.term if opts.term else '') + \
            ('&=%s' % opts.owner if opts.owner else '')
 
@@ -51,8 +50,10 @@ def checkerror(data):
         print("Error %s: %s" % (data.status_code, data.reason))
     return not data.ok
 
+
 def make_it_so(f, url):
     return f(url+'&bypass=1')
+
 
 def cs_name_to_id(opts):
     url = opts.url + '/changeset/' + opts.changeset + '?format=json'
@@ -61,24 +62,24 @@ def cs_name_to_id(opts):
         return data.ok
     return data.json()['ChangeSetReferenceSetEntry']['referencedComponentId']['uuid']
 
+
 def new(opts):
     """ Add a new concept
     :param opts: opts.term = preferred name, opts.parent = parent sctid
     :return: pass/fail
     """
-    csid = cs_name_to_id(opts)
-    url = opts.url + '/concept/' + str(opts.parent) + '/base?format=json&changeset=' + csid
+    url = opts.url + '/concept/' + str(opts.parent) + '/base?format=json&changeset=' + opts.changeset
     data = make_it_so(requests.get, url)
     if checkerror(data):
         return data.ok
     fsn = opts.term + ' ' + data.json()['val']
-    url = opts.url + '/concept/' + str(opts.parent) + '/fsn?format=json&changeset=' + csid
+    url = opts.url + '/concept/' + str(opts.parent) + '/fsn?format=json&changeset=' + opts.changeset
     data = make_it_so(requests.get, url)
     if checkerror(data):
         return data.ok
     parent_fsn = data.json()['Description']['term']
 
-    url = opts.url + '/concept?format=json&changeset=' + csid
+    url = opts.url + '/concept?format=json&changeset=' + opts.changeset
     data = make_it_so(requests.post, url)
     if not checkerror(data):
         conceptid = data.json()['Concept']['id']
@@ -86,7 +87,7 @@ def new(opts):
     else:
         return data.ok
 
-    url = opts.url + '/description?format=json&changeset=%s&concept=%s&term=%s' % (csid, conceptid, opts.term)
+    url = opts.url + '/description?format=json&changeset=%s&concept=%s&term=%s' % (opts.changeset, conceptid, opts.term)
     data = make_it_so(requests.post, url)
     if not checkerror(data):
         descid = data.json()['Description']['id']
@@ -95,8 +96,8 @@ def new(opts):
         return data.ok
 
     url = opts.url + '/description?format=json&type=%s&changeset=%s&concept=%s&term=%s' % \
-                     ('f', csid, conceptid, fsn)
-    data =  make_it_so(requests.post, url)
+                     ('f', opts.changeset, conceptid, fsn)
+    data = make_it_so(requests.post, url)
     if not checkerror(data):
         descid = data.json()['Description']['id']
         print("Description id %s was created for fsn '%s'" % (descid, fsn))
@@ -104,7 +105,7 @@ def new(opts):
         return data.ok
 
     url = opts.url + '/relationship/source/%s/target/%s?format=json&changeset=%s' % \
-                     (conceptid, opts.parent, csid)
+                     (conceptid, opts.parent, opts.changeset)
     data = make_it_so(requests.post, url)
     if not checkerror(data):
         relid = data.json()['Relationship']['id']
@@ -112,6 +113,7 @@ def new(opts):
     return data.ok
 
 choices = {'new': new, 'update': stub, 'delete': stub}
+
 
 def main(args):
     parser = argparse.ArgumentParser(description="RF2 Concept Manager")
