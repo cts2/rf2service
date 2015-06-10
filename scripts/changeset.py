@@ -79,7 +79,7 @@ choices = {'new': new, 'update': update, 'commit': commit, 'rollback': rollback,
 
 def main(args):
     parser = argparse.ArgumentParser(description="RF2 Changeset Manager")
-    parser.add_argument('-u', '--url', help="Base service URL")
+    parser.add_argument('-u', '--url', help="Base service URL", required=True)
     parser.add_argument('action', choices=choices.keys())
     parser.add_argument('changeset', help="Reference set name")
     parser.add_argument('-d', '--description', help="Reference set description")
