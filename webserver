@@ -35,6 +35,7 @@ import mimetypes
 from server.utils.SetConfig import setConfig
 
 mimetypes.add_type(("text/xml", None), ".xsd")
+mimetypes.add_type(("text/turtle", None), ".ttl")
 
 base = setConfig()
 
@@ -85,6 +86,12 @@ conf = {'/': {
         '/xsd': {
             'tools.staticdir.on': True,
             'tools.staticdir.dir': 'xsd'
+        },
+        '/owl': {
+            'tools.staticdir.on': True,
+            'tools.staticdir.dir': 'xsd',
+            'tools.auth.no_auth': True
+
         },
         '/favicon.ico': {'tools.staticfile.on': True,
                          'tools.staticfile.filename': os.path.join(base, 'static', 'favicon.png')
