@@ -177,10 +177,9 @@ def as_html(parser_object, **_):
     continuation = ''
     if isinstance(parser_object, Iterator):
         continuation += cont_template % parser_object.numEntries
-        if parser_object.__next__:
+        if parser_object.next:
             continuation += next_template % parser_object.next
         if parser_object.prev:
             continuation += prev_template % parser_object.prev
-
 
     return doc_template % locals(), 'text/html;charset=UTF-8'
