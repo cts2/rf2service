@@ -89,8 +89,8 @@ conf = {'/': {
         },
         '/owl': {
             'tools.staticdir.on': True,
-            'tools.staticdir.dir': 'xsd',
-            'tools.auth.no_auth': True
+            'tools.staticdir.dir': 'owl',
+            'tools.auth.on': True
 
         },
         '/favicon.ico': {'tools.staticfile.on': True,
